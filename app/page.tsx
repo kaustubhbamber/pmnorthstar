@@ -44,11 +44,18 @@ const categoryAccents: Record<string, string> = {
 };
 
 export default function HomePage() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setIsDark(true);
+    else setIsDark(false);
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
-
   const [user, setUser] = useState<AuthUser | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
