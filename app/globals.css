@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── DARK MODE (default) ───────────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  --font-display: 'Inter', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  --page-bg:        #000000;
+  --surface-bg:     #000000;
+  --card-bg:        #0A0A0A;
+  --tag-bg:         #111111;
+
+  --card-border:    #222222;
+  --divider:        #1A1A1A;
+
+  --brand-primary:  #F3123C;
+  --brand-hover:    #D4102F;
+  --brand-soft:     rgba(243, 18, 60, 0.08);
+
+  --text-primary:   #FFFFFF;
+  --text-muted:     #777777;
+  --text-faint:     #444444;
+
+  --success:        #22C55E;
+  --warning:        #F59E0B;
+  --danger:         #F3123C;
+
+  --sidebar-bg:     #000000;
+  --sidebar-border: #1E1E1E;
+  --nav-bg:         #000000;
+}
+
+/* ── LIGHT MODE ────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --page-bg:        #FFFFFF;
+  --surface-bg:     #FFFFFF;
+  --card-bg:        #FFFFFF;
+  --tag-bg:         #F5F5F5;
+
+  --card-border:    #E8E8E8;
+  --divider:        #F0F0F0;
+
+  --brand-primary:  #F3123C;
+  --brand-hover:    #D4102F;
+  --brand-soft:     rgba(243, 18, 60, 0.06);
+
+  --text-primary:   #000000;
+  --text-muted:     #666666;
+  --text-faint:     #BBBBBB;
+
+  --success:        #16A34A;
+  --warning:        #D97706;
+  --danger:         #F3123C;
+
+  --sidebar-bg:     #FFFFFF;
+  --sidebar-border: #E8E8E8;
+  --nav-bg:         #FFFFFF;
+}
+
+/* ── RESET ─────────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html, body {
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  height: 100%;
+  overflow: hidden;
+}
+
+#__next, main {
+  height: 100%;
+}
+
+/* ── SCROLLBAR ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
+
+.scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--card-border) transparent;
+}
+
+/* ── KILL ALL GRADIENTS & NOISE ─────────────────────────────────────────── */
+.noise::after    { display: none !important; }
+.hero-gradient   { background: none !important; }
+.glow-brand      { box-shadow: none !important; }
+.glow-accent     { box-shadow: none !important; }
+
+/* ── BOOK CARD ──────────────────────────────────────────────────────────── */
+.book-card {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.book-card:hover {
+  border-color: var(--brand-primary) !important;
+  transform: translateY(-2px);
+}
+
+/* ── SIDEBAR NAV ────────────────────────────────────────────────────────── */
+.nav-item {
+  border-left: 2px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.nav-item:hover {
+  background: var(--brand-soft);
+  color: var(--text-primary);
+}
+.nav-item.active {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  border-left: 2px solid var(--brand-primary);
+}
+
+/* ── FILTER CHIP ────────────────────────────────────────────────────────── */
+.filter-chip {
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  background: transparent;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.filter-chip:hover {
+  border-color: var(--brand-primary);
+  color: var(--text-primary);
+}
+.filter-chip.active {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+/* ── SECTION ANIMATION ──────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.animate-section                  { animation: fadeInUp 0.3s ease forwards; }
+.animate-section:nth-child(2)     { animation-delay: 0.06s; }
+.animate-section:nth-child(3)     { animation-delay: 0.12s; }
+.animate-section:nth-child(4)     { animation-delay: 0.18s; }
+
+/* ── STAR ───────────────────────────────────────────────────────────────── */
+.star { color: var(--brand-primary); }
+
+/* ── CATEGORY BADGES ────────────────────────────────────────────────────── */
+.badge-pm, .badge-startups {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  border: 1px solid rgba(243, 18, 60, 0.2);
+}
+.badge-management {
+  background: var(--tag-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--card-border);
+}
+
+/* ── CASE STUDY CARD ────────────────────────────────────────────────────── */
+.case-card {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.case-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand-primary) !important;
+}
+
+/* ── THEME TRANSITION ───────────────────────────────────────────────────── */
+html {
+  transition: background-color 0.2s ease;
+}
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.book-card, .case-card {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+/* ── SECTION DIVIDER ────────────────────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: var(--divider);
+  margin: 0 24px;
+}
+
+/* ── BUTTONS ────────────────────────────────────────────────────────────── */
+button { outline: none; cursor: pointer; }
+button:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* ── INPUT ──────────────────────────────────────────────────────────────── */
+input::placeholder { color: var(--text-faint); }
+input:focus        { outline: none; }

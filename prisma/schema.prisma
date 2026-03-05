@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  name           String
+  passwordHash   String          @map("password_hash")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  likedResources LikedResource[]
+  savedResources SavedResource[]
+  sessions       Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@map("sessions")
+}
+
+model SavedResource {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  resourceId String   @map("resource_id")
+  title      String
+  author     String
+  category   String
+  link       String
+  savedAt    DateTime @default(now()) @map("saved_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, resourceId])
+  @@index([userId])
+  @@map("saved_resources")
+}
+
+model LikedResource {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  resourceId String   @map("resource_id")
+  title      String
+  author     String
+  category   String
+  link       String
+  likedAt    DateTime @default(now()) @map("liked_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, resourceId])
+  @@index([userId])
+  @@map("liked_resources")
+}
