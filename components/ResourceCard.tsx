@@ -113,7 +113,7 @@ export function ResourceCard({
   return (
     <div
       className="rounded-xl overflow-hidden flex-shrink-0"
-      style={{ width: "160px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      style={{ width: "185px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
     >
       <div
         className="relative cursor-pointer"
@@ -133,6 +133,9 @@ export function ResourceCard({
         )}
       </div>
       <div className="p-2.5">
+        <p className="text-xs leading-relaxed mb-2 line-clamp-2" style={{ color: "var(--text-muted)" }}>
+          {book.description}
+        </p>
         <div className="flex items-center gap-0.5 mb-2">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star key={i} size={9} style={{
