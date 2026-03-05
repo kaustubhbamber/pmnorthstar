@@ -46,10 +46,7 @@ const categoryAccents: Record<string, string> = {
 export default function HomePage() {
   const [isDark, setIsDark] = useState(true);
   useEffect(() => {
-    document.documentElement.setAttribute(
-      "data-theme",
-      isDark ? "dark" : "light"
-    );
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   }, [isDark]);
 
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -122,27 +119,29 @@ export default function HomePage() {
     return counts;
   }, []);
 
-  // ── Saved Library View ─────────────────────────────────────────────────
-  if (activeNav === "saved") {
-    // Saved = saved but NOT liked
-    const savedBooks = books.filter((b) => savedIds.has(b.id) && !likedIds.has(b.id));
-    const savedStudies = caseStudies.filter((s) => savedIds.has(s.id) && !likedIds.has(s.id));
-    // Favourites = liked (regardless of saved)
-    const favouriteBooks = books.filter((b) => likedIds.has(b.id));
-    const favouriteStudies = caseStudies.filter((s) => likedIds.has(s.id));
+  // ── Derived lists (used across views + sidebar counts) ─────────────────
+  const savedBooks = books.filter((b) => savedIds.has(b.id) && !likedIds.has(b.id));
+  const savedStudies = caseStudies.filter((s) => savedIds.has(s.id) && !likedIds.has(s.id));
+  const favouriteBooks = books.filter((b) => likedIds.has(b.id));
+  const favouriteStudies = caseStudies.filter((s) => likedIds.has(s.id));
 
+  const savedCount = savedBooks.length + savedStudies.length;
+  const favouriteCount = favouriteBooks.length + favouriteStudies.length;
+
+  // ── Saved for Later View ───────────────────────────────────────────────
+  if (activeNav === "saved") {
     return (
       <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} />
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-6 py-4 flex items-center justify-between"
             style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
           >
             <div>
-              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>My Library</h1>
+              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>Saved for Later</h1>
               <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                {savedBooks.length + savedStudies.length} saved for later · {favouriteBooks.length + favouriteStudies.length} favourites
+                {savedCount} items saved to read later
               </p>
             </div>
             <button
@@ -158,9 +157,7 @@ export default function HomePage() {
             {!user ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <Bookmark size={40} style={{ color: "var(--text-faint)" }} />
-                <p className="text-base font-semibold mt-4" style={{ color: "var(--text-muted)" }}>
-                  Sign in to see your library
-                </p>
+                <p className="text-base font-semibold mt-4" style={{ color: "var(--text-muted)" }}>Sign in to see your saved items</p>
                 <button
                   onClick={() => setShowAuthModal(true)}
                   className="mt-4 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
@@ -171,140 +168,144 @@ export default function HomePage() {
               </div>
             ) : (
               <>
-                {/* ── Saved for Later ── */}
-                <div className="mb-2">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Bookmark size={16} style={{ color: "var(--brand-primary)" }} />
-                    <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
-                      Saved for Later
-                    </h2>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--brand-soft)", color: "var(--brand-primary)" }}>
-                      {savedBooks.length + savedStudies.length}
-                    </span>
-                  </div>
-                  <p className="text-xs mb-5" style={{ color: "var(--text-muted)" }}>
-                    Books and case studies you want to read later
-                  </p>
-
-                  {/* Saved Books */}
-                  <div className="mb-6">
-                    <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>
-                      Books
-                    </p>
-                    {savedBooks.length === 0 ? (
-                      <p className="text-sm" style={{ color: "var(--text-faint)" }}>No saved books yet.</p>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {savedBooks.map((book) => (
-                          <ResourceCard
-                            key={book.id}
-                            book={book}
-                            variant="list"
-                            isLoggedIn={!!user}
-                            initialSaved={savedIds.has(book.id)}
-                            initialLiked={likedIds.has(book.id)}
-                            onAuthRequired={() => setShowAuthModal(true)}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Saved Case Studies */}
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>
-                      Case Studies
-                    </p>
-                    {savedStudies.length === 0 ? (
-                      <p className="text-sm" style={{ color: "var(--text-faint)" }}>No saved case studies yet.</p>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {savedStudies.map((study) => (
-                          <CaseStudyCard
-                            key={study.id}
-                            study={study}
-                            isLoggedIn={!!user}
-                            initialSaved={savedIds.has(study.id)}
-                            initialLiked={likedIds.has(study.id)}
-                            onAuthRequired={() => setShowAuthModal(true)}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                <div className="mb-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>Books</p>
+                  {savedBooks.length === 0 ? (
+                    <p className="text-sm" style={{ color: "var(--text-faint)" }}>No saved books yet. Hit 🔖 on any book!</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {savedBooks.map((book) => (
+                        <ResourceCard
+                          key={book.id}
+                          book={book}
+                          variant="list"
+                          isLoggedIn={!!user}
+                          initialSaved={savedIds.has(book.id)}
+                          initialLiked={likedIds.has(book.id)}
+                          onAuthRequired={() => setShowAuthModal(true)}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="section-divider my-8" />
+                <div className="section-divider my-6" />
 
-                {/* ── Favourites ── */}
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Heart size={16} style={{ color: "var(--brand-primary)" }} className="fill-current" />
-                    <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
-                      Favourites
-                    </h2>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--brand-soft)", color: "var(--brand-primary)" }}>
-                      {favouriteBooks.length + favouriteStudies.length}
-                    </span>
-                  </div>
-                  <p className="text-xs mb-5" style={{ color: "var(--text-muted)" }}>
-                    Books and case studies you loved
-                  </p>
-
-                  {/* Favourite Books */}
-                  <div className="mb-6">
-                    <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>
-                      Books
-                    </p>
-                    {favouriteBooks.length === 0 ? (
-                      <p className="text-sm" style={{ color: "var(--text-faint)" }}>No favourite books yet. Hit ❤️ on any book!</p>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {favouriteBooks.map((book) => (
-                          <ResourceCard
-                            key={book.id}
-                            book={book}
-                            variant="list"
-                            isLoggedIn={!!user}
-                            initialSaved={savedIds.has(book.id)}
-                            initialLiked={likedIds.has(book.id)}
-                            onAuthRequired={() => setShowAuthModal(true)}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Favourite Case Studies */}
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>
-                      Case Studies
-                    </p>
-                    {favouriteStudies.length === 0 ? (
-                      <p className="text-sm" style={{ color: "var(--text-faint)" }}>No favourite case studies yet. Hit ❤️ on any case study!</p>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {favouriteStudies.map((study) => (
-                          <CaseStudyCard
-                            key={study.id}
-                            study={study}
-                            isLoggedIn={!!user}
-                            initialSaved={savedIds.has(study.id)}
-                            initialLiked={likedIds.has(study.id)}
-                            onAuthRequired={() => setShowAuthModal(true)}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>Case Studies</p>
+                  {savedStudies.length === 0 ? (
+                    <p className="text-sm" style={{ color: "var(--text-faint)" }}>No saved case studies yet. Hit 🔖 on any case study!</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {savedStudies.map((study) => (
+                        <CaseStudyCard
+                          key={study.id}
+                          study={study}
+                          isLoggedIn={!!user}
+                          initialSaved={savedIds.has(study.id)}
+                          initialLiked={likedIds.has(study.id)}
+                          onAuthRequired={() => setShowAuthModal(true)}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </>
             )}
           </main>
         </div>
-        {showAuthModal && (
-          <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />
-        )}
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />}
+      </div>
+    );
+  }
+
+  // ── Favourites View ────────────────────────────────────────────────────
+  if (activeNav === "favourites") {
+    return (
+      <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <header
+            className="flex-shrink-0 px-6 py-4 flex items-center justify-between"
+            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+          >
+            <div>
+              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>Favourites</h1>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                {favouriteCount} items you loved
+              </p>
+            </div>
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium"
+              style={{ background: "var(--brand-soft)", border: "1px solid rgba(243,18,60,0.2)", color: "var(--brand-primary)" }}
+            >
+              {isDark ? "☀️ Light" : "🌙 Dark"}
+            </button>
+          </header>
+
+          <main className="flex-1 overflow-y-auto scroll-container p-6 pb-12">
+            {!user ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <Heart size={40} style={{ color: "var(--text-faint)" }} />
+                <p className="text-base font-semibold mt-4" style={{ color: "var(--text-muted)" }}>Sign in to see your favourites</p>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="mt-4 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
+                  style={{ background: "var(--brand-primary)" }}
+                >
+                  Log In / Sign Up
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="mb-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>Books</p>
+                  {favouriteBooks.length === 0 ? (
+                    <p className="text-sm" style={{ color: "var(--text-faint)" }}>No favourite books yet. Hit ❤️ on any book!</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {favouriteBooks.map((book) => (
+                        <ResourceCard
+                          key={book.id}
+                          book={book}
+                          variant="list"
+                          isLoggedIn={!!user}
+                          initialSaved={savedIds.has(book.id)}
+                          initialLiked={likedIds.has(book.id)}
+                          onAuthRequired={() => setShowAuthModal(true)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="section-divider my-6" />
+
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-faint)" }}>Case Studies</p>
+                  {favouriteStudies.length === 0 ? (
+                    <p className="text-sm" style={{ color: "var(--text-faint)" }}>No favourite case studies yet. Hit ❤️ on any case study!</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {favouriteStudies.map((study) => (
+                        <CaseStudyCard
+                          key={study.id}
+                          study={study}
+                          isLoggedIn={!!user}
+                          initialSaved={savedIds.has(study.id)}
+                          initialLiked={likedIds.has(study.id)}
+                          onAuthRequired={() => setShowAuthModal(true)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </main>
+        </div>
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />}
       </div>
     );
   }
@@ -313,7 +314,7 @@ export default function HomePage() {
   if (activeNav === "casestudies") {
     return (
       <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} />
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-6 py-4 flex items-center justify-between"
@@ -397,9 +398,7 @@ export default function HomePage() {
             </div>
           </main>
         </div>
-        {showAuthModal && (
-          <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />
-        )}
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />}
       </div>
     );
   }
@@ -407,7 +406,7 @@ export default function HomePage() {
   // ── Main Home View ─────────────────────────────────────────────────────
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} />
+      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <TopNav
           activeFilter={activeFilter}
@@ -433,14 +432,14 @@ export default function HomePage() {
                 className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg"
                 style={{ background: "var(--brand-soft)", color: "var(--brand-primary)", border: "1px solid rgba(243,18,60,0.2)" }}
               >
-                <Bookmark size={11} /> {savedIds.size} Saved
+                <Bookmark size={11} /> {savedCount} Saved
               </button>
               <button
-                onClick={() => setActiveNav("saved")}
+                onClick={() => setActiveNav("favourites")}
                 className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg"
                 style={{ background: "var(--brand-soft)", color: "var(--brand-primary)", border: "1px solid rgba(243,18,60,0.2)" }}
               >
-                <Heart size={11} /> {likedIds.size} Favourites
+                <Heart size={11} /> {favouriteCount} Favourites
               </button>
               <button
                 onClick={handleLogout}
@@ -598,9 +597,7 @@ export default function HomePage() {
         </main>
       </div>
 
-      {showAuthModal && (
-        <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />
-      )}
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />}
     </div>
   );
 }
