@@ -450,7 +450,7 @@ export default function HomePage() {
         <main className="flex-1 overflow-y-auto scroll-container">
           {!isFiltered ? (
             <div className="pb-12">
-              {heroBook && <HeroBanner book={heroBook} />}
+              {heroBook && <HeroBanner onNavChange={setActiveNav} />}
 
               {/* Stats Strip */}
               <div className="flex gap-4 mx-6 mt-4 mb-6">
