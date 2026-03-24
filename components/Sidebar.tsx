@@ -27,12 +27,12 @@ export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount
       {/* Mobile overlay backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-[150] bg-black/50 lg:hidden"
           onClick={onClose}
         />
       )}
       <aside
-        className={`flex flex-col h-full w-56 flex-shrink-0 py-6 px-3 fixed top-0 left-0 lg:static z-50 transition-transform duration-200 ${
+        className={`flex flex-col h-full w-56 flex-shrink-0 py-6 px-3 fixed top-0 left-0 lg:static z-[200] transition-transform duration-200 ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
         style={{ background: "var(--sidebar-bg)", borderRight: "1px solid var(--sidebar-border)" }}
