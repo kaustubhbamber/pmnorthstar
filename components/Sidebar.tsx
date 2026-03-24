@@ -1,12 +1,14 @@
 "use client";
 
-import { Home, Library, BookMarked, Star, FlameIcon } from "lucide-react";
+import { Home, Library, BookMarked, Star, FlameIcon, X } from "lucide-react";
 
 interface SidebarProps {
   activeNav: string;
   onNavChange: (nav: string) => void;
   savedCount?: number;
   favouriteCount?: number;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 const navItems = [
@@ -14,12 +16,35 @@ const navItems = [
   { id: "library", label: "Library", icon: Library },
 ];
 
-export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount = 0 }: SidebarProps) {
+export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount = 0, isOpen = false, onClose }: SidebarProps) {
+  const handleNavClick = (nav: string) => {
+    onNavChange(nav);
+    onClose?.();
+  };
+
   return (
-    <aside
-      className="flex flex-col h-full w-56 flex-shrink-0 py-6 px-3"
-      style={{ background: "var(--sidebar-bg)", borderRight: "1px solid var(--sidebar-border)" }}
-    >
+    <>
+      {/* Mobile overlay backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      <aside
+        className={`flex flex-col h-full w-56 flex-shrink-0 py-6 px-3 fixed top-0 left-0 lg:static z-50 transition-transform duration-200 ${
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        }`}
+        style={{ background: "var(--sidebar-bg)", borderRight: "1px solid var(--sidebar-border)" }}
+      >
+        {/* Mobile close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-3 p-1.5 rounded-lg lg:hidden"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <X size={18} />
+        </button>
       {/* Logo */}
       <div className="px-3 mb-8">
         <div className="flex items-center gap-2.5">
@@ -46,7 +71,7 @@ export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount
         {navItems.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
-            onClick={() => onNavChange(id)}
+            onClick={() => handleNavClick(id)}
             className={`nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${activeNav === id ? "active" : ""}`}
             style={{ color: activeNav === id ? "var(--brand-primary)" : "var(--text-muted)" }}
           >
@@ -57,7 +82,7 @@ export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount
 
         {/* Case Studies */}
         <button
-          onClick={() => onNavChange("casestudies")}
+          onClick={() => handleNavClick("casestudies")}
           className={`nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${activeNav === "casestudies" ? "active" : ""}`}
           style={{ color: activeNav === "casestudies" ? "var(--brand-primary)" : "var(--text-muted)" }}
         >
@@ -78,7 +103,7 @@ export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount
           </p>
 
           <button
-            onClick={() => onNavChange("saved")}
+            onClick={() => handleNavClick("saved")}
             className={`nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${activeNav === "saved" ? "active" : ""}`}
             style={{ color: activeNav === "saved" ? "var(--brand-primary)" : "var(--text-muted)" }}
           >
@@ -95,7 +120,7 @@ export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount
           </button>
 
           <button
-            onClick={() => onNavChange("favourites")}
+            onClick={() => handleNavClick("favourites")}
             className={`nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${activeNav === "favourites" ? "active" : ""}`}
             style={{ color: activeNav === "favourites" ? "var(--brand-primary)" : "var(--text-muted)" }}
           >
@@ -113,5 +138,6 @@ export function Sidebar({ activeNav, onNavChange, savedCount = 0, favouriteCount
         </div>
       </nav>
     </aside>
+    </>
   );
 }

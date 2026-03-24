@@ -79,6 +79,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
   height: 100%;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #__next, main {
@@ -192,7 +194,12 @@ html {
 .section-divider {
   height: 1px;
   background: var(--divider);
-  margin: 0 24px;
+  margin: 0 16px;
+}
+@media (min-width: 640px) {
+  .section-divider {
+    margin: 0 24px;
+  }
 }
 
 /* ── BUTTONS ────────────────────────────────────────────────────────────── */

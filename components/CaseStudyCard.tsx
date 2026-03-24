@@ -47,10 +47,10 @@ export function CaseStudyCard({
       >
         {/* Top row */}
         <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{study.logo}</span>
-            <div>
-              <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-2xl flex-shrink-0">{study.logo}</span>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <span
                   className="text-xs px-2 py-0.5 rounded-full font-medium"
                   style={{

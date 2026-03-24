@@ -45,7 +45,7 @@ export function TopNav({
 
   return (
     <header
-      className="flex-shrink-0 px-6 py-4 flex items-center gap-4"
+      className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
       style={{
         background: "var(--nav-bg)",
         backdropFilter: "blur(16px)",
@@ -57,7 +57,7 @@ export function TopNav({
     >
       {/* Search Bar */}
       <div
-        className="flex items-center gap-2 flex-1 max-w-sm px-3 py-2 rounded-xl transition-all duration-200"
+        className="flex items-center gap-2 flex-1 sm:max-w-sm px-3 py-2 rounded-xl transition-all duration-200"
         style={{
           background: "var(--card-bg)",
           border: `1px solid ${focused ? "var(--brand-primary)" : "var(--card-border)"}`,
@@ -82,24 +82,27 @@ export function TopNav({
         )}
       </div>
 
-      {/* Filter Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto scroll-container pb-0.5 flex-1">
-        {filters.map((filter) => (
-          <button
-            key={filter}
-            onClick={() => onFilterChange(filter)}
-            className={`filter-chip flex-shrink-0 text-xs px-3 py-1.5 rounded-full font-medium ${
-              activeFilter === filter ? "active" : ""
-            }`}
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
+      {/* Filter Chips + Right Actions row */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 overflow-x-auto scroll-container pb-0.5 flex-1 min-w-0">
+          {filters.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => onFilterChange(filter)}
+              className={`filter-chip flex-shrink-0 text-xs px-3 py-1.5 rounded-full font-medium ${
+                activeFilter === filter ? "active" : ""
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
 
-      {/* Right Actions */}
-      <div className="flex items-center gap-3 flex-shrink-0">
-        <ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <span className="hidden sm:inline-flex">
+            <ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
+          </span>
 
         {/* Avatar + Dropdown */}
         <div className="relative" ref={menuRef}>
@@ -153,6 +156,7 @@ export function TopNav({
               </button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </header>

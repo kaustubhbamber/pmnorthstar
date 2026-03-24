@@ -76,7 +76,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       >
         {/* Modal */}
         <div
-          className="relative w-full max-w-md rounded-2xl p-8"
+          className="relative w-full max-w-md rounded-2xl p-5 sm:p-8"
           style={{
             background: "var(--page-bg)",
             border: "1px solid var(--card-border)",

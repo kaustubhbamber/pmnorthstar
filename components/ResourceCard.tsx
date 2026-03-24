@@ -73,8 +73,8 @@ export function ResourceCard({
   if (variant === "featured") {
     return (
       <div
-        className="rounded-xl overflow-hidden flex-shrink-0"
-        style={{ width: "200px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+        className="rounded-xl overflow-hidden flex-shrink-0 w-[175px] sm:w-[200px]"
+        style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
       >
         <div
           className="relative cursor-pointer"
@@ -112,8 +112,8 @@ export function ResourceCard({
   // default
   return (
     <div
-      className="rounded-xl overflow-hidden flex-shrink-0"
-      style={{ width: "185px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      className="rounded-xl overflow-hidden flex-shrink-0 w-[160px] sm:w-[185px]"
+      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
     >
       <div
         className="relative cursor-pointer"

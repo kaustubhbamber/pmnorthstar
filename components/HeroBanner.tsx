@@ -22,7 +22,7 @@ interface HeroBannerProps {
 export function HeroBanner({ onNavChange }: HeroBannerProps) {
   return (
     <div
-      className="relative mx-6 mt-6 rounded-2xl overflow-hidden"
+      className="relative mx-4 sm:mx-6 mt-4 sm:mt-6 rounded-2xl overflow-hidden"
       style={{
         background: "var(--card-bg)",
         border: "1px solid var(--card-border)",
@@ -45,13 +45,13 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
         }).join("")}
       `}</style>
 
-      {/* Floating words */}
+      {/* Floating words — hidden on mobile */}
       {floatingWords.map(({ label, top, right, size }) => {
         const cls = `fw-${label.replace(/[^a-z]/gi, "").toLowerCase()}`;
         return (
           <span
             key={label}
-            className={`float-word ${cls} absolute pointer-events-none select-none font-semibold tracking-tight`}
+            className={`float-word ${cls} absolute pointer-events-none select-none font-semibold tracking-tight hidden md:block`}
             style={{
               top,
               right,
@@ -66,7 +66,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
       })}
 
       {/* Content */}
-      <div className="relative z-10 p-8 max-w-lg">
+      <div className="relative z-10 p-5 sm:p-8 max-w-lg">
         {/* Logo */}
         <div className="flex items-center gap-2.5 mb-5">
           <div
@@ -86,7 +86,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
         </div>
 
         <h1
-          className="text-2xl font-bold leading-tight mb-2"
+          className="text-xl sm:text-2xl font-bold leading-tight mb-2"
           style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}
         >
           Welcome to the team's resource hub
@@ -100,7 +100,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
           frameworks, and more to help you learn, grow, and ship better products.
         </p>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
             style={{ background: "#e02020" }}

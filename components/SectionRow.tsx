@@ -20,7 +20,7 @@ export function SectionRow({ title, subtitle, children, accentColor = "var(--nor
 
   return (
     <section className="animate-section">
-      <div className="flex items-center justify-between mb-4 px-6">
+      <div className="flex items-center justify-between mb-4 px-4 sm:px-6">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-1 h-5 rounded-full" style={{ background: accentColor }} />
@@ -61,7 +61,7 @@ export function SectionRow({ title, subtitle, children, accentColor = "var(--nor
       </div>
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scroll-container px-6 pb-2"
+        className="flex gap-3 sm:gap-4 overflow-x-auto scroll-container px-4 sm:px-6 pb-2"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {children}

@@ -29,6 +29,8 @@ import {
   User,
   Bookmark,
   Heart,
+  Menu,
+  Star,
 } from "lucide-react";
 
 interface AuthUser {
@@ -89,6 +91,7 @@ export default function HomePage() {
     setLikedIds(new Set());
   };
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("home");
   const [activeFilter, setActiveFilter] = useState<"All" | Category>("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -139,28 +142,37 @@ export default function HomePage() {
   if (activeNav === "saved") {
     return (
       <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
-            className="flex-shrink-0 px-6 py-4 flex items-center justify-between"
+            className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
             style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
           >
-            <div>
-              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>Saved for Later</h1>
-              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                {savedCount} items saved to read later
-              </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-1.5 rounded-lg lg:hidden"
+                style={{ color: "var(--text-primary)" }}
+              >
+                <Menu size={20} />
+              </button>
+              <div>
+                <h1 className="text-lg sm:text-xl font-bold" style={{ color: "var(--text-primary)" }}>Saved for Later</h1>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                  {savedCount} items saved to read later
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setIsDark(!isDark)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium flex-shrink-0"
               style={{ background: "var(--brand-soft)", border: "1px solid rgba(243,18,60,0.2)", color: "var(--brand-primary)" }}
             >
               {isDark ? "☀️ Light" : "🌙 Dark"}
             </button>
           </header>
 
-          <main className="flex-1 overflow-y-auto scroll-container p-6 pb-12">
+          <main className="flex-1 overflow-y-auto scroll-container p-4 sm:p-6 pb-12">
             {!user ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <Bookmark size={40} style={{ color: "var(--text-faint)" }} />
@@ -230,28 +242,37 @@ export default function HomePage() {
   if (activeNav === "favourites") {
     return (
       <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
-            className="flex-shrink-0 px-6 py-4 flex items-center justify-between"
+            className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
             style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
           >
-            <div>
-              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>Favourites</h1>
-              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                {favouriteCount} items you loved
-              </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-1.5 rounded-lg lg:hidden"
+                style={{ color: "var(--text-primary)" }}
+              >
+                <Menu size={20} />
+              </button>
+              <div>
+                <h1 className="text-lg sm:text-xl font-bold" style={{ color: "var(--text-primary)" }}>Favourites</h1>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                  {favouriteCount} items you loved
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setIsDark(!isDark)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium flex-shrink-0"
               style={{ background: "var(--brand-soft)", border: "1px solid rgba(243,18,60,0.2)", color: "var(--brand-primary)" }}
             >
               {isDark ? "☀️ Light" : "🌙 Dark"}
             </button>
           </header>
 
-          <main className="flex-1 overflow-y-auto scroll-container p-6 pb-12">
+          <main className="flex-1 overflow-y-auto scroll-container p-4 sm:p-6 pb-12">
             {!user ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <Heart size={40} style={{ color: "var(--text-faint)" }} />
@@ -321,29 +342,40 @@ export default function HomePage() {
   if (activeNav === "casestudies") {
     return (
       <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
-            className="flex-shrink-0 px-6 py-4 flex items-center justify-between"
+            className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
             style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
           >
-            <div>
-              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>Case Studies</h1>
-              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                50 real stories — product wins, growth hacks, and failures
-              </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-1.5 rounded-lg lg:hidden"
+                style={{ color: "var(--text-primary)" }}
+              >
+                <Menu size={20} />
+              </button>
+              <div>
+                <h1 className="text-lg sm:text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+                  Case Studies
+                </h1>
+                <p className="text-xs mt-0.5 hidden sm:block" style={{ color: "var(--text-muted)" }}>
+                  50 real stories — product wins, growth hacks, and failures
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setIsDark(!isDark)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium flex-shrink-0"
               style={{ background: "var(--brand-soft)", border: "1px solid rgba(243,18,60,0.2)", color: "var(--brand-primary)" }}
             >
               {isDark ? "☀️ Light" : "🌙 Dark"}
             </button>
           </header>
 
-          <main className="flex-1 overflow-y-auto scroll-container p-6 pb-12">
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-6">
+          <main className="flex-1 overflow-y-auto scroll-container p-4 sm:p-6 pb-12">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mb-6">
               {Object.entries(csStats).map(([cat, count]) => (
                 <button
                   key={cat}
@@ -371,15 +403,15 @@ export default function HomePage() {
               </button>
             </div>
 
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-5">
               <div className="w-1 h-5 rounded-full" style={{ background: "var(--brand-primary)" }} />
-              <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+              <h2 className="text-sm sm:text-base font-semibold" style={{ color: "var(--text-primary)" }}>
                 {activeCsFilter === "All" ? "All Case Studies" : `${activeCsFilter} Case Studies`}
               </h2>
               <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--brand-soft)", color: "var(--brand-primary)" }}>
                 {filteredCaseStudies.length}
               </span>
-              <div className="ml-auto flex items-center gap-4">
+              <div className="ml-auto flex items-center gap-3 sm:gap-4">
                 <span className="flex items-center gap-1 text-xs" style={{ color: "var(--success)" }}>
                   <TrendingUp size={12} />
                   {filteredCaseStudies.filter((c) => c.category !== "Failure").length} wins
@@ -413,8 +445,33 @@ export default function HomePage() {
   // ── Main Home View ─────────────────────────────────────────────────────
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
-      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Mobile header with hamburger */}
+        <div
+          className="flex items-center gap-3 px-4 py-3 lg:hidden flex-shrink-0"
+          style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+        >
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-1.5 rounded-lg"
+            style={{ color: "var(--text-primary)" }}
+          >
+            <Menu size={20} />
+          </button>
+          <div className="flex items-center gap-1.5">
+            <div
+              className="w-6 h-6 rounded-md flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg, var(--brand-primary), #8B0000)" }}
+            >
+              <Star size={12} className="text-white fill-white" />
+            </div>
+            <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>North</span>
+            <span className="font-bold text-sm" style={{ color: "var(--brand-primary)" }}>Star</span>
+          </div>
+        </div>
+
         <TopNav
           activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
@@ -426,34 +483,37 @@ export default function HomePage() {
 
         {/* User bar */}
         <div
-          className="flex items-center justify-between px-6 py-2"
+          className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2"
           style={{ borderBottom: "1px solid var(--card-border)", background: "var(--nav-bg)" }}
         >
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>
             {user ? `Welcome back, ${user.name} 👋` : "Sign in to save and like resources"}
           </p>
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setActiveNav("saved")}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg"
+                className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1.5 rounded-lg"
                 style={{ background: "var(--brand-soft)", color: "var(--brand-primary)", border: "1px solid rgba(243,18,60,0.2)" }}
               >
-                <Bookmark size={11} /> {savedCount} Saved
+                <Bookmark size={11} />
+                <span className="hidden sm:inline">{savedCount}</span> Saved
               </button>
               <button
                 onClick={() => setActiveNav("favourites")}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg"
+                className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1.5 rounded-lg"
                 style={{ background: "var(--brand-soft)", color: "var(--brand-primary)", border: "1px solid rgba(243,18,60,0.2)" }}
               >
-                <Heart size={11} /> {favouriteCount} Favourites
+                <Heart size={11} />
+                <span className="hidden sm:inline">{favouriteCount}</span> Favourites
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg"
+                className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1.5 rounded-lg"
                 style={{ background: "var(--tag-bg)", color: "var(--text-muted)", border: "1px solid var(--card-border)" }}
               >
-                <LogOut size={11} /> Log Out
+                <LogOut size={11} />
+                <span className="hidden sm:inline">Log Out</span>
               </button>
             </div>
           ) : (
@@ -473,7 +533,7 @@ export default function HomePage() {
               {heroBook && <HeroBanner onNavChange={setActiveNav} />}
 
               {/* Stats Strip */}
-              <div className="flex gap-4 mx-6 mt-4 mb-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 mx-4 sm:mx-6 mt-4 mb-6">
                 {[
                   { label: "Total Books", value: "30", icon: BookOpen },
                   { label: "Case Studies", value: "50", icon: Layers, nav: "casestudies" },
@@ -481,24 +541,24 @@ export default function HomePage() {
                 ].map(({ label, value, icon: Icon, nav }) => (
                   <div
                     key={label}
-                    className="flex-1 flex items-center gap-3 p-3 rounded-xl cursor-pointer"
+                    className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl cursor-pointer"
                     style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
                     onClick={() => nav && setActiveNav(nav)}
                     onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = "var(--brand-primary)")}
                     onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = "var(--card-border)")}
                   >
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--brand-soft)" }}>
-                      <Icon size={16} style={{ color: "var(--brand-primary)" }} />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--brand-soft)" }}>
+                      <Icon size={14} style={{ color: "var(--brand-primary)" }} />
                     </div>
                     <div>
-                      <div className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>{value}</div>
-                      <div className="text-xs" style={{ color: "var(--text-muted)" }}>{label}</div>
+                      <div className="text-base sm:text-lg font-bold" style={{ color: "var(--text-primary)" }}>{value}</div>
+                      <div className="text-xs hidden sm:block" style={{ color: "var(--text-muted)" }}>{label}</div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Featured Row — UPDATED */}
+              {/* Featured Row */}
               <SectionRow title="Latest Picks" subtitle="Hand-curated for product leaders" accentColor="var(--brand-primary)">
                 {featured.map((book, index) => (
                   <ResourceCard
@@ -516,7 +576,7 @@ export default function HomePage() {
 
               <div className="section-divider my-8" />
 
-              {/* Per-Category Rows — UPDATED */}
+              {/* Per-Category Rows */}
               {categories.map((cat) => {
                 const catBooks = books.filter((b) => b.category === cat);
                 return (
@@ -541,7 +601,7 @@ export default function HomePage() {
               })}
 
               {/* Case Studies Preview */}
-              <div className="px-6 mt-8 mb-8">
+              <div className="px-4 sm:px-6 mt-8 mb-8">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <div className="w-1 h-5 rounded-full" style={{ background: "var(--brand-primary)" }} />
@@ -571,7 +631,7 @@ export default function HomePage() {
               </div>
             </div>
           ) : (
-            <div className="p-6 pb-12">
+            <div className="p-4 sm:p-6 pb-12">
               <div className="mb-6">
                 <h2 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
                   {searchQuery ? `Results for "${searchQuery}"` : activeFilter}
@@ -588,7 +648,6 @@ export default function HomePage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {/* Filtered results — UPDATED */}
                   {filteredBooks.map((book, index) => (
                     <ResourceCard
                       key={book.id}
