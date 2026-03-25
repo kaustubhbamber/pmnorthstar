@@ -15,7 +15,8 @@ export function SectionRow({ title, subtitle, children, accentColor = "var(--nor
 
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
-    scrollRef.current.scrollBy({ left: dir === "left" ? -320 : 320, behavior: "smooth" });
+    const distance = Math.min(scrollRef.current.clientWidth * 0.7, 500);
+    scrollRef.current.scrollBy({ left: dir === "left" ? -distance : distance, behavior: "smooth" });
   };
 
   return (
@@ -37,25 +38,25 @@ export function SectionRow({ title, subtitle, children, accentColor = "var(--nor
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="p-1.5 rounded-lg transition-all"
+            className="p-2.5 rounded-lg transition-all"
             style={{
               background: "var(--north-card)",
               border: "1px solid var(--north-border)",
               color: "var(--north-muted)",
             }}
           >
-            <ChevronLeft size={15} />
+            <ChevronLeft size={18} />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="p-1.5 rounded-lg transition-all"
+            className="p-2.5 rounded-lg transition-all"
             style={{
               background: "var(--north-card)",
               border: "1px solid var(--north-border)",
               color: "var(--north-muted)",
             }}
           >
-            <ChevronRight size={15} />
+            <ChevronRight size={18} />
           </button>
         </div>
       </div>

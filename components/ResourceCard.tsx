@@ -73,7 +73,7 @@ export function ResourceCard({
   if (variant === "featured") {
     return (
       <div
-        className="rounded-xl overflow-hidden flex-shrink-0 w-[175px] sm:w-[200px]"
+        className="rounded-xl overflow-hidden flex-shrink-0 w-[175px] sm:w-[200px] md:w-[220px] lg:w-[240px]"
         style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
       >
         <div
@@ -112,7 +112,7 @@ export function ResourceCard({
   // default
   return (
     <div
-      className="rounded-xl overflow-hidden flex-shrink-0 w-[160px] sm:w-[185px]"
+      className="rounded-xl overflow-hidden flex-shrink-0 w-[160px] sm:w-[185px] md:w-[210px] lg:w-[230px]"
       style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
     >
       <div
