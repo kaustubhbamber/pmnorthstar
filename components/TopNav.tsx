@@ -131,7 +131,7 @@ export function TopNav({
                 style={{ borderBottom: "1px solid var(--card-border)" }}
               >
                 <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
-                  PM Team
+                  My Account
                 </p>
                 <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
                   NorthStar Hub

@@ -556,7 +556,7 @@ export default function HomePage() {
                 Welcome to NorthStar
               </h2>
               <p className="text-sm max-w-md mb-6" style={{ color: "var(--text-muted)" }}>
-                Sign in to access our curated library of 30 books, 50 case studies, and more resources for product leaders.
+                Sign in to access 30 curated books, 50 case studies, and more — for anyone learning product management.
               </p>
               <button
                 onClick={() => setShowAuthModal(true)}
@@ -597,7 +597,7 @@ export default function HomePage() {
               </div>
 
               {/* Featured Row */}
-              <SectionRow title="Latest Picks" subtitle="Hand-curated for product leaders" accentColor="var(--brand-primary)">
+              <SectionRow title="Latest Picks" subtitle="Hand-curated for product learners" accentColor="var(--brand-primary)">
                 {featured.map((book, index) => (
                   <ResourceCard
                     key={book.id}

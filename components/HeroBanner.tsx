@@ -89,15 +89,15 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
           className="text-xl sm:text-2xl font-bold leading-tight mb-2"
           style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}
         >
-          Welcome to the team's resource hub
+          Your product management library
         </h1>
 
         <p
           className="text-sm leading-relaxed mb-6"
           style={{ color: "var(--text-muted)" }}
         >
-          A curated library of product resources — books, case studies,
-          frameworks, and more to help you learn, grow, and ship better products.
+          Books, case studies, frameworks, and more — curated for anyone
+          learning product management, from first-timers to seasoned builders.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
