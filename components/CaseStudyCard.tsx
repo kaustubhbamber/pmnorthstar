@@ -1,8 +1,9 @@
 "use client";
 
-import { ExternalLink, TrendingUp, TrendingDown, Youtube, FileText } from "lucide-react";
+import { TrendingUp, TrendingDown, BookOpen } from "lucide-react";
 import { CaseStudy } from "@/data/caseStudies";
 import { SaveButton } from "@/components/SaveButton";
+import Link from "next/link";
 
 interface CaseStudyCardProps {
   study: CaseStudy;
@@ -39,11 +40,9 @@ export function CaseStudyCard({
       }}
     >
       {/* Main clickable area */}
-      <div
-        className="p-4 cursor-pointer group"
-        onClick={() =>
-          window.open(study.link, "_blank", "noopener,noreferrer")
-        }
+      <Link
+        href={`/case-study/${study.id}`}
+        className="block p-4 group"
       >
         {/* Top row */}
         <div className="flex items-start justify-between gap-2 mb-3">
@@ -61,31 +60,17 @@ export function CaseStudyCard({
                 >
                   {study.category}
                 </span>
-                {study.linkType === "youtube" ? (
-                  <span
-                    className="flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full"
-                    style={{
-                      background: "rgba(255,0,0,0.08)",
-                      color: "#FF0000",
-                      border: "1px solid rgba(255,0,0,0.15)",
-                    }}
-                  >
-                    <Youtube size={9} />
-                    Video
-                  </span>
-                ) : (
-                  <span
-                    className="flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full"
-                    style={{
-                      background: "var(--tag-bg)",
-                      color: "var(--text-muted)",
-                      border: "1px solid var(--card-border)",
-                    }}
-                  >
-                    <FileText size={9} />
-                    Article
-                  </span>
-                )}
+                <span
+                  className="flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full"
+                  style={{
+                    background: "var(--tag-bg)",
+                    color: "var(--text-muted)",
+                    border: "1px solid var(--card-border)",
+                  }}
+                >
+                  <BookOpen size={9} />
+                  Case Study
+                </span>
               </div>
             </div>
           </div>
@@ -96,11 +81,6 @@ export function CaseStudyCard({
             ) : (
               <TrendingUp size={14} style={{ color: "#50C878" }} />
             )}
-            <ExternalLink
-              size={13}
-              style={{ color: "var(--brand-primary)" }}
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
-            />
           </div>
         </div>
 
@@ -155,7 +135,7 @@ export function CaseStudyCard({
             </span>
           ))}
         </div>
-      </div>
+      </Link>
 
       {/* Save/Like bar */}
       <div
@@ -163,7 +143,7 @@ export function CaseStudyCard({
         style={{ borderTop: "1px solid var(--card-border)" }}
       >
         <span className="text-xs" style={{ color: "var(--text-faint)" }}>
-          {study.linkType === "youtube" ? "Watch on YouTube" : "Read article"}
+          Read case study
         </span>
         <SaveButton
           resource={{
@@ -171,7 +151,7 @@ export function CaseStudyCard({
             title: study.title,
             author: study.company,
             category: study.category,
-            link: study.link,
+            link: `/case-study/${study.id}`,
           }}
           isLoggedIn={isLoggedIn}
           initialSaved={initialSaved}
