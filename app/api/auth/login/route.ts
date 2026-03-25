@@ -6,7 +6,6 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    // ── Validate ─────────────────────────────────────────────────────────
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
@@ -14,7 +13,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Find user ─────────────────────────────────────────────────────────
     const user = await prisma.user.findUnique({
       where: { email: email.toLowerCase().trim() },
     });
@@ -26,7 +24,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Check password ────────────────────────────────────────────────────
     const valid = await comparePassword(password, user.passwordHash);
 
     if (!valid) {
@@ -36,9 +33,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Sign token + set cookie ───────────────────────────────────────────
     const token = await signToken(user.id);
-    setTokenCookie(token);
+    await setTokenCookie(token);
 
     return NextResponse.json({
       user: {

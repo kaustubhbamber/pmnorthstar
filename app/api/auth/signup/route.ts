@@ -6,7 +6,6 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, password } = await req.json();
 
-    // ── Validate ─────────────────────────────────────────────────────────
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Name, email and password are required" },
@@ -29,7 +28,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Check existing user ───────────────────────────────────────────────
     const existing = await prisma.user.findUnique({
       where: { email: email.toLowerCase().trim() },
     });
@@ -41,7 +39,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Create user ───────────────────────────────────────────────────────
     const passwordHash = await hashPassword(password);
 
     const user = await prisma.user.create({
@@ -58,9 +55,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // ── Sign token + set cookie ───────────────────────────────────────────
     const token = await signToken(user.id);
-    setTokenCookie(token);
+    await setTokenCookie(token);
 
     return NextResponse.json(
       { user, message: "Account created successfully" },
