@@ -468,26 +468,35 @@ export default function HomePage() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile header with hamburger */}
         <div
-          className="flex items-center gap-3 px-4 py-3 lg:hidden flex-shrink-0"
+          className="flex items-center justify-between px-4 py-3 lg:hidden flex-shrink-0"
           style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
         >
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-1.5 rounded-lg"
-            style={{ color: "var(--text-primary)" }}
-          >
-            <Menu size={20} />
-          </button>
-          <div className="flex items-center gap-1.5">
-            <div
-              className="w-6 h-6 rounded-md flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, var(--brand-primary), #8B0000)" }}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-1.5 rounded-lg"
+              style={{ color: "var(--text-primary)" }}
             >
-              <Star size={12} className="text-white fill-white" />
+              <Menu size={20} />
+            </button>
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-6 h-6 rounded-md flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, var(--brand-primary), #8B0000)" }}
+              >
+                <Star size={12} className="text-white fill-white" />
+              </div>
+              <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>North</span>
+              <span className="font-bold text-sm" style={{ color: "var(--brand-primary)" }}>Star</span>
             </div>
-            <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>North</span>
-            <span className="font-bold text-sm" style={{ color: "var(--brand-primary)" }}>Star</span>
           </div>
+          <button
+            onClick={() => setIsDark(!isDark)}
+            className="sm:hidden px-3 py-1.5 rounded-lg text-xs font-medium"
+            style={{ background: "var(--brand-soft)", border: "1px solid rgba(243,18,60,0.2)", color: "var(--brand-primary)" }}
+          >
+            {isDark ? "Light" : "Dark"}
+          </button>
         </div>
 
         <TopNav
