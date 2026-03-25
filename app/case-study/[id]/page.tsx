@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { getCaseStudyById } from "@/data/caseStudies";
 import { ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 import Link from "next/link";
@@ -13,8 +13,8 @@ const categoryColors: Record<string, string> = {
   Failure: "#FF4B4B",
 };
 
-export default function CaseStudyPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function CaseStudyPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const study = getCaseStudyById(id);
 
   const [isDark, setIsDark] = useState(false);
