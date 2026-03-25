@@ -35,7 +35,11 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         const res = await fetch("/api/auth/forgot-password", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: form.email }),
+          body: JSON.stringify({
+            email: form.email,
+            name: form.name,
+            newPassword: form.password,
+          }),
         });
 
         const data = await res.json();
@@ -151,7 +155,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             style={{ color: "var(--text-muted)" }}
           >
             {mode === "forgot"
-              ? "Enter your email and we'll send you a reset link"
+              ? "Verify your identity to set a new password"
               : mode === "login"
               ? "Sign in to access your saved resources"
               : "Start saving and liking resources"}
@@ -196,15 +200,16 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 <Star size={20} style={{ color: "var(--brand-primary)" }} />
               </div>
               <p className="text-sm font-medium mb-1" style={{ color: "var(--text-primary)" }}>
-                Check your email
+                Password reset!
               </p>
               <p className="text-xs mb-5" style={{ color: "var(--text-muted)" }}>
-                If an account exists for {form.email}, you'll receive a password reset link shortly.
+                Your password has been updated. You can now log in with your new password.
               </p>
               <button
                 onClick={() => {
                   setMode("login");
                   setForgotSent(false);
+                  setForm({ name: "", email: "", password: "" });
                   setError("");
                 }}
                 className="text-xs font-semibold"
@@ -217,19 +222,19 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             <>
               {/* Fields */}
               <div className="space-y-3">
-                {/* Name — signup only */}
-                {mode === "signup" && (
+                {/* Name — signup and forgot */}
+                {(mode === "signup" || mode === "forgot") && (
                   <div>
                     <label
                       className="text-xs font-medium block mb-1.5"
                       style={{ color: "var(--text-muted)" }}
                     >
-                      Full Name
+                      {mode === "forgot" ? "Account Name" : "Full Name"}
                     </label>
                     <input
                       type="text"
                       name="name"
-                      placeholder="Your name"
+                      placeholder={mode === "forgot" ? "Name on your account" : "Your name"}
                       value={form.name}
                       onChange={handleChange}
                       onKeyDown={handleKeyDown}
@@ -279,21 +284,20 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                   />
                 </div>
 
-                {/* Password — not shown in forgot mode */}
-                {mode !== "forgot" && (
-                  <div>
+                {/* Password */}
+                <div>
                     <label
                       className="text-xs font-medium block mb-1.5"
                       style={{ color: "var(--text-muted)" }}
                     >
-                      Password
+                      {mode === "forgot" ? "New Password" : "Password"}
                     </label>
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
                         name="password"
                         placeholder={
-                          mode === "signup"
+                          mode === "signup" || mode === "forgot"
                             ? "Min. 8 characters"
                             : "Your password"
                         }
@@ -322,8 +326,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                         {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                       </button>
                     </div>
-                  </div>
-                )}
+                </div>
               </div>
 
               {/* Forgot password link — login mode only */}
@@ -371,7 +374,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 {loading
                   ? "Please wait..."
                   : mode === "forgot"
-                  ? "Send Reset Link"
+                  ? "Reset Password"
                   : mode === "login"
                   ? "Log In"
                   : "Create Account"}
