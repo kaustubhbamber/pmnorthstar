@@ -78,7 +78,6 @@ html, body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   height: 100%;
-  overflow: hidden;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
