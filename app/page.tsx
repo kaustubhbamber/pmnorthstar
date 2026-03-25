@@ -564,26 +564,116 @@ export default function HomePage() {
               <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: "var(--card-border)", borderTopColor: "var(--brand-primary)" }} />
             </div>
           ) : !user ? (
-            <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
-                style={{ background: "var(--brand-soft)" }}
-              >
-                <BookOpen size={32} style={{ color: "var(--brand-primary)" }} />
+            <div className="pb-12 overflow-y-auto">
+              {/* Hero */}
+              <div className="px-4 sm:px-8 py-12 sm:py-20 text-center">
+                <div
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mx-auto mb-6"
+                  style={{ background: "linear-gradient(135deg, var(--brand-primary), #8B0000)" }}
+                >
+                  <Star size={32} className="text-white fill-white" />
+                </div>
+                <h1
+                  className="text-3xl sm:text-5xl font-bold mb-4"
+                  style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}
+                >
+                  Learn Product Management<br />
+                  <span style={{ color: "var(--brand-primary)" }}>The Smart Way</span>
+                </h1>
+                <p
+                  className="text-sm sm:text-lg max-w-xl mx-auto mb-8 leading-relaxed"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  A free, curated library of the best books, case studies, and frameworks
+                  for aspiring and practicing product managers.
+                </p>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="px-8 py-3.5 rounded-xl text-sm sm:text-base font-semibold text-white"
+                  style={{ background: "var(--brand-primary)" }}
+                >
+                  Get Started — It's Free
+                </button>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: "var(--text-primary)" }}>
-                Welcome to NorthStar
-              </h2>
-              <p className="text-sm max-w-md mb-6" style={{ color: "var(--text-muted)" }}>
-                Sign in to access 30 curated books, 50 case studies, and more — for anyone learning product management.
-              </p>
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="px-6 py-3 rounded-xl text-sm font-semibold text-white"
-                style={{ background: "var(--brand-primary)" }}
+
+              {/* Stats */}
+              <div
+                className="grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto px-4 mb-12 sm:mb-16"
               >
-                Log In / Sign Up
-              </button>
+                {[
+                  { value: "30", label: "Curated Books" },
+                  { value: "50", label: "Case Studies" },
+                  { value: "3", label: "Categories" },
+                ].map(({ value, label }) => (
+                  <div
+                    key={label}
+                    className="text-center p-3 sm:p-4 rounded-xl"
+                    style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+                  >
+                    <div className="text-xl sm:text-3xl font-bold" style={{ color: "var(--brand-primary)" }}>{value}</div>
+                    <div className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* What's inside */}
+              <div className="max-w-2xl mx-auto px-4 mb-12 sm:mb-16">
+                <h2 className="text-lg sm:text-xl font-bold text-center mb-6" style={{ color: "var(--text-primary)" }}>
+                  What's Inside
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {[
+                    { icon: "📚", title: "Curated Book Library", desc: "30 essential reads across Product Management, Startups, and Management — each with summaries and direct links." },
+                    { icon: "📊", title: "50 Case Studies", desc: "Deep dives into how Apple, Spotify, Airbnb, Slack, and 46 more companies built iconic products." },
+                    { icon: "🔖", title: "Save & Organize", desc: "Bookmark resources and build your personal reading list. Pick up where you left off." },
+                    { icon: "❤️", title: "Favourites", desc: "Mark the resources you love. Your favourites are always one click away." },
+                  ].map(({ icon, title, desc }) => (
+                    <div
+                      key={title}
+                      className="p-4 sm:p-5 rounded-xl"
+                      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+                    >
+                      <span className="text-2xl">{icon}</span>
+                      <h3 className="text-sm font-semibold mt-2 mb-1" style={{ color: "var(--text-primary)" }}>{title}</h3>
+                      <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>{desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sample case studies preview */}
+              <div className="max-w-2xl mx-auto px-4 mb-12 sm:mb-16">
+                <h2 className="text-lg sm:text-xl font-bold text-center mb-6" style={{ color: "var(--text-primary)" }}>
+                  Featured Case Studies
+                </h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                  {caseStudies.slice(0, 8).map((cs) => (
+                    <div
+                      key={cs.id}
+                      className="p-3 rounded-xl text-center"
+                      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+                    >
+                      <span className="text-2xl block mb-1">{cs.logo}</span>
+                      <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>{cs.company}</p>
+                      <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "var(--text-muted)" }}>{cs.category}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="text-center px-4 pb-12">
+                <p className="text-sm mb-4" style={{ color: "var(--text-muted)" }}>
+                  Free forever. No credit card required.
+                </p>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="px-8 py-3.5 rounded-xl text-sm sm:text-base font-semibold text-white"
+                  style={{ background: "var(--brand-primary)" }}
+                >
+                  Sign Up for Free
+                </button>
+              </div>
             </div>
           ) : !isFiltered ? (
             <div className="pb-12">
