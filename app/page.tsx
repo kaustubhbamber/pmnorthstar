@@ -506,6 +506,10 @@ export default function HomePage() {
           onSearchChange={setSearchQuery}
           isDark={isDark}
           onThemeToggle={() => setIsDark(!isDark)}
+          isLoggedIn={!!user}
+          userName={user?.name}
+          onLogout={handleLogout}
+          onAuthRequired={() => setShowAuthModal(true)}
         />
 
         {/* User bar */}

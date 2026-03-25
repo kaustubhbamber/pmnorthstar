@@ -12,6 +12,10 @@ interface TopNavProps {
   onSearchChange: (q: string) => void;
   isDark: boolean;
   onThemeToggle: () => void;
+  isLoggedIn?: boolean;
+  userName?: string;
+  onLogout?: () => void;
+  onAuthRequired?: () => void;
 }
 
 const filters: ("All" | Category)[] = [
@@ -28,6 +32,10 @@ export function TopNav({
   onSearchChange,
   isDark,
   onThemeToggle,
+  isLoggedIn = false,
+  userName,
+  onLogout,
+  onAuthRequired,
 }: TopNavProps) {
   const [focused, setFocused] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -104,59 +112,71 @@ export function TopNav({
             <ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
           </span>
 
-        {/* Avatar + Dropdown */}
-        <div className="relative" ref={menuRef}>
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0"
-            style={{
-              background: "linear-gradient(135deg, var(--brand-primary), #8B0000)",
-            }}
-            onClick={() => setShowMenu((p) => !p)}
-          >
-            <span className="text-white text-xs font-bold">PM</span>
-          </div>
-
-          {showMenu && (
+        {/* Avatar + Dropdown (logged in) or Login button (logged out) */}
+        {isLoggedIn ? (
+          <div className="relative" ref={menuRef}>
             <div
-              className="absolute right-0 mt-2 w-44 rounded-xl overflow-hidden"
+              className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0"
               style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                zIndex: 200,
+                background: "linear-gradient(135deg, var(--brand-primary), #8B0000)",
               }}
+              onClick={() => setShowMenu((p) => !p)}
             >
+              <span className="text-white text-xs font-bold">
+                {userName ? userName.charAt(0).toUpperCase() : "PM"}
+              </span>
+            </div>
+
+            {showMenu && (
               <div
-                className="px-4 py-3"
-                style={{ borderBottom: "1px solid var(--card-border)" }}
-              >
-                <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
-                  My Account
-                </p>
-                <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                  NorthStar Hub
-                </p>
-              </div>
-              <button
-                className="w-full flex items-center gap-2.5 px-4 py-3 text-sm transition-colors"
-                style={{ color: "var(--danger, #e02020)" }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLButtonElement).style.background = "var(--brand-soft)")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLButtonElement).style.background = "transparent")
-                }
-                onClick={() => {
-                  // wire to your auth logout here
-                  setShowMenu(false);
+                className="absolute right-0 mt-2 w-44 rounded-xl overflow-hidden"
+                style={{
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                  zIndex: 200,
                 }}
               >
-                <LogOut size={14} />
-                Log out
-              </button>
-            </div>
-          )}
-        </div>
+                <div
+                  className="px-4 py-3"
+                  style={{ borderBottom: "1px solid var(--card-border)" }}
+                >
+                  <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
+                    {userName || "My Account"}
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                    NorthStar Hub
+                  </p>
+                </div>
+                <button
+                  className="w-full flex items-center gap-2.5 px-4 py-3 text-sm transition-colors"
+                  style={{ color: "var(--danger, #e02020)" }}
+                  onMouseEnter={(e) =>
+                    ((e.currentTarget as HTMLButtonElement).style.background = "var(--brand-soft)")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.currentTarget as HTMLButtonElement).style.background = "transparent")
+                  }
+                  onClick={() => {
+                    setShowMenu(false);
+                    onLogout?.();
+                  }}
+                >
+                  <LogOut size={14} />
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={() => onAuthRequired?.()}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white flex-shrink-0"
+            style={{ background: "var(--brand-primary)" }}
+          >
+            Log In
+          </button>
+        )}
         </div>
       </div>
     </header>
