@@ -375,66 +375,82 @@ export default function HomePage() {
           </header>
 
           <main className="flex-1 overflow-y-auto scroll-container p-4 sm:p-6 pb-12">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mb-6">
-              {Object.entries(csStats).map(([cat, count]) => (
+            {!user ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <Layers size={40} style={{ color: "var(--text-faint)" }} />
+                <p className="text-base font-semibold mt-4" style={{ color: "var(--text-muted)" }}>Sign in to view case studies</p>
                 <button
-                  key={cat}
-                  onClick={() => setActiveCsFilter(cat as CaseStudyCategory)}
-                  className="rounded-xl p-3 text-left transition-all"
-                  style={{
-                    background: activeCsFilter === cat ? "var(--brand-soft)" : "var(--card-bg)",
-                    border: `1px solid ${activeCsFilter === cat ? "rgba(243,18,60,0.3)" : "var(--card-border)"}`,
-                  }}
+                  onClick={() => setShowAuthModal(true)}
+                  className="mt-4 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
+                  style={{ background: "var(--brand-primary)" }}
                 >
-                  <div className="text-xl font-bold" style={{ color: "var(--brand-primary)" }}>{count}</div>
-                  <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{cat}</div>
+                  Log In / Sign Up
                 </button>
-              ))}
-              <button
-                onClick={() => setActiveCsFilter("All")}
-                className="rounded-xl p-3 text-left transition-all"
-                style={{
-                  background: activeCsFilter === "All" ? "var(--brand-soft)" : "var(--card-bg)",
-                  border: `1px solid ${activeCsFilter === "All" ? "rgba(243,18,60,0.3)" : "var(--card-border)"}`,
-                }}
-              >
-                <div className="text-xl font-bold" style={{ color: "var(--brand-primary)" }}>50</div>
-                <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>All</div>
-              </button>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-5">
-              <div className="w-1 h-5 rounded-full" style={{ background: "var(--brand-primary)" }} />
-              <h2 className="text-sm sm:text-base font-semibold" style={{ color: "var(--text-primary)" }}>
-                {activeCsFilter === "All" ? "All Case Studies" : `${activeCsFilter} Case Studies`}
-              </h2>
-              <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--brand-soft)", color: "var(--brand-primary)" }}>
-                {filteredCaseStudies.length}
-              </span>
-              <div className="ml-auto flex items-center gap-3 sm:gap-4">
-                <span className="flex items-center gap-1 text-xs" style={{ color: "var(--success)" }}>
-                  <TrendingUp size={12} />
-                  {filteredCaseStudies.filter((c) => c.category !== "Failure").length} wins
-                </span>
-                <span className="flex items-center gap-1 text-xs" style={{ color: "var(--danger)" }}>
-                  <TrendingDown size={12} />
-                  {filteredCaseStudies.filter((c) => c.category === "Failure").length} failures
-                </span>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mb-6">
+                  {Object.entries(csStats).map(([cat, count]) => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCsFilter(cat as CaseStudyCategory)}
+                      className="rounded-xl p-3 text-left transition-all"
+                      style={{
+                        background: activeCsFilter === cat ? "var(--brand-soft)" : "var(--card-bg)",
+                        border: `1px solid ${activeCsFilter === cat ? "rgba(243,18,60,0.3)" : "var(--card-border)"}`,
+                      }}
+                    >
+                      <div className="text-xl font-bold" style={{ color: "var(--brand-primary)" }}>{count}</div>
+                      <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{cat}</div>
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setActiveCsFilter("All")}
+                    className="rounded-xl p-3 text-left transition-all"
+                    style={{
+                      background: activeCsFilter === "All" ? "var(--brand-soft)" : "var(--card-bg)",
+                      border: `1px solid ${activeCsFilter === "All" ? "rgba(243,18,60,0.3)" : "var(--card-border)"}`,
+                    }}
+                  >
+                    <div className="text-xl font-bold" style={{ color: "var(--brand-primary)" }}>50</div>
+                    <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>All</div>
+                  </button>
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredCaseStudies.map((study) => (
-                <CaseStudyCard
-                  key={study.id}
-                  study={study}
-                  isLoggedIn={!!user}
-                  initialSaved={savedIds.has(study.id)}
-                  initialLiked={likedIds.has(study.id)}
-                  onAuthRequired={() => setShowAuthModal(true)}
-                />
-              ))}
-            </div>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-5">
+                  <div className="w-1 h-5 rounded-full" style={{ background: "var(--brand-primary)" }} />
+                  <h2 className="text-sm sm:text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+                    {activeCsFilter === "All" ? "All Case Studies" : `${activeCsFilter} Case Studies`}
+                  </h2>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--brand-soft)", color: "var(--brand-primary)" }}>
+                    {filteredCaseStudies.length}
+                  </span>
+                  <div className="ml-auto flex items-center gap-3 sm:gap-4">
+                    <span className="flex items-center gap-1 text-xs" style={{ color: "var(--success)" }}>
+                      <TrendingUp size={12} />
+                      {filteredCaseStudies.filter((c) => c.category !== "Failure").length} wins
+                    </span>
+                    <span className="flex items-center gap-1 text-xs" style={{ color: "var(--danger)" }}>
+                      <TrendingDown size={12} />
+                      {filteredCaseStudies.filter((c) => c.category === "Failure").length} failures
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {filteredCaseStudies.map((study) => (
+                    <CaseStudyCard
+                      key={study.id}
+                      study={study}
+                      isLoggedIn={!!user}
+                      initialSaved={savedIds.has(study.id)}
+                      initialLiked={likedIds.has(study.id)}
+                      onAuthRequired={() => setShowAuthModal(true)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </main>
         </div>
         {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />}
@@ -528,7 +544,29 @@ export default function HomePage() {
         </div>
 
         <main className="flex-1 overflow-y-auto scroll-container">
-          {!isFiltered ? (
+          {!user ? (
+            <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
+                style={{ background: "var(--brand-soft)" }}
+              >
+                <BookOpen size={32} style={{ color: "var(--brand-primary)" }} />
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: "var(--text-primary)" }}>
+                Welcome to NorthStar
+              </h2>
+              <p className="text-sm max-w-md mb-6" style={{ color: "var(--text-muted)" }}>
+                Sign in to access our curated library of 30 books, 50 case studies, and more resources for product leaders.
+              </p>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="px-6 py-3 rounded-xl text-sm font-semibold text-white"
+                style={{ background: "var(--brand-primary)" }}
+              >
+                Log In / Sign Up
+              </button>
+            </div>
+          ) : !isFiltered ? (
             <div className="pb-12">
               {heroBook && <HeroBanner onNavChange={setActiveNav} />}
 
