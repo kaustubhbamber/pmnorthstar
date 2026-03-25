@@ -59,6 +59,7 @@ export default function HomePage() {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
@@ -67,7 +68,8 @@ export default function HomePage() {
     fetch("/api/auth/me")
       .then((r) => r.json())
       .then((data) => { if (data.user) setUser(data.user); })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setAuthLoading(false));
   }, []);
 
   useEffect(() => {
@@ -544,7 +546,11 @@ export default function HomePage() {
         </div>
 
         <main className="flex-1 overflow-y-auto scroll-container">
-          {!user ? (
+          {authLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: "var(--card-border)", borderTopColor: "var(--brand-primary)" }} />
+            </div>
+          ) : !user ? (
             <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
