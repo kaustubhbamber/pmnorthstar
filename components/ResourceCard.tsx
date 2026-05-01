@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { ExternalLink, Star } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import { Book } from "@/data/books";
 import { SaveButton } from "@/components/SaveButton";
 
@@ -15,6 +14,24 @@ interface ResourceCardProps {
   onAuthRequired?: () => void;
 }
 
+function StarRating({ rating, size = 9 }: { rating: number; size?: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          size={size}
+          strokeWidth={1.5}
+          style={{
+            color: i < Math.floor(rating) ? "var(--text-primary)" : "var(--text-faint)",
+            fill: i < Math.floor(rating) ? "var(--text-primary)" : "transparent",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function ResourceCard({
   book,
   index = 0,
@@ -24,127 +41,84 @@ export function ResourceCard({
   initialLiked = false,
   onAuthRequired = () => {},
 }: ResourceCardProps) {
-  const [hovered, setHovered] = useState(false);
+  const indexLabel = String(index + 1).padStart(2, "0");
 
-  const cardColors = ["#E8192C", "#16A34A", "#2563EB"];
-  const cardColor = cardColors[index % 3];
+  // Width sizing per variant
+  const widthClass =
+    variant === "featured"
+      ? "flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px]"
+      : variant === "default"
+      ? "flex-shrink-0 w-[200px] sm:w-[220px] md:w-[240px]"
+      : "";
 
-  if (variant === "list") {
-    return (
-      <div
-        className="rounded-xl overflow-hidden"
-        style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
-      >
-        <div
-          className="flex items-center gap-3 p-3 cursor-pointer group"
-          onClick={() => window.open(book.link, "_blank", "noopener,noreferrer")}
-        >
-          <div
-            className="w-10 h-12 rounded-lg flex-shrink-0 flex items-center justify-center"
-            style={{ background: cardColor }}
-          >
-            <span className="text-white text-xs font-bold text-center leading-tight px-1">
-              {book.title.split(" ")[0].slice(0, 3).toUpperCase()}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>
-              {book.title}
-            </h3>
-            <p className="text-xs truncate" style={{ color: "var(--text-muted)" }}>{book.author}</p>
-            <div className="flex items-center gap-0.5 mt-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={9} style={{
-                  color: i < Math.floor(book.rating) ? "var(--brand-primary)" : "var(--text-faint)",
-                  fill: i < Math.floor(book.rating) ? "var(--brand-primary)" : "transparent",
-                }} />
-              ))}
-            </div>
-          </div>
-          <ExternalLink size={13} style={{ color: "var(--text-faint)" }} className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-        </div>
-        <div className="px-3 pb-3">
-          <SaveButton resource={book} isLoggedIn={isLoggedIn} initialSaved={initialSaved} initialLiked={initialLiked} onAuthRequired={onAuthRequired} />
-        </div>
-      </div>
-    );
-  }
-
-  if (variant === "featured") {
-    return (
-      <div
-        className="rounded-xl overflow-hidden flex-shrink-0 w-[175px] sm:w-[200px] md:w-[220px] lg:w-[240px]"
-        style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
-      >
-        <div
-          className="relative cursor-pointer"
-          style={{ height: "140px", background: cardColor }}
-          onClick={() => window.open(book.link, "_blank", "noopener,noreferrer")}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center">
-            <span className="text-white font-bold text-sm leading-tight">{book.title}</span>
-            <span className="text-white text-xs mt-1 opacity-80">{book.author}</span>
-          </div>
-          {hovered && (
-            <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.35)" }}>
-              <span className="text-white text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.2)" }}>Open</span>
-            </div>
-          )}
-        </div>
-        <div className="p-3">
-          <p className="text-xs leading-relaxed mb-2 line-clamp-2" style={{ color: "var(--text-muted)" }}>{book.description}</p>
-          <div className="flex items-center gap-0.5 mb-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} size={10} style={{
-                color: i < Math.floor(book.rating) ? "var(--brand-primary)" : "var(--text-faint)",
-                fill: i < Math.floor(book.rating) ? "var(--brand-primary)" : "transparent",
-              }} />
-            ))}
-          </div>
-          <SaveButton resource={book} isLoggedIn={isLoggedIn} initialSaved={initialSaved} initialLiked={initialLiked} onAuthRequired={onAuthRequired} />
-        </div>
-      </div>
-    );
-  }
-
-  // default
   return (
     <div
-      className="rounded-xl overflow-hidden flex-shrink-0 w-[160px] sm:w-[185px] md:w-[210px] lg:w-[230px]"
-      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      className={`playlist-card surface overflow-hidden ${widthClass}`}
+      style={{ ["--accent-color" as any]: "var(--brand-primary)" } as React.CSSProperties}
     >
-      <div
-        className="relative cursor-pointer"
-        style={{ height: "110px", background: cardColor }}
-        onClick={() => window.open(book.link, "_blank", "noopener,noreferrer")}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+      <a
+        href={book.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block px-5 pt-5 pb-4 group"
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-2 text-center">
-          <span className="text-white font-bold text-xs leading-tight">{book.title}</span>
-          <span className="text-white text-xs mt-1 opacity-80" style={{ fontSize: "10px" }}>{book.author}</span>
-        </div>
-        {hovered && (
-          <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.35)" }}>
-            <span className="text-white text-xs font-semibold px-2 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.2)" }}>Open</span>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="font-mono text-xs" style={{ color: "var(--text-faint)", letterSpacing: "0.08em" }}>
+              {indexLabel}
+            </span>
+            <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
+            <span
+              className="font-mono text-[10px] tracking-[0.18em] uppercase truncate"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {book.category}
+            </span>
           </div>
-        )}
-      </div>
-      <div className="p-2.5">
-        <p className="text-xs leading-relaxed mb-2 line-clamp-2" style={{ color: "var(--text-muted)" }}>
-          {book.description}
-        </p>
-        <div className="flex items-center gap-0.5 mb-2">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} size={9} style={{
-              color: i < Math.floor(book.rating) ? "var(--brand-primary)" : "var(--text-faint)",
-              fill: i < Math.floor(book.rating) ? "var(--brand-primary)" : "transparent",
-            }} />
-          ))}
+          <div className="card-arrow flex items-center justify-center w-7 h-7 rounded-full"
+            style={{ border: "1px solid var(--card-border)", color: "var(--brand-primary)" }}>
+            <ArrowUpRight size={14} strokeWidth={1.6} />
+          </div>
         </div>
-        <SaveButton resource={book} isLoggedIn={isLoggedIn} initialSaved={initialSaved} initialLiked={initialLiked} onAuthRequired={onAuthRequired} />
+
+        <h3
+          className="text-[15px] sm:text-base font-semibold leading-snug mb-1.5"
+          style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
+        >
+          {book.title}
+        </h3>
+        <p className="font-mono text-xs mb-3" style={{ color: "var(--text-muted)" }}>
+          {book.author}
+        </p>
+
+        {variant !== "list" && (
+          <p className="text-xs leading-relaxed line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>
+            {book.description}
+          </p>
+        )}
+
+        <div className="flex items-center justify-between">
+          <StarRating rating={book.rating} />
+          <span className="font-mono text-[10px]" style={{ color: "var(--text-faint)", letterSpacing: "0.06em" }}>
+            {book.rating.toFixed(1)}
+          </span>
+        </div>
+      </a>
+
+      <div
+        className="px-5 py-3 flex items-center justify-between"
+        style={{ borderTop: "1px solid var(--card-border)" }}
+      >
+        <span className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: "var(--text-muted)" }}>
+          Open book
+        </span>
+        <SaveButton
+          resource={book}
+          isLoggedIn={isLoggedIn}
+          initialSaved={initialSaved}
+          initialLiked={initialLiked}
+          onAuthRequired={onAuthRequired}
+        />
       </div>
     </div>
   );

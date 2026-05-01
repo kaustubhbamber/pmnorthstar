@@ -115,60 +115,47 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             <X size={18} />
           </button>
 
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-8">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: "var(--brand-primary)" }}
+          {/* Logo + eyebrow */}
+          <div className="mb-7">
+            <div className="flex items-center gap-2.5 mb-5">
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center"
+                style={{ background: "var(--brand-primary)" }}
+              >
+                <Star size={13} className="text-white fill-white" strokeWidth={1.5} />
+              </div>
+              <div className="flex items-baseline gap-0.5">
+                <span className="font-mono font-bold text-[15px]" style={{ color: "var(--text-primary)", letterSpacing: "-0.04em" }}>north</span>
+                <span className="font-mono font-bold text-[15px]" style={{ color: "var(--brand-primary)", letterSpacing: "-0.04em" }}>_star</span>
+              </div>
+            </div>
+            <p className="eyebrow mb-2">
+              // {mode === "forgot" ? "auth.reset" : mode === "login" ? "auth.login" : "auth.signup"}
+            </p>
+            <h2
+              className="text-2xl font-bold mb-1"
+              style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
             >
-              <Star size={16} className="text-white fill-white" />
-            </div>
-            <div className="flex items-baseline gap-0.5">
-              <span
-                className="font-bold text-lg tracking-tight"
-                style={{ color: "var(--text-primary)" }}
-              >
-                North
-              </span>
-              <span
-                className="font-bold text-lg tracking-tight"
-                style={{ color: "var(--brand-primary)" }}
-              >
-                Star
-              </span>
-            </div>
+              {mode === "forgot"
+                ? "Reset password"
+                : mode === "login"
+                ? "Welcome back"
+                : "Create account"}
+            </h2>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              {mode === "forgot"
+                ? "Verify your identity to set a new password."
+                : mode === "login"
+                ? "Sign in to access saved resources."
+                : "Start saving and liking resources."}
+            </p>
           </div>
-
-          {/* Title */}
-          <h2
-            className="text-xl font-bold mb-1"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {mode === "forgot"
-              ? "Reset your password"
-              : mode === "login"
-              ? "Welcome back"
-              : "Create your account"}
-          </h2>
-          <p
-            className="text-sm mb-6"
-            style={{ color: "var(--text-muted)" }}
-          >
-            {mode === "forgot"
-              ? "Verify your identity to set a new password"
-              : mode === "login"
-              ? "Sign in to access your saved resources"
-              : "Start saving and liking resources"}
-          </p>
 
           {/* Mode Toggle */}
           {mode !== "forgot" && (
             <div
-              className="flex rounded-xl p-1 mb-6"
-              style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-              }}
+              className="flex rounded-lg p-0.5 mb-6"
+              style={{ border: "1px solid var(--card-border)" }}
             >
               {(["login", "signup"] as const).map((m) => (
                 <button
@@ -177,11 +164,10 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                     setMode(m);
                     setError("");
                   }}
-                  className="flex-1 py-2 rounded-lg text-sm font-medium transition-all"
+                  className="flex-1 py-2 rounded-md text-xs font-mono uppercase tracking-wider transition-all"
                   style={{
-                    background:
-                      mode === m ? "var(--brand-primary)" : "transparent",
-                    color: mode === m ? "#ffffff" : "var(--text-muted)",
+                    background: mode === m ? "var(--text-primary)" : "transparent",
+                    color: mode === m ? "var(--page-bg)" : "var(--text-muted)",
                   }}
                 >
                   {m === "login" ? "Log In" : "Sign Up"}

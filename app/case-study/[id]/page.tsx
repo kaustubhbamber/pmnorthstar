@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { getCaseStudyById, caseStudies } from "@/data/caseStudies";
 import { Sidebar } from "@/components/Sidebar";
-import { ArrowLeft, TrendingUp, TrendingDown, Star, Clock, Tag, Menu } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ArrowLeft, ArrowUpRight, TrendingUp, TrendingDown, Clock, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -32,11 +33,8 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   }, [isDark]);
 
-  const handleNavChange = (nav: string) => {
-    router.push("/");
-  };
+  const handleNavChange = () => router.push("/");
 
-  // Get prev/next case studies for navigation
   const currentIndex = caseStudies.findIndex((c) => c.id === id);
   const prevStudy = currentIndex > 0 ? caseStudies[currentIndex - 1] : null;
   const nextStudy = currentIndex < caseStudies.length - 1 ? caseStudies[currentIndex + 1] : null;
@@ -48,11 +46,12 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
         style={{ background: "var(--page-bg)" }}
       >
         <div className="text-center">
-          <p className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
+          <p className="eyebrow mb-2">// 404</p>
+          <p className="text-lg font-bold mb-3" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
             Case study not found
           </p>
-          <Link href="/" className="text-sm font-medium" style={{ color: "var(--brand-primary)" }}>
-            Back to Home
+          <Link href="/" className="btn-ghost">
+            <ArrowLeft size={12} strokeWidth={1.6} /> Back home
           </Link>
         </div>
       </div>
@@ -63,6 +62,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
   const color = categoryColors[study.category] ?? "var(--brand-primary)";
   const paragraphs = study.content.split("\n\n").filter(Boolean);
   const readTime = Math.max(3, Math.ceil(study.content.split(" ").length / 200));
+  const indexLabel = String(currentIndex + 1).padStart(2, "0");
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
@@ -74,7 +74,6 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
       />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top bar */}
         <header
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
           style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
@@ -87,70 +86,55 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
             >
               <Menu size={20} />
             </button>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-xs font-medium"
-              style={{ color: "var(--text-muted)" }}
-            >
-              <ArrowLeft size={14} />
-              <span className="hidden sm:inline">All Case Studies</span>
+            <Link href="/" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider"
+              style={{ color: "var(--text-muted)", letterSpacing: "0.12em" }}>
+              <ArrowLeft size={12} strokeWidth={1.6} />
+              <span className="hidden sm:inline">Case studies</span>
               <span className="sm:hidden">Back</span>
             </Link>
           </div>
+
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-              <Star size={12} className="fill-current" style={{ color: "var(--brand-primary)" }} />
-              <span className="text-xs font-bold hidden sm:inline" style={{ color: "var(--text-primary)" }}>North</span>
-              <span className="text-xs font-bold hidden sm:inline" style={{ color: "var(--brand-primary)" }}>Star</span>
-            </div>
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
-              style={{ background: "var(--brand-soft)", border: "1px solid rgba(243,18,60,0.2)", color: "var(--brand-primary)" }}
-            >
-              {isDark ? "Light" : "Dark"}
-            </button>
+            <span className="font-mono text-[10px]" style={{ color: "var(--text-faint)", letterSpacing: "0.08em" }}>
+              {indexLabel} / {String(caseStudies.length).padStart(2, "0")}
+            </span>
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} className="hidden sm:inline-flex" />
           </div>
         </header>
 
-        {/* Scrollable content */}
         <main className="flex-1 overflow-y-auto scroll-container">
-          {/* Hero section */}
+          {/* Hero */}
           <div
-            className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
+            className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
-              <div className="flex flex-wrap items-center gap-2 mb-5">
+              <div className="flex flex-wrap items-center gap-3 mb-5">
                 <span
-                  className="text-xs px-2.5 py-1 rounded-full font-semibold"
-                  style={{
-                    background: `${color}18`,
-                    color: color,
-                    border: `1px solid ${color}30`,
-                  }}
+                  className="font-mono text-[10px] tracking-[0.18em] uppercase"
+                  style={{ color }}
                 >
-                  {study.category}
+                  // {study.category.toLowerCase()}
                 </span>
-                <span className="flex items-center gap-1 text-xs" style={{ color: "var(--text-faint)" }}>
-                  <Clock size={11} />
-                  {readTime} min read
+                <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
+                <span className="meta-mono inline-flex items-center gap-1">
+                  <Clock size={11} strokeWidth={1.6} />
+                  {readTime} min
                 </span>
-                <span className="text-xs" style={{ color: "var(--text-faint)" }}>
-                  {study.company} · {study.year}
-                </span>
+                <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
+                <span className="meta-mono">{study.company} · {study.year}</span>
               </div>
 
               <h1
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-4"
-                style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
+                className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05] mb-5"
+                style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}
               >
-                <span className="mr-3">{study.logo}</span>
+                <span className="mr-3 align-middle text-2xl sm:text-3xl">{study.logo}</span>
                 {study.title}
               </h1>
 
               <p
-                className="text-sm sm:text-base lg:text-lg leading-relaxed"
+                className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl"
                 style={{ color: "var(--text-muted)" }}
               >
                 {study.description}
@@ -158,28 +142,31 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          {/* Content area */}
-          <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10">
+          {/* Content */}
+          <div className="px-4 sm:px-8 lg:px-12 py-10 sm:py-12">
             <div className="max-w-3xl">
               {/* Outcome callout */}
               <div
                 className="text-sm px-5 py-4 rounded-xl mb-10 flex items-start gap-3"
                 style={{
-                  background: isFailure ? "rgba(255,75,75,0.06)" : "rgba(80,200,120,0.06)",
-                  border: `1px solid ${isFailure ? "rgba(255,75,75,0.15)" : "rgba(80,200,120,0.15)"}`,
+                  background: "transparent",
+                  border: `1px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
                   color: isFailure ? "#FF4B4B" : "#50C878",
                 }}
               >
                 {isFailure ? (
-                  <TrendingDown size={18} className="mt-0.5 flex-shrink-0" />
+                  <TrendingDown size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
                 ) : (
-                  <TrendingUp size={18} className="mt-0.5 flex-shrink-0" />
+                  <TrendingUp size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
                 )}
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-wide block mb-1" style={{ opacity: 0.7 }}>
-                    {isFailure ? "Outcome" : "Impact"}
+                  <span
+                    className="font-mono text-[10px] tracking-[0.18em] uppercase block mb-1"
+                    style={{ opacity: 0.8 }}
+                  >
+                    // {isFailure ? "outcome" : "impact"}
                   </span>
-                  {study.outcome}
+                  <span style={{ color: "var(--text-primary)" }}>{study.outcome}</span>
                 </div>
               </div>
 
@@ -189,7 +176,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                   <p
                     key={i}
                     className="text-sm sm:text-base lg:text-lg leading-[1.85] mb-6"
-                    style={{ color: "var(--text-primary)", opacity: 0.88 }}
+                    style={{ color: "var(--text-primary)", opacity: 0.9 }}
                   >
                     {p}
                   </p>
@@ -201,15 +188,15 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 className="flex flex-wrap items-center gap-2 py-6 mt-4"
                 style={{ borderTop: "1px solid var(--card-border)" }}
               >
-                <Tag size={13} style={{ color: "var(--text-faint)" }} />
+                <span className="eyebrow mr-2">// tags</span>
                 {study.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs px-2.5 py-1 rounded-lg"
+                    className="font-mono text-[10px] px-2 py-1 rounded"
                     style={{
                       background: "var(--tag-bg)",
                       color: "var(--text-muted)",
-                      border: "1px solid var(--card-border)",
+                      letterSpacing: "0.04em",
                     }}
                   >
                     {tag}
@@ -217,7 +204,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 ))}
               </div>
 
-              {/* Prev / Next navigation */}
+              {/* Prev / Next */}
               <div
                 className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-8"
                 style={{ borderTop: "1px solid var(--card-border)" }}
@@ -225,15 +212,13 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 {prevStudy ? (
                   <Link
                     href={`/case-study/${prevStudy.id}`}
-                    className="p-4 rounded-xl case-card"
-                    style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+                    className="playlist-card surface p-4 group"
+                    style={{ ["--accent-color" as any]: "var(--text-muted)" } as React.CSSProperties}
                   >
-                    <span className="text-xs block mb-1.5" style={{ color: "var(--text-faint)" }}>
-                      ← Previous
-                    </span>
-                    <span className="text-sm font-semibold line-clamp-2" style={{ color: "var(--text-primary)" }}>
-                      {prevStudy.logo} {prevStudy.title}
-                    </span>
+                    <p className="eyebrow mb-2">← Prev</p>
+                    <p className="text-sm font-semibold line-clamp-2" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                      {prevStudy.title}
+                    </p>
                   </Link>
                 ) : (
                   <div />
@@ -241,15 +226,13 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 {nextStudy ? (
                   <Link
                     href={`/case-study/${nextStudy.id}`}
-                    className="p-4 rounded-xl text-right case-card"
-                    style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+                    className="playlist-card surface p-4 text-right group"
+                    style={{ ["--accent-color" as any]: "var(--text-muted)" } as React.CSSProperties}
                   >
-                    <span className="text-xs block mb-1.5" style={{ color: "var(--text-faint)" }}>
-                      Next →
-                    </span>
-                    <span className="text-sm font-semibold line-clamp-2" style={{ color: "var(--text-primary)" }}>
-                      {nextStudy.title} {nextStudy.logo}
-                    </span>
+                    <p className="eyebrow mb-2">Next →</p>
+                    <p className="text-sm font-semibold line-clamp-2" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                      {nextStudy.title}
+                    </p>
                   </Link>
                 ) : (
                   <div />
@@ -258,12 +241,9 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
 
               {/* Back to all */}
               <div className="text-center pb-12">
-                <Link
-                  href="/"
-                  className="text-xs font-medium px-4 py-2 rounded-lg inline-block"
-                  style={{ background: "var(--brand-soft)", color: "var(--brand-primary)", border: "1px solid rgba(243,18,60,0.2)" }}
-                >
-                  Browse all case studies
+                <Link href="/" className="btn-ghost inline-flex">
+                  Browse all
+                  <ArrowUpRight size={12} strokeWidth={1.6} />
                 </Link>
               </div>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useRef } from "react";
+import { ReactNode, useRef, Children } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SectionRowProps {
@@ -10,53 +10,67 @@ interface SectionRowProps {
   accentColor?: string;
 }
 
-export function SectionRow({ title, subtitle, children, accentColor = "var(--north-accent)" }: SectionRowProps) {
+export function SectionRow({ title, subtitle, children }: SectionRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
     const distance = Math.min(scrollRef.current.clientWidth * 0.7, 500);
-    scrollRef.current.scrollBy({ left: dir === "left" ? -distance : distance, behavior: "smooth" });
+    scrollRef.current.scrollBy({
+      left: dir === "left" ? -distance : distance,
+      behavior: "smooth",
+    });
   };
+
+  const count = Children.count(children);
 
   return (
     <section className="animate-section">
-      <div className="flex items-center justify-between mb-4 px-4 sm:px-6">
+      <div className="flex items-end justify-between mb-4 px-4 sm:px-6">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="w-1 h-5 rounded-full" style={{ background: accentColor }} />
-            <h2 className="font-display text-lg font-semibold" style={{ color: "var(--north-text)" }}>
+          <p className="eyebrow mb-1.5">// {title.toLowerCase().replace(/\s+/g, ".")}</p>
+          <div className="flex items-baseline gap-3">
+            <h2
+              className="text-base sm:text-lg font-semibold"
+              style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
+            >
               {title}
             </h2>
+            <span
+              className="font-mono"
+              style={{ fontSize: 11, color: "var(--text-faint)", letterSpacing: "0.06em" }}
+            >
+              [{String(count).padStart(2, "0")}]
+            </span>
           </div>
           {subtitle && (
-            <p className="text-xs mt-0.5 ml-3" style={{ color: "var(--north-muted)" }}>
+            <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
               {subtitle}
             </p>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <button
             onClick={() => scroll("left")}
-            className="p-2.5 rounded-lg transition-all"
+            className="w-8 h-8 rounded-full flex items-center justify-center"
             style={{
-              background: "var(--north-card)",
-              border: "1px solid var(--north-border)",
-              color: "var(--north-muted)",
+              background: "transparent",
+              border: "1px solid var(--card-border)",
+              color: "var(--text-muted)",
             }}
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={14} strokeWidth={1.6} />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="p-2.5 rounded-lg transition-all"
+            className="w-8 h-8 rounded-full flex items-center justify-center"
             style={{
-              background: "var(--north-card)",
-              border: "1px solid var(--north-border)",
-              color: "var(--north-muted)",
+              background: "transparent",
+              border: "1px solid var(--card-border)",
+              color: "var(--text-muted)",
             }}
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={14} strokeWidth={1.6} />
           </button>
         </div>
       </div>

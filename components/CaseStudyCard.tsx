@@ -1,12 +1,13 @@
 "use client";
 
-import { TrendingUp, TrendingDown, BookOpen } from "lucide-react";
+import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import { CaseStudy } from "@/data/caseStudies";
 import { SaveButton } from "@/components/SaveButton";
 import Link from "next/link";
 
 interface CaseStudyCardProps {
   study: CaseStudy;
+  index?: number;
   isLoggedIn?: boolean;
   initialSaved?: boolean;
   initialLiked?: boolean;
@@ -23,6 +24,7 @@ const categoryColors: Record<string, string> = {
 
 export function CaseStudyCard({
   study,
+  index,
   isLoggedIn = false,
   initialSaved = false,
   initialLiked = false,
@@ -30,119 +32,92 @@ export function CaseStudyCard({
 }: CaseStudyCardProps) {
   const isFailure = study.category === "Failure";
   const color = categoryColors[study.category] ?? "var(--brand-primary)";
+  const indexLabel = typeof index === "number" ? String(index + 1).padStart(2, "0") : "·";
 
   return (
     <div
-      className="case-card rounded-xl overflow-hidden"
-      style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--card-border)",
-      }}
+      className="playlist-card surface overflow-hidden"
+      style={{ ["--accent-color" as any]: color } as React.CSSProperties}
     >
-      {/* Main clickable area */}
-      <Link
-        href={`/case-study/${study.id}`}
-        className="block p-4 group"
-      >
-        {/* Top row */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-2xl flex-shrink-0">{study.logo}</span>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span
-                  className="text-xs px-2 py-0.5 rounded-full font-medium"
-                  style={{
-                    background: `${color}18`,
-                    color: color,
-                    border: `1px solid ${color}30`,
-                  }}
-                >
-                  {study.category}
-                </span>
-                <span
-                  className="flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full"
-                  style={{
-                    background: "var(--tag-bg)",
-                    color: "var(--text-muted)",
-                    border: "1px solid var(--card-border)",
-                  }}
-                >
-                  <BookOpen size={9} />
-                  Case Study
-                </span>
-              </div>
-            </div>
+      <Link href={`/case-study/${study.id}`} className="block px-5 pt-5 pb-4 group">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="font-mono text-xs" style={{ color: "var(--text-faint)", letterSpacing: "0.08em" }}>
+              {indexLabel}
+            </span>
+            <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
+            <span
+              className="font-mono text-[10px] tracking-[0.18em] uppercase truncate"
+              style={{ color }}
+            >
+              {study.category}
+            </span>
           </div>
-
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            {isFailure ? (
-              <TrendingDown size={14} style={{ color: "#FF4B4B" }} />
-            ) : (
-              <TrendingUp size={14} style={{ color: "#50C878" }} />
-            )}
+          <div className="card-arrow flex items-center justify-center w-7 h-7 rounded-full"
+            style={{ border: "1px solid var(--card-border)", color }}>
+            <ArrowUpRight size={14} strokeWidth={1.6} />
           </div>
         </div>
 
-        {/* Company + Title */}
-        <p
-          className="text-xs font-medium mb-0.5"
-          style={{ color: "var(--text-muted)" }}
-        >
+        <p className="font-mono text-xs mb-1.5" style={{ color: "var(--text-muted)" }}>
+          <span className="mr-1.5">{study.logo}</span>
           {study.company} · {study.year}
         </p>
         <h3
-          className="text-sm font-semibold leading-tight mb-2"
-          style={{ color: "var(--text-primary)" }}
+          className="text-[15px] sm:text-base font-semibold leading-snug mb-2"
+          style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
         >
           {study.title}
         </h3>
 
-        {/* Description */}
-        <p
-          className="text-xs leading-relaxed line-clamp-2 mb-3"
-          style={{ color: "var(--text-muted)" }}
-        >
+        <p className="text-xs leading-relaxed line-clamp-2 mb-4" style={{ color: "var(--text-muted)" }}>
           {study.description}
         </p>
 
-        {/* Outcome */}
+        {/* Outcome strip */}
         <div
-          className="text-xs px-2.5 py-1.5 rounded-lg mb-3"
+          className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg mb-3"
           style={{
-            background: isFailure
-              ? "rgba(255,75,75,0.06)"
-              : "rgba(80,200,120,0.06)",
-            border: `1px solid ${isFailure ? "rgba(255,75,75,0.15)" : "rgba(80,200,120,0.15)"}`,
+            background: "transparent",
+            border: `1px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
             color: isFailure ? "#FF4B4B" : "#50C878",
           }}
         >
-          {study.outcome}
+          {isFailure ? (
+            <TrendingDown size={12} strokeWidth={1.6} />
+          ) : (
+            <TrendingUp size={12} strokeWidth={1.6} />
+          )}
+          <span className="line-clamp-1 font-mono text-[11px]" style={{ letterSpacing: "0.02em" }}>
+            {study.outcome}
+          </span>
         </div>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-1">
-          {study.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="text-xs px-1.5 py-0.5 rounded"
-              style={{
-                background: "var(--tag-bg)",
-                color: "var(--text-muted)",
-              }}
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+        {study.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {study.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="font-mono text-[10px] px-2 py-0.5 rounded"
+                style={{
+                  background: "var(--tag-bg)",
+                  color: "var(--text-muted)",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </Link>
 
-      {/* Save/Like bar */}
       <div
-        className="px-4 py-2.5 flex items-center justify-between"
+        className="px-5 py-3 flex items-center justify-between"
         style={{ borderTop: "1px solid var(--card-border)" }}
       >
-        <span className="text-xs" style={{ color: "var(--text-faint)" }}>
+        <span className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: "var(--text-muted)" }}>
           Read case study
         </span>
         <SaveButton
