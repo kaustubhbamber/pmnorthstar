@@ -27,6 +27,7 @@ import { HeroBanner } from "@/components/HeroBanner";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
 import { PlaylistCard } from "@/components/PlaylistCard";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { MobileNav } from "@/components/MobileNav";
 import { AuthModal } from "@/components/AuthModal";
 import {
   TrendingUp,
@@ -170,6 +171,32 @@ export default function HomePage() {
     [activeLearnFilter]
   );
 
+  // ── Cross-section search ──────────────────────────────────────────────
+  const searchedCaseStudies = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [] as typeof caseStudies;
+    return caseStudies.filter((c) =>
+      c.title.toLowerCase().includes(q) ||
+      c.company.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q) ||
+      c.outcome.toLowerCase().includes(q) ||
+      c.category.toLowerCase().includes(q) ||
+      c.tags.some((t) => t.toLowerCase().includes(q))
+    );
+  }, [searchQuery]);
+
+  const searchedPlaylists = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [] as typeof playlists;
+    return playlists.filter((p) =>
+      p.title.toLowerCase().includes(q) ||
+      p.channel.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      (p.tags ?? []).some((t) => t.toLowerCase().includes(q))
+    );
+  }, [searchQuery]);
+
   const learnStats = useMemo(() => {
     const counts: Record<string, number> = {};
     playlists.forEach((p) => { counts[p.category] = (counts[p.category] || 0) + 1; });
@@ -221,6 +248,8 @@ export default function HomePage() {
             </div>
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
           </header>
+
+          <MobileNav activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
 
           <main className="flex-1 overflow-y-auto scroll-container p-4 sm:p-6 pb-12">
             {!user ? (
@@ -349,6 +378,8 @@ export default function HomePage() {
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
           </header>
 
+          <MobileNav activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+
           <main className="flex-1 overflow-y-auto scroll-container p-4 sm:p-6 pb-12">
             {!user ? (
               <div className="flex flex-col items-center justify-center py-20">
@@ -472,6 +503,8 @@ export default function HomePage() {
             </div>
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
           </header>
+
+          <MobileNav activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
 
           <main className="flex-1 overflow-y-auto scroll-container">
             {!user ? (
@@ -597,6 +630,8 @@ export default function HomePage() {
             </div>
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
           </header>
+
+          <MobileNav activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
 
           <main className="flex-1 overflow-y-auto scroll-container">
             {!user ? (
@@ -743,6 +778,8 @@ export default function HomePage() {
           </div>
           <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
         </div>
+
+        <MobileNav activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
 
         <TopNav
           activeFilter={activeFilter}
@@ -1077,40 +1114,151 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="p-4 sm:p-6 pb-12">
-              <div className="mb-6">
-                <p className="eyebrow mb-1.5">// {searchQuery ? "search" : "filter"}</p>
-                <div className="flex items-baseline gap-3">
-                  <h2 className="text-xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-                    {searchQuery ? `“${searchQuery}”` : activeFilter}
-                  </h2>
-                  <span className="font-mono text-xs" style={{ color: "var(--text-faint)" }}>
-                    [{String(filteredBooks.length).padStart(2, "0")}]
-                  </span>
-                </div>
-              </div>
-              {filteredBooks.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <p className="eyebrow mb-3">// no results</p>
-                  <p className="text-base font-semibold" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>No books found</p>
-                  <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>Try a different search or category</p>
-                </div>
+              {searchQuery.trim() ? (
+                <>
+                  {/* Search header */}
+                  <div className="mb-6">
+                    <p className="eyebrow mb-1.5">// search</p>
+                    <div className="flex items-baseline gap-3 flex-wrap">
+                      <h2 className="text-xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                        “{searchQuery}”
+                      </h2>
+                      <span className="font-mono text-xs" style={{ color: "var(--text-faint)" }}>
+                        [{String(filteredBooks.length + searchedCaseStudies.length + searchedPlaylists.length).padStart(2, "0")}]
+                      </span>
+                    </div>
+                  </div>
+
+                  {filteredBooks.length + searchedCaseStudies.length + searchedPlaylists.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                      <p className="eyebrow mb-3">// no results</p>
+                      <p className="text-base font-semibold" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>Nothing matched</p>
+                      <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>Try a different keyword</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Books group */}
+                      {filteredBooks.length > 0 && (
+                        <div className="mb-10">
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <p className="eyebrow">// books</p>
+                            <span className="font-mono text-[11px]" style={{ color: "var(--text-faint)" }}>
+                              [{String(filteredBooks.length).padStart(2, "0")}]
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {filteredBooks.map((book, index) => (
+                              <ResourceCard
+                                key={book.id}
+                                book={book}
+                                index={index}
+                                variant="list"
+                                isLoggedIn={!!user}
+                                initialSaved={savedIds.has(book.id)}
+                                initialLiked={likedIds.has(book.id)}
+                                onAuthRequired={() => setShowAuthModal(true)}
+                                onSavedChange={handleSavedChange}
+                                onLikedChange={handleLikedChange}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Case studies group */}
+                      {searchedCaseStudies.length > 0 && (
+                        <div className="mb-10">
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <p className="eyebrow">// case_studies</p>
+                            <span className="font-mono text-[11px]" style={{ color: "var(--text-faint)" }}>
+                              [{String(searchedCaseStudies.length).padStart(2, "0")}]
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {searchedCaseStudies.map((study, idx) => (
+                              <CaseStudyCard
+                                key={study.id}
+                                study={study}
+                                index={idx}
+                                isLoggedIn={!!user}
+                                initialSaved={savedIds.has(study.id)}
+                                initialLiked={likedIds.has(study.id)}
+                                onAuthRequired={() => setShowAuthModal(true)}
+                                onSavedChange={handleSavedChange}
+                                onLikedChange={handleLikedChange}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Playlists group */}
+                      {searchedPlaylists.length > 0 && (
+                        <div>
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <p className="eyebrow">// playlists</p>
+                            <span className="font-mono text-[11px]" style={{ color: "var(--text-faint)" }}>
+                              [{String(searchedPlaylists.length).padStart(2, "0")}]
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {searchedPlaylists.map((playlist, idx) => (
+                              <PlaylistCard
+                                key={playlist.id}
+                                playlist={playlist}
+                                index={idx}
+                                isLoggedIn={!!user}
+                                initialSaved={savedIds.has(playlist.id)}
+                                initialLiked={likedIds.has(playlist.id)}
+                                onAuthRequired={() => setShowAuthModal(true)}
+                                onSavedChange={handleSavedChange}
+                                onLikedChange={handleLikedChange}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {filteredBooks.map((book, index) => (
-                    <ResourceCard
-                      key={book.id}
-                      book={book}
-                      index={index}
-                      variant="list"
-                      isLoggedIn={!!user}
-                      initialSaved={savedIds.has(book.id)}
-                      initialLiked={likedIds.has(book.id)}
-                      onAuthRequired={() => setShowAuthModal(true)}
+                <>
+                  <div className="mb-6">
+                    <p className="eyebrow mb-1.5">// filter</p>
+                    <div className="flex items-baseline gap-3">
+                      <h2 className="text-xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                        {activeFilter}
+                      </h2>
+                      <span className="font-mono text-xs" style={{ color: "var(--text-faint)" }}>
+                        [{String(filteredBooks.length).padStart(2, "0")}]
+                      </span>
+                    </div>
+                  </div>
+                  {filteredBooks.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                      <p className="eyebrow mb-3">// no results</p>
+                      <p className="text-base font-semibold" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>No books found</p>
+                      <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>Try a different category</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {filteredBooks.map((book, index) => (
+                        <ResourceCard
+                          key={book.id}
+                          book={book}
+                          index={index}
+                          variant="list"
+                          isLoggedIn={!!user}
+                          initialSaved={savedIds.has(book.id)}
+                          initialLiked={likedIds.has(book.id)}
+                          onAuthRequired={() => setShowAuthModal(true)}
                           onSavedChange={handleSavedChange}
                           onLikedChange={handleLikedChange}
-                    />
-                  ))}
-                </div>
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}
