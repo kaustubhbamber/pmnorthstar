@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import { CaseStudy } from "@/data/caseStudies";
+import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { SaveButton } from "@/components/SaveButton";
 import Link from "next/link";
 
@@ -37,6 +39,8 @@ export function CaseStudyCard({
   const isFailure = study.category === "Failure";
   const color = categoryColors[study.category] ?? "var(--brand-primary)";
   const indexLabel = typeof index === "number" ? String(index + 1).padStart(2, "0") : "·";
+  const logoUrl = getCompanyLogoUrl(study.company);
+  const [logoFailed, setLogoFailed] = useState(false);
 
   return (
     <div
@@ -89,10 +93,23 @@ export function CaseStudyCard({
           </div>
         </div>
 
-        <p className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>
-          <span className="text-base mr-1.5 align-middle">{study.logo}</span>
-          {study.company} · {study.year}
-        </p>
+        <div className="flex items-center gap-2 mb-2">
+          {logoUrl && !logoFailed ? (
+            <img
+              src={logoUrl}
+              alt={`${study.company} logo`}
+              loading="lazy"
+              onError={() => setLogoFailed(true)}
+              className="w-5 h-5 rounded object-contain flex-shrink-0"
+              style={{ background: "transparent" }}
+            />
+          ) : (
+            <span className="text-base flex-shrink-0">{study.logo}</span>
+          )}
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+            {study.company} · {study.year}
+          </p>
+        </div>
         <h3
           className="text-lg sm:text-xl font-semibold leading-tight mb-2"
           style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}

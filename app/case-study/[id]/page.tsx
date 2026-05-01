@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getCaseStudyById, caseStudies } from "@/data/caseStudies";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { ArrowLeft, ArrowUpRight, TrendingUp, TrendingDown, Clock, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -63,6 +64,8 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
   const paragraphs = study.content.split("\n\n").filter(Boolean);
   const readTime = Math.max(3, Math.ceil(study.content.split(" ").length / 200));
   const indexLabel = String(currentIndex + 1).padStart(2, "0");
+  const logoUrl = getCompanyLogoUrl(study.company);
+  const [logoFailed, setLogoFailed] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
@@ -126,13 +129,25 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 <span className="meta-mono">{study.company} · {study.year}</span>
               </div>
 
-              <h1
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05] mb-5"
-                style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}
-              >
-                <span className="mr-3 align-middle text-2xl sm:text-3xl">{study.logo}</span>
-                {study.title}
-              </h1>
+              <div className="flex items-start gap-4 mb-5">
+                {logoUrl && !logoFailed ? (
+                  <img
+                    src={logoUrl}
+                    alt={`${study.company} logo`}
+                    onError={() => setLogoFailed(true)}
+                    className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg object-contain flex-shrink-0 mt-1"
+                    style={{ background: "transparent" }}
+                  />
+                ) : (
+                  <span className="text-3xl sm:text-4xl lg:text-5xl flex-shrink-0">{study.logo}</span>
+                )}
+                <h1
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05]"
+                  style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}
+                >
+                  {study.title}
+                </h1>
+              </div>
 
               <p
                 className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl"

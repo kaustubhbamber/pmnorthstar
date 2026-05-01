@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowUpRight, Star } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, Star, BookOpen } from "lucide-react";
 import { Book } from "@/data/books";
 import { SaveButton } from "@/components/SaveButton";
 
@@ -46,6 +47,8 @@ export function ResourceCard({
   onLikedChange,
 }: ResourceCardProps) {
   const indexLabel = String(index + 1).padStart(2, "0");
+  const [coverFailed, setCoverFailed] = useState(false);
+  const hasCover = book.thumbnailURL && !coverFailed;
 
   // Width sizing per variant
   const widthClass =
@@ -92,8 +95,39 @@ export function ResourceCard({
         href={book.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="block px-5 pt-5 pb-4 group"
+        className="block group"
       >
+        {/* Book cover image */}
+        <div
+          className="relative w-full overflow-hidden flex items-center justify-center"
+          style={{
+            aspectRatio: "16 / 9",
+            background: hasCover
+              ? "var(--tag-bg)"
+              : "linear-gradient(135deg, var(--brand-soft), var(--card-bg))",
+            borderBottom: "1px solid var(--card-border)",
+          }}
+        >
+          {hasCover ? (
+            <img
+              src={book.thumbnailURL}
+              alt={`${book.title} cover`}
+              loading="lazy"
+              onError={() => setCoverFailed(true)}
+              className="h-full w-auto max-w-full object-contain"
+              style={{ padding: "8px 0" }}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center px-4 text-center">
+              <BookOpen size={28} strokeWidth={1.4} style={{ color: "var(--brand-primary)", opacity: 0.6 }} />
+              <p className="mt-2 text-[11px] font-medium" style={{ color: "var(--text-muted)", letterSpacing: "0.04em" }}>
+                {book.author.toUpperCase()}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 pt-5 pb-4">
         <div className="flex items-center justify-between mb-5">
           <span
             className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full truncate"
@@ -132,6 +166,7 @@ export function ResourceCard({
           <span className="text-xs" style={{ color: "var(--text-faint)" }}>
             {book.rating.toFixed(1)}
           </span>
+        </div>
         </div>
       </a>
 
