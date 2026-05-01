@@ -1,8 +1,12 @@
 // Maps each case study's company name to its public domain.
-// Used with Clearbit's free logo API: https://logo.clearbit.com/<domain>
-// Returns the brand's logo as a transparent PNG. Defunct companies
-// (e.g., Theranos, Quibi, Myspace) often still have logos cached.
-// Card falls back to the company emoji on image load failure.
+// Used with Google's Favicon API to fetch the brand mark:
+//   https://www.google.com/s2/favicons?domain=<domain>&sz=128
+// Free, no API key, redirects to gstatic CDN. Resolves to the
+// site's actual favicon at up to 128px. Fall back to the company
+// emoji on image load failure.
+//
+// (Originally we used logo.clearbit.com/<domain>, but HubSpot
+//  deprecated the public Logo API in 2025.)
 
 export const companyDomains: Record<string, string> = {
   Apple: "apple.com",
@@ -55,5 +59,7 @@ export const companyDomains: Record<string, string> = {
 
 export function getCompanyLogoUrl(company: string): string | null {
   const domain = companyDomains[company];
-  return domain ? `https://logo.clearbit.com/${domain}` : null;
+  return domain
+    ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
+    : null;
 }
