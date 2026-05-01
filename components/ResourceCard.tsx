@@ -157,7 +157,9 @@ export function ResourceCard({
             <img
               src={book.thumbnailURL}
               alt={`${book.title} cover`}
-              loading="lazy"
+              loading={index < 4 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={index < 4 ? "high" : "low"}
               onError={() => setCoverFailed(true)}
               className="h-full w-auto max-w-full object-contain"
               style={{ padding: "8px 0" }}
@@ -168,6 +170,7 @@ export function ResourceCard({
                 src={authorPhoto}
                 alt={book.author}
                 loading="lazy"
+                decoding="async"
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0"
                 style={{ border: "2px solid var(--card-bg)" }}
               />
