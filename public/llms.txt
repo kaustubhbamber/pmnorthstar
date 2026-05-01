@@ -1,0 +1,35 @@
+# NorthStar
+
+> A free, curated library of books, case studies, and YouTube playlists for product managers and builders. No sign-up required to browse.
+
+NorthStar is a single-page resource hub aimed at PMs, founders, and operators who want to learn product management without paywalls, ad-stuffed listicles, or 14 dead bookmarks across Notion. All content is hand-curated by the maintainer.
+
+## What's inside
+
+- [Home](https://pmnorthstar.in/): The main library — browse all books, case studies, and playlists in one place.
+- 30 essential books across Product Management, Startups, and Management — each with summary and direct external link.
+- 50 in-depth case studies on real products and companies (Apple, Spotify, Airbnb, Slack, Netflix, Figma, and 44 more) — full multi-paragraph deep dives, written as articles rather than bullet points.
+- 19 curated YouTube playlists across 8 topics: Design, Product Management (incl. AI PM), Data Analytics, Product Analytics, Marketing, Branding, Startup, Finances.
+
+## Case studies
+
+The full list of 50 case study URLs is available in the sitemap: https://pmnorthstar.in/sitemap.xml
+
+Each case study lives at `https://pmnorthstar.in/case-study/cs-{N}` where N is 1 through 50. Each page contains a 7-paragraph deep dive structured around: the company context, the core problem, the key decision, execution details, results, ripple effects, and lessons for product managers.
+
+## Categories covered
+
+- Product Management — discovery, delivery, prioritization, AI product management
+- Startups — 0-to-1, fundraising, founder lessons
+- Management — team building, leadership for builders
+- Design — UX, UI, visual design fundamentals
+- Data Analytics — SQL, dashboards, analyst skills
+- Product Analytics — metrics, funnels, retention
+- Marketing — positioning, channels, growth
+- Branding — identity, naming, visual systems
+- Finances — runway, fundraising, founder finance
+
+## Optional
+
+- [Sitemap](https://pmnorthstar.in/sitemap.xml): All indexable URLs.
+- [Robots](https://pmnorthstar.in/robots.txt): Crawler rules.
