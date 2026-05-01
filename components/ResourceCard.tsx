@@ -91,9 +91,15 @@ export function ResourceCard({
   onLikedChange,
 }: ResourceCardProps) {
   const indexLabel = String(index + 1).padStart(2, "0");
+  // OpenLibrary covers depend on archive.org, which is currently unreliable
+  // (cyberattack aftermath — fetches frequently hang for 30+ seconds).
+  // We try the author photo from Wikipedia first; it loads fast and reliably.
+  // OpenLibrary cover is only attempted as a secondary if the author photo
+  // is missing AND we want to give it a shot — but disabled for now.
+  const authorPhoto = useAuthorPhoto(book.author, true);
   const [coverFailed, setCoverFailed] = useState(false);
-  const hasCover = book.thumbnailURL && !coverFailed;
-  const authorPhoto = useAuthorPhoto(book.author, !hasCover);
+  const useOpenLibraryCover = false; // re-enable when archive.org stabilizes
+  const hasCover = useOpenLibraryCover && book.thumbnailURL && !coverFailed && !authorPhoto;
 
   // Width sizing per variant
   const widthClass =
@@ -165,26 +171,39 @@ export function ResourceCard({
               style={{ padding: "8px 0" }}
             />
           ) : authorPhoto ? (
-            <div className="flex items-center gap-3 px-5 w-full">
+            <div className="flex items-center gap-4 px-5 w-full">
               <img
                 src={authorPhoto}
                 alt={book.author}
-                loading="lazy"
+                loading={index < 4 ? "eager" : "lazy"}
                 decoding="async"
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0"
-                style={{ border: "2px solid var(--card-bg)" }}
+                fetchPriority={index < 4 ? "high" : "low"}
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover flex-shrink-0"
+                style={{ border: "2px solid var(--card-bg)", boxShadow: "0 0 0 1px var(--card-border)" }}
               />
-              <div className="min-w-0">
-                <p className="text-[10px] font-medium uppercase tracking-wider mb-0.5" style={{ color: "var(--brand-primary)" }}>Author</p>
-                <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>{book.author}</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-medium uppercase tracking-wider mb-1" style={{ color: "var(--brand-primary)" }}>By the author</p>
+                <p className="text-base font-semibold leading-tight" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>{book.author}</p>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center px-4 text-center">
-              <BookOpen size={28} strokeWidth={1.4} style={{ color: "var(--brand-primary)", opacity: 0.6 }} />
-              <p className="mt-2 text-[11px] font-medium" style={{ color: "var(--text-muted)", letterSpacing: "0.04em" }}>
-                {book.author.toUpperCase()}
-              </p>
+            <div className="flex items-center gap-4 px-5 w-full">
+              <div
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex-shrink-0 flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, var(--brand-primary), #8B0000)",
+                  border: "2px solid var(--card-bg)",
+                  boxShadow: "0 0 0 1px var(--card-border)",
+                }}
+              >
+                <span className="text-2xl sm:text-3xl font-bold text-white" style={{ letterSpacing: "-0.02em" }}>
+                  {book.author.split(" ").map((p) => p[0]).slice(0, 2).join("")}
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-medium uppercase tracking-wider mb-1" style={{ color: "var(--brand-primary)" }}>Author</p>
+                <p className="text-base font-semibold leading-tight" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>{book.author}</p>
+              </div>
             </div>
           )}
         </div>
