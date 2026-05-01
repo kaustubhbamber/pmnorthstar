@@ -32,15 +32,37 @@ export function PlaylistCard({
 
   return (
     <div
-      className="playlist-card rounded-xl overflow-hidden"
+      className="playlist-card rounded-xl overflow-hidden relative"
       style={
         {
-          background: "var(--card-bg)",
-          border: "1px solid var(--card-border)",
+          background: initialLiked || initialSaved ? `${color}08` : "var(--card-bg)",
+          border: `1px solid ${initialLiked || initialSaved ? color : "var(--card-border)"}`,
           ["--accent-color" as any]: color,
         } as React.CSSProperties
       }
     >
+      {(initialLiked || initialSaved) && (
+        <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
+          {initialLiked && (
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full"
+              style={{ background: color }}
+              title="Liked"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </span>
+          )}
+          {initialSaved && (
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full"
+              style={{ background: color }}
+              title="Saved"
+            >
+              <svg width="9" height="11" viewBox="0 0 24 24" fill="white"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+            </span>
+          )}
+        </div>
+      )}
       <a
         href={hasUrl ? playlist.url : "#"}
         target={hasUrl ? "_blank" : undefined}
