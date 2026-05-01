@@ -34,7 +34,6 @@ import {
   TrendingUp,
   TrendingDown,
   LogOut,
-  User,
   Bookmark,
   Heart,
   Menu,
@@ -806,11 +805,7 @@ export default function HomePage() {
                 <span className="hidden sm:inline">Log out</span>
               </button>
             </div>
-          ) : (
-            <button onClick={() => setShowAuthModal(true)} className="btn-accent flex-shrink-0" style={{ padding: "6px 12px", fontSize: 12 }}>
-              <User size={11} /> Log In
-            </button>
-          )}
+          ) : null}
         </div>
 
         <main className="flex-1 overflow-y-auto scroll-container">
