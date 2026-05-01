@@ -236,7 +236,35 @@ export const playlists: Playlist[] = [
   },
 ];
 
+// Round-robin interleave so the "All" feed rotates through topics
+// instead of showing 3 Design then 3 PM then 2 Data, etc.
+function interleaveByCategory(items: Playlist[]): Playlist[] {
+  const byCategory = new Map<LearnCategory, Playlist[]>();
+  for (const item of items) {
+    const list = byCategory.get(item.category) ?? [];
+    list.push(item);
+    byCategory.set(item.category, list);
+  }
+  const result: Playlist[] = [];
+  let i = 0;
+  let pushed = true;
+  while (pushed) {
+    pushed = false;
+    for (const cat of learnCategories) {
+      const arr = byCategory.get(cat);
+      if (arr && arr[i]) {
+        result.push(arr[i]);
+        pushed = true;
+      }
+    }
+    i++;
+  }
+  return result;
+}
+
+export const interleavedPlaylists: Playlist[] = interleaveByCategory(playlists);
+
 export function getPlaylistsByCategory(filter: LearnFilter): Playlist[] {
-  if (filter === "All") return playlists;
+  if (filter === "All") return interleavedPlaylists;
   return playlists.filter((p) => p.category === filter);
 }

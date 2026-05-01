@@ -14,6 +14,7 @@ import {
 } from "@/data/caseStudies";
 import {
   playlists,
+  interleavedPlaylists,
   learnCategories,
   getPlaylistsByCategory,
   learnCategoryColors,
@@ -1096,7 +1097,7 @@ export default function HomePage() {
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {playlists.slice(0, 6).map((playlist, idx) => (
+                  {interleavedPlaylists.slice(0, 6).map((playlist, idx) => (
                     <PlaylistCard
                       key={playlist.id}
                       playlist={playlist}
