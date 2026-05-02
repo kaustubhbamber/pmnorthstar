@@ -48,31 +48,67 @@ export default function CaseStudyLayout({
   return (
     <>
       {study && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Article",
-              headline: study.title,
-              description: study.description,
-              datePublished: `${study.year}-01-01`,
-              author: { "@type": "Organization", name: "NorthStar" },
-              publisher: {
-                "@type": "Organization",
-                name: "NorthStar",
-                url: SITE_URL,
-              },
-              about: study.company,
-              keywords: study.tags.join(", "),
-              articleSection: study.category,
-              mainEntityOfPage: {
-                "@type": "WebPage",
-                "@id": `${SITE_URL}/case-study/${study.id}`,
-              },
-            }),
-          }}
-        />
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                headline: study.title,
+                description: study.description,
+                datePublished: `${study.year}-01-01`,
+                author: { "@type": "Organization", name: "NorthStar" },
+                publisher: {
+                  "@type": "Organization",
+                  name: "NorthStar",
+                  url: SITE_URL,
+                },
+                about: study.company,
+                keywords: study.tags.join(", "),
+                articleSection: study.category,
+                mainEntityOfPage: {
+                  "@type": "WebPage",
+                  "@id": `${SITE_URL}/case-study/${study.id}`,
+                },
+              }),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "NorthStar",
+                    item: SITE_URL,
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: "Case Studies",
+                    item: `${SITE_URL}/?nav=casestudies`,
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 3,
+                    name: study.category,
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 4,
+                    name: study.title,
+                    item: `${SITE_URL}/case-study/${study.id}`,
+                  },
+                ],
+              }),
+            }}
+          />
+        </>
       )}
       {children}
     </>

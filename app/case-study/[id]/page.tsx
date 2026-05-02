@@ -67,6 +67,17 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
   const logoUrl = getCompanyLogoUrl(study.company);
   const [logoFailed, setLogoFailed] = useState(false);
 
+  // Related = same category, not the current one. Pick up to 4 closest by tag overlap.
+  const related = caseStudies
+    .filter((c) => c.id !== study.id && c.category === study.category)
+    .map((c) => ({
+      study: c,
+      overlap: c.tags.filter((t) => study.tags.includes(t)).length,
+    }))
+    .sort((a, b) => b.overlap - a.overlap)
+    .slice(0, 4)
+    .map((x) => x.study);
+
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
       <Sidebar
@@ -258,6 +269,61 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                   <div />
                 )}
               </div>
+
+              {/* Related case studies */}
+              {related.length > 0 && (
+                <div
+                  className="py-10"
+                  style={{ borderTop: "1px solid var(--card-border)" }}
+                >
+                  <div className="flex items-baseline gap-3 mb-6">
+                    <h2
+                      className="text-xl sm:text-2xl font-semibold"
+                      style={{ color, letterSpacing: "-0.02em" }}
+                    >
+                      Related {study.category} case studies
+                    </h2>
+                    <span className="text-xs" style={{ color: "var(--text-faint)" }}>
+                      {related.length}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {related.map((r) => {
+                      const rColor = categoryColors[r.category] ?? "var(--brand-primary)";
+                      return (
+                        <Link
+                          key={r.id}
+                          href={`/case-study/${r.id}`}
+                          className="playlist-card surface p-4 group"
+                          style={{ ["--accent-color" as any]: rColor } as React.CSSProperties}
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-base">{r.logo}</span>
+                            <span
+                              className="text-[10px] font-medium uppercase tracking-wider"
+                              style={{ color: rColor }}
+                            >
+                              {r.company} · {r.year}
+                            </span>
+                          </div>
+                          <p
+                            className="text-sm font-semibold leading-snug line-clamp-2"
+                            style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
+                          >
+                            {r.title}
+                          </p>
+                          <p
+                            className="text-xs mt-2 line-clamp-2"
+                            style={{ color: "var(--text-muted)" }}
+                          >
+                            {r.description}
+                          </p>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Back to all */}
               <div className="text-center pb-12">
