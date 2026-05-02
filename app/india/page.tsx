@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
@@ -35,8 +36,19 @@ const upcomingIndia = [
 const globalRelevantIds = ["cs-2", "cs-5", "cs-7", "cs-27", "cs-30", "cs-3"];
 
 export default function IndiaPage() {
+  const router = useRouter();
   const [isDark, setIsDark] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Sidebar / mobile nav clicks on /india must navigate back to /
+  // and pass the requested tab via hash so the home view opens to it.
+  const handleNavChange = (nav: string) => {
+    if (nav === "home" || nav === "library") {
+      router.push("/");
+    } else {
+      router.push(`/#${nav}`);
+    }
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -70,7 +82,7 @@ export default function IndiaPage() {
     >
       <Sidebar
         activeNav="home"
-        onNavChange={() => {}}
+        onNavChange={handleNavChange}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
@@ -103,7 +115,7 @@ export default function IndiaPage() {
           <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
         </header>
 
-        <MobileNav activeNav="india" onNavChange={() => {}} />
+        <MobileNav activeNav="india" onNavChange={handleNavChange} />
 
         <main className="flex-1 overflow-y-auto scroll-container">
           {/* Hero */}

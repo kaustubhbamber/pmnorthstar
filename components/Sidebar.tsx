@@ -1,6 +1,7 @@
 "use client";
 
-import { Home, Library, BookMarked, Star, FlameIcon, GraduationCap, X } from "lucide-react";
+import Link from "next/link";
+import { Home, Library, BookMarked, Star, FlameIcon, GraduationCap, MapPin, X } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 
@@ -115,6 +116,27 @@ export function Sidebar({
           {primaryNav.map((item) => (
             <NavButton key={item.id} {...item} />
           ))}
+
+          {/* India — separate Link because it's a different route (not a tab) */}
+          <Link
+            href="/india"
+            onClick={onClose}
+            className={`nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm ${activeNav === "india" ? "active" : ""}`}
+            style={{ color: activeNav === "india" ? "var(--text-primary)" : "var(--text-muted)" }}
+          >
+            <MapPin size={15} strokeWidth={1.6} />
+            <span style={{ letterSpacing: "-0.005em" }}>India</span>
+            <span
+              className="ml-auto text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+              style={{
+                background: "rgba(255, 107, 53, 0.14)",
+                color: "#FF6B35",
+                letterSpacing: "0.08em",
+              }}
+            >
+              New
+            </span>
+          </Link>
 
           <div className="pt-5">
             <p className="text-[11px] font-medium px-3 mb-2 uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>Library</p>

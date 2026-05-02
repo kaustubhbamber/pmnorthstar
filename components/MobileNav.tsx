@@ -1,6 +1,7 @@
 "use client";
 
-import { Home, Library, BookMarked, Star, FlameIcon, GraduationCap } from "lucide-react";
+import Link from "next/link";
+import { Home, Library, BookMarked, Star, FlameIcon, GraduationCap, MapPin } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 
@@ -35,7 +36,6 @@ export function MobileNav({
       }}
     >
       {items.map(({ id, label, icon: Icon, count }) => {
-        const active = activeNav === id || (id === "home" && activeNav === "library") || (id === "library" && activeNav === "home");
         const isExactActive = activeNav === id;
         return (
           <button
@@ -51,6 +51,16 @@ export function MobileNav({
           </button>
         );
       })}
+
+      {/* India — separate Link, navigates to /india */}
+      <Link
+        href="/india"
+        className={`chip flex-shrink-0 inline-flex items-center gap-1.5 ${activeNav === "india" ? "active" : ""}`}
+        style={{ borderColor: activeNav === "india" ? "#FF6B35" : undefined }}
+      >
+        <MapPin size={11} strokeWidth={1.6} />
+        India
+      </Link>
     </div>
   );
 }

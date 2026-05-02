@@ -143,6 +143,15 @@ export default function HomePage() {
   const [activeCsFilter, setActiveCsFilter] = useState<CaseStudyCategory>("All");
   const [activeLearnFilter, setActiveLearnFilter] = useState<LearnFilter>("All");
 
+  // When navigated in from another route (e.g. /india) with a hash like
+  // #casestudies, set the active tab on mount so the right view loads.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const valid = ["home", "library", "casestudies", "learn", "saved", "favourites"];
+    const hash = window.location.hash.replace("#", "");
+    if (hash && valid.includes(hash)) setActiveNav(hash);
+  }, []);
+
   const featured = getFeaturedBooks();
 
   const filteredBooks = useMemo(() => {
