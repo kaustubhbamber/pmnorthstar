@@ -55,6 +55,12 @@ export const companyDomains: Record<string, string> = {
   Robinhood: "robinhood.com",
   Whatsapp: "whatsapp.com",
   Atlassian: "atlassian.com",
+  // India case studies
+  Cred: "cred.club",
+  Razorpay: "razorpay.com",
+  Zerodha: "zerodha.com",
+  "Byju's": "byjus.com",
+  Paytm: "paytm.com",
 };
 
 export function getCompanyLogoUrl(company: string): string | null {
