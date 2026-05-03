@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500">
+  <!-- Dark background with subtle dotted grid feel -->
+  <rect width="1500" height="500" fill="#0A0A0A"/>
+  <g opacity="0.15">
+    <circle cx="100" cy="100" r="1.5" fill="#666"/>
+    <circle cx="200" cy="100" r="1.5" fill="#666"/>
+    <circle cx="300" cy="100" r="1.5" fill="#666"/>
+    <circle cx="400" cy="100" r="1.5" fill="#666"/>
+    <circle cx="1100" cy="100" r="1.5" fill="#666"/>
+    <circle cx="1200" cy="100" r="1.5" fill="#666"/>
+    <circle cx="1300" cy="100" r="1.5" fill="#666"/>
+    <circle cx="1400" cy="100" r="1.5" fill="#666"/>
+    <circle cx="100" cy="400" r="1.5" fill="#666"/>
+    <circle cx="200" cy="400" r="1.5" fill="#666"/>
+    <circle cx="300" cy="400" r="1.5" fill="#666"/>
+    <circle cx="400" cy="400" r="1.5" fill="#666"/>
+    <circle cx="1100" cy="400" r="1.5" fill="#666"/>
+    <circle cx="1200" cy="400" r="1.5" fill="#666"/>
+    <circle cx="1300" cy="400" r="1.5" fill="#666"/>
+    <circle cx="1400" cy="400" r="1.5" fill="#666"/>
+  </g>
+
+  <!-- Centered logo block: icon + wordmark -->
+  <g transform="translate(530, 200)">
+    <!-- Red square + star icon -->
+    <rect x="0" y="0" width="100" height="100" rx="20" fill="#F3123C"/>
+    <g transform="translate(15, 15) scale(2.1875)">
+      <path d="M16 4l3.7 7.5L28 13l-6 5.8 1.4 8.2L16 23l-7.4 4 1.4-8.2L4 13l8.3-1.5z" fill="#FFFFFF"/>
+    </g>
+    <!-- Wordmark -->
+    <text x="130" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="64" font-weight="700" fill="#FFFFFF" letter-spacing="-2">North</text>
+    <text x="320" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="64" font-weight="700" fill="#F3123C" letter-spacing="-2">Star</text>
+  </g>
+
+  <!-- Tagline -->
+  <text x="750" y="370" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" font-weight="500" fill="#B5B5B5" letter-spacing="2">CURATED PM RESOURCES · BUILT FOR INDIA</text>
+</svg>
