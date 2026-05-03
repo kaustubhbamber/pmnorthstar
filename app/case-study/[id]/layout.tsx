@@ -91,16 +91,11 @@ export default function CaseStudyLayout({
                     "@type": "ListItem",
                     position: 2,
                     name: "Case Studies",
-                    item: `${SITE_URL}/?nav=casestudies`,
+                    item: `${SITE_URL}/#casestudies`,
                   },
                   {
                     "@type": "ListItem",
                     position: 3,
-                    name: study.category,
-                  },
-                  {
-                    "@type": "ListItem",
-                    position: 4,
                     name: study.title,
                     item: `${SITE_URL}/case-study/${study.id}`,
                   },
