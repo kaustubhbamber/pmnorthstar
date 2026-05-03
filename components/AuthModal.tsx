@@ -125,8 +125,8 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 <Star size={13} className="text-white fill-white" strokeWidth={1.5} />
               </div>
               <div className="flex items-baseline gap-0.5">
-                <span className="font-display font-bold text-[17px]" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>North</span>
-                <span className="font-display font-bold text-[17px]" style={{ color: "var(--brand-primary)", letterSpacing: "-0.02em" }}>Star</span>
+                <span className="font-display font-bold text-[17px]" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>north</span>
+                <span className="font-display font-bold text-[17px]" style={{ color: "var(--brand-primary)", letterSpacing: "-0.02em" }}>star</span>
               </div>
             </div>
             <h2

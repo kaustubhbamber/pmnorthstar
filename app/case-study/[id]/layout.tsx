@@ -24,7 +24,7 @@ export async function generateMetadata(
       url,
       title: study.title,
       description: study.description,
-      siteName: "NorthStar",
+      siteName: "northstar",
       publishedTime: `${study.year}-01-01`,
       tags: study.tags,
     },
@@ -58,10 +58,10 @@ export default function CaseStudyLayout({
                 headline: study.title,
                 description: study.description,
                 datePublished: `${study.year}-01-01`,
-                author: { "@type": "Organization", name: "NorthStar" },
+                author: { "@type": "Organization", name: "northstar" },
                 publisher: {
                   "@type": "Organization",
-                  name: "NorthStar",
+                  name: "northstar",
                   url: SITE_URL,
                 },
                 about: study.company,
@@ -84,7 +84,7 @@ export default function CaseStudyLayout({
                   {
                     "@type": "ListItem",
                     position: 1,
-                    name: "NorthStar",
+                    name: "northstar",
                     item: SITE_URL,
                   },
                   {

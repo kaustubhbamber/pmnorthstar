@@ -1,8 +1,8 @@
-# NorthStar
+# northstar
 
 > A free, curated library of books, case studies, and YouTube playlists for product managers and builders. No sign-up required to browse.
 
-NorthStar is a single-page resource hub aimed at PMs, founders, and operators who want to learn product management without paywalls, ad-stuffed listicles, or 14 dead bookmarks across Notion. All content is hand-curated by the maintainer.
+northstar is a single-page resource hub aimed at PMs, founders, and operators who want to learn product management without paywalls, ad-stuffed listicles, or 14 dead bookmarks across Notion. All content is hand-curated by the maintainer.
 
 ## What's inside
 

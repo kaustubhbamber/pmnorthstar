@@ -6,8 +6,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "NorthStar — Free Product Management Library, Case Studies & Playlists",
-    template: "%s | NorthStar",
+    default: "northstar — Free Product Management Library, Case Studies & Playlists",
+    template: "%s | northstar",
   },
   description:
     "A free curated library of the best books, case studies, and YouTube playlists for product managers. 30 essential books, 50 real case studies (Apple, Spotify, Airbnb, Slack), and 19 hand-picked learning playlists across design, data, marketing, branding, startups and finance.",
@@ -25,22 +25,22 @@ export const metadata: Metadata = {
     "data analytics",
     "AI product management",
   ],
-  authors: [{ name: "NorthStar" }],
-  creator: "NorthStar",
-  publisher: "NorthStar",
+  authors: [{ name: "northstar" }],
+  creator: "northstar",
+  publisher: "northstar",
   category: "education",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "NorthStar",
-    title: "NorthStar — Free Product Management Library, Case Studies & Playlists",
+    siteName: "northstar",
+    title: "northstar — Free Product Management Library, Case Studies & Playlists",
     description:
       "30 books · 50 case studies · 19 curated playlists. The free, opinionated library for product managers and builders.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "NorthStar — Product Management Library",
+    title: "northstar — Product Management Library",
     description: "Free curated books, case studies and playlists for PMs and builders.",
   },
   robots: {
@@ -72,8 +72,8 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "NorthStar",
-              alternateName: "NorthStar PM",
+              name: "northstar",
+              alternateName: "northstar PM",
               url: SITE_URL,
               description:
                 "Free curated library of books, case studies, and YouTube playlists for product managers.",

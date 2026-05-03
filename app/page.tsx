@@ -757,8 +757,8 @@ export default function HomePage() {
               >
                 <Star size={11} className="text-white fill-white" strokeWidth={1.5} />
               </div>
-              <span className="font-display font-bold text-[15px]" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>North</span>
-              <span className="font-display font-bold text-[15px]" style={{ color: "var(--brand-primary)", letterSpacing: "-0.02em" }}>Star</span>
+              <span className="font-display font-bold text-[15px]" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>north</span>
+              <span className="font-display font-bold text-[15px]" style={{ color: "var(--brand-primary)", letterSpacing: "-0.02em" }}>star</span>
             </div>
           </div>
           <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />

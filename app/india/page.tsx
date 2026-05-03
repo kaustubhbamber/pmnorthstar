@@ -144,7 +144,7 @@ export default function IndiaPage() {
               >
                 A curated library for Indian product managers, founders, and
                 operators. The case studies you read elsewhere are written for
-                the US market. NorthStar is being rewritten for ours.
+                the US market. northstar is being rewritten for ours.
               </p>
 
               <div className="flex flex-wrap items-center gap-2.5 mt-7">
@@ -356,7 +356,7 @@ export default function IndiaPage() {
           >
             <div className="max-w-2xl">
               <p className="eyebrow mb-3" style={{ color: "#50C878" }}>
-                Why NorthStar
+                Why northstar
               </p>
               <h2
                 className="text-2xl sm:text-3xl font-semibold mb-5"
@@ -382,7 +382,7 @@ export default function IndiaPage() {
                   case study covers.
                 </p>
                 <p>
-                  NorthStar is being built around that gap — long-form Indian
+                  northstar is being built around that gap — long-form Indian
                   case studies, in the same depth as the global ones, plus the
                   curated library you already get for free.
                 </p>
