@@ -61,6 +61,9 @@ export const companyDomains: Record<string, string> = {
   Zerodha: "zerodha.com",
   "Byju's": "byjus.com",
   Paytm: "paytm.com",
+  Swiggy: "swiggy.com",
+  PhonePe: "phonepe.com",
+  Nykaa: "nykaa.com",
 };
 
 export function getCompanyLogoUrl(company: string): string | null {

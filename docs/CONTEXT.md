@@ -1,6 +1,6 @@
 # northstar — context document
 
-Last updated: 2026-05-04 (Substack integration shipped)
+Last updated: 2026-05-04 (Substack integration shipped, 8 India case studies live)
 
 A living context doc so any future session (Claude or otherwise) can pick up cold. Update it whenever decisions or strategy shift.
 
@@ -262,8 +262,17 @@ Fixed BreadcrumbList "Missing field 'item'" error. Removed the category breadcru
 
 1. ✅ Substack live at `pmnorthstar.substack.com` (done 2026-05-04)
 2. ✅ Custom signup form embedded on case studies + home + /india (done 2026-05-04)
-3. **Write next 5 India case studies** at the 3-day mark: Swiggy, PhonePe, Cult.fit, Nykaa, Meesho
-4. **First Substack post**: write the welcome / intro post (~150 words) introducing the publication
+3. ✅ Added 3 more India case studies: Swiggy (cs-56), PhonePe (cs-57), Nykaa (cs-58) — total 8 India cases live
+4. **Write next India case studies** at the 3-day mark: Cult.fit, Meesho, Slice, Groww vs Zerodha — 4 remain in queue, then expand the queue further
+5. **First Substack post**: write the welcome / intro post (~150 words) introducing the publication
+
+## v3 backlog (post-month-12, after PM is nailed)
+
+- **CMS for case studies** — currently all case study content is in `data/caseStudies.ts` and requires a code push to update. v3 should add a lightweight admin interface (e.g., admin route gated by user role, Markdown editor, content lives in DB or in MDX files). Goal: user can publish a new case study without touching code. Keep this scoped — not a full Notion-like system, just a Markdown-in-Markdown-out editor with preview. Likely Supabase-backed table with role-based auth.
+- Author photo manual override field (for cases where Wikipedia API misses)
+- Newsletter "subscribers" dashboard (read-only mirror of Substack stats)
+- Per-vertical sub-section structure (`/startups`, `/marketing`, etc) — see Phased expansion above
+- B2B layer (sell case studies as a curriculum to companies)
 4. **Continue weekly publishing** after the 25-case batch
 5. **Audit at month 6**: if not at 25-60k MAU + 1.5k+ subs, plan needs adjustment
 6. **Monetization layer at month 12-15** if PM milestones met
