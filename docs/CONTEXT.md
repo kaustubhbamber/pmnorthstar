@@ -1,6 +1,6 @@
 # northstar — context document
 
-Last updated: 2026-05-04 (Substack integration shipped, 8 India case studies live)
+Last updated: 2026-05-11 (9 India case studies live, Cult.fit added)
 
 A living context doc so any future session (Claude or otherwise) can pick up cold. Update it whenever decisions or strategy shift.
 

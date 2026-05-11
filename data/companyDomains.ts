@@ -64,6 +64,7 @@ export const companyDomains: Record<string, string> = {
   Swiggy: "swiggy.com",
   PhonePe: "phonepe.com",
   Nykaa: "nykaa.com",
+  "Cult.fit": "cult.fit",
 };
 
 export function getCompanyLogoUrl(company: string): string | null {
