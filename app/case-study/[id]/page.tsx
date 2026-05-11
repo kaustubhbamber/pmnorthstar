@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getCaseStudyById, caseStudies } from "@/data/caseStudies";
+import { getCaseStudyById, getCaseStudyBySlug, getCaseStudySlug, caseStudies } from "@/data/caseStudies";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SubscribeForm } from "@/components/SubscribeForm";
@@ -20,7 +20,8 @@ const categoryColors: Record<string, string> = {
 
 export default function CaseStudyPage({ params }: { params: { id: string } }) {
   const { id } = params;
-  const study = getCaseStudyById(id);
+  // Param is the slug; legacy cs-X URLs are 301-redirected by the layout.
+  const study = getCaseStudyBySlug(id) || getCaseStudyById(id);
   const router = useRouter();
 
   const [isDark, setIsDark] = useState(false);
@@ -37,7 +38,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
 
   const handleNavChange = () => router.push("/");
 
-  const currentIndex = caseStudies.findIndex((c) => c.id === id);
+  const currentIndex = study ? caseStudies.findIndex((c) => c.id === study.id) : -1;
   const prevStudy = currentIndex > 0 ? caseStudies[currentIndex - 1] : null;
   const nextStudy = currentIndex < caseStudies.length - 1 ? caseStudies[currentIndex + 1] : null;
 
@@ -252,7 +253,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               >
                 {prevStudy ? (
                   <Link
-                    href={`/case-study/${prevStudy.id}`}
+                    href={`/case-study/${getCaseStudySlug(prevStudy.id)}`}
                     className="playlist-card surface p-4 group"
                     style={{ ["--accent-color" as any]: "var(--text-muted)" } as React.CSSProperties}
                   >
@@ -266,7 +267,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 )}
                 {nextStudy ? (
                   <Link
-                    href={`/case-study/${nextStudy.id}`}
+                    href={`/case-study/${getCaseStudySlug(nextStudy.id)}`}
                     className="playlist-card surface p-4 text-right group"
                     style={{ ["--accent-color" as any]: "var(--text-muted)" } as React.CSSProperties}
                   >
@@ -303,7 +304,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                       return (
                         <Link
                           key={r.id}
-                          href={`/case-study/${r.id}`}
+                          href={`/case-study/${getCaseStudySlug(r.id)}`}
                           className="playlist-card surface p-4 group"
                           style={{ ["--accent-color" as any]: rColor } as React.CSSProperties}
                         >

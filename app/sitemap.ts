@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { caseStudies } from "@/data/caseStudies";
+import { caseStudies, getCaseStudySlug } from "@/data/caseStudies";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
 
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const study of caseStudies) {
     routes.push({
-      url: `${SITE_URL}/case-study/${study.id}`,
+      url: `${SITE_URL}/case-study/${getCaseStudySlug(study.id)}`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,

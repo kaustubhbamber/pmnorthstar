@@ -759,3 +759,85 @@ export const getCaseStudyById = (id: string): CaseStudy | undefined =>
 
 export const getIndianCaseStudies = (): CaseStudy[] =>
   caseStudies.filter((c) => c.region === "India");
+
+// ── SLUG MAP ────────────────────────────────────────────────────────────
+// SEO-friendly URLs: /case-study/{slug} instead of /case-study/cs-X.
+// Old cs-X URLs are 301-redirected to the slug URL in layout.tsx.
+// Pattern: {company-lowercase}-{topic} — short, descriptive, unique.
+const SLUG_MAP: Record<string, string> = {
+  "cs-1":  "apple-iphone-launch",
+  "cs-2":  "slack-gaming-pivot",
+  "cs-3":  "airbnb-cereal-survival",
+  "cs-4":  "netflix-dvd-to-streaming",
+  "cs-5":  "spotify-streaming-war",
+  "cs-6":  "figma-browser-design",
+  "cs-7":  "notion-all-in-one-workspace",
+  "cs-8":  "zoom-frictionless-video",
+  "cs-9":  "duolingo-gamification",
+  "cs-10": "instagram-burbn-pivot",
+  "cs-11": "dropbox-referral-loop",
+  "cs-12": "hotmail-viral-growth-hack",
+  "cs-13": "twitter-suggested-users",
+  "cs-14": "linkedin-profile-completeness",
+  "cs-15": "pinterest-waitlist",
+  "cs-16": "uber-blitzscaling",
+  "cs-17": "tiktok-algorithm",
+  "cs-18": "hubspot-inbound-marketing",
+  "cs-19": "clubhouse-fomo-launch",
+  "cs-20": "paypal-referral-bonus",
+  "cs-21": "amazon-working-backwards",
+  "cs-22": "microsoft-cloud-turnaround",
+  "cs-23": "tesla-direct-to-consumer",
+  "cs-24": "nintendo-blue-ocean-wii",
+  "cs-25": "shopify-merchants-first",
+  "cs-26": "google-maps-data-moat",
+  "cs-27": "stripe-developer-first",
+  "cs-28": "lego-near-bankruptcy-comeback",
+  "cs-29": "chatgpt-consumer-launch",
+  "cs-30": "canva-freemium-design",
+  "cs-31": "ipod-scroll-wheel",
+  "cs-32": "gmail-inbox-redesign",
+  "cs-33": "headspace-meditation-design",
+  "cs-34": "monzo-hot-coral-card",
+  "cs-35": "superhuman-product-market-fit",
+  "cs-36": "kodak-digital-camera-failure",
+  "cs-37": "blackberry-touchscreen-refusal",
+  "cs-38": "google-glass-ahead-of-time",
+  "cs-39": "wework-ipo-collapse",
+  "cs-40": "quibi-shutdown",
+  "cs-41": "microsoft-zune-failure",
+  "cs-42": "facebook-home-failure",
+  "cs-43": "theranos-fraud",
+  "cs-44": "myspace-facebook-loss",
+  "cs-45": "yahoo-missed-deals",
+  "cs-46": "intercom-jobs-to-be-done",
+  "cs-47": "snapchat-ephemeral-content",
+  "cs-48": "robinhood-democratized-trading",
+  "cs-49": "whatsapp-no-ads-growth",
+  "cs-50": "atlassian-no-sales-team",
+  "cs-51": "cred-design-fintech",
+  "cs-52": "razorpay-pivot-fintech",
+  "cs-53": "zerodha-bootstrap-broker",
+  "cs-54": "byjus-downfall",
+  "cs-55": "paytm-super-app-comeback",
+  "cs-56": "swiggy-instamart-bet",
+  "cs-57": "phonepe-upi-strategy",
+  "cs-58": "nykaa-ipo-journey",
+  "cs-59": "cult-fit-super-app",
+};
+
+const ID_BY_SLUG: Record<string, string> = Object.fromEntries(
+  Object.entries(SLUG_MAP).map(([id, slug]) => [slug, id])
+);
+
+export const getCaseStudySlug = (id: string): string =>
+  SLUG_MAP[id] || id;
+
+export const getCaseStudyBySlug = (slug: string): CaseStudy | undefined => {
+  const id = ID_BY_SLUG[slug];
+  return id ? getCaseStudyById(id) : undefined;
+};
+
+// True if param looks like a legacy cs-X identifier
+export const isLegacyId = (param: string): boolean =>
+  /^cs-\d+$/.test(param);

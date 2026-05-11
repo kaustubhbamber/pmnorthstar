@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
-import { CaseStudy } from "@/data/caseStudies";
+import { CaseStudy, getCaseStudySlug } from "@/data/caseStudies";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { SaveButton } from "@/components/SaveButton";
 import Link from "next/link";
@@ -75,7 +75,7 @@ export function CaseStudyCard({
           )}
         </div>
       )}
-      <Link href={`/case-study/${study.id}`} className="block px-5 pt-5 pb-4 group">
+      <Link href={`/case-study/${getCaseStudySlug(study.id)}`} className="block px-5 pt-5 pb-4 group">
         <div className="flex items-center justify-between mb-5">
           <span
             className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full truncate"
@@ -177,7 +177,7 @@ export function CaseStudyCard({
             title: study.title,
             author: study.company,
             category: study.category,
-            link: `/case-study/${study.id}`,
+            link: `/case-study/${getCaseStudySlug(study.id)}`,
           }}
           isLoggedIn={isLoggedIn}
           initialSaved={initialSaved}

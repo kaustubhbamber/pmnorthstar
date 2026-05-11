@@ -1,20 +1,35 @@
 import type { Metadata } from "next";
-import { getCaseStudyById, caseStudies } from "@/data/caseStudies";
+import { permanentRedirect } from "next/navigation";
+import {
+  caseStudies,
+  getCaseStudyById,
+  getCaseStudyBySlug,
+  getCaseStudySlug,
+  isLegacyId,
+} from "@/data/caseStudies";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
 
+// Prerender every case study at its slug URL (not cs-X).
+// The [id] route param now holds a slug; legacy cs-X params are
+// 301-redirected by the layout component below.
 export async function generateStaticParams() {
-  return caseStudies.map((c) => ({ id: c.id }));
+  return caseStudies.map((c) => ({ id: getCaseStudySlug(c.id) }));
 }
 
 export async function generateMetadata(
   { params }: { params: { id: string } }
 ): Promise<Metadata> {
-  const study = getCaseStudyById(params.id);
+  // Resolve the study by slug first; fall back to ID for legacy URLs.
+  const study =
+    getCaseStudyBySlug(params.id) ||
+    (isLegacyId(params.id) ? getCaseStudyById(params.id) : undefined);
+
   if (!study) {
     return { title: "Case study not found" };
   }
-  const url = `${SITE_URL}/case-study/${study.id}`;
+  const slug = getCaseStudySlug(study.id);
+  const url = `${SITE_URL}/case-study/${slug}`;
   return {
     title: study.title,
     description: study.description,
@@ -43,7 +58,18 @@ export default function CaseStudyLayout({
   children: React.ReactNode;
   params: { id: string };
 }) {
-  const study = getCaseStudyById(params.id);
+  // Legacy cs-X URL? 301-redirect to the slug URL for SEO equity transfer.
+  if (isLegacyId(params.id)) {
+    const study = getCaseStudyById(params.id);
+    if (study) {
+      const slug = getCaseStudySlug(study.id);
+      // permanentRedirect issues a 308 (which Google treats as 301 equivalent).
+      permanentRedirect(`/case-study/${slug}`);
+    }
+  }
+
+  const study = getCaseStudyBySlug(params.id);
+  const slug = study ? getCaseStudySlug(study.id) : params.id;
 
   return (
     <>
@@ -69,7 +95,7 @@ export default function CaseStudyLayout({
                 articleSection: study.category,
                 mainEntityOfPage: {
                   "@type": "WebPage",
-                  "@id": `${SITE_URL}/case-study/${study.id}`,
+                  "@id": `${SITE_URL}/case-study/${slug}`,
                 },
               }),
             }}
@@ -97,7 +123,7 @@ export default function CaseStudyLayout({
                     "@type": "ListItem",
                     position: 3,
                     name: study.title,
-                    item: `${SITE_URL}/case-study/${study.id}`,
+                    item: `${SITE_URL}/case-study/${slug}`,
                   },
                 ],
               }),
