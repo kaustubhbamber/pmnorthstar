@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 import { books } from "@/data/books";
