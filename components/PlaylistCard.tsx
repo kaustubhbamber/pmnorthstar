@@ -42,7 +42,9 @@ export function PlaylistCard({
 }: PlaylistCardProps) {
   const color = learnCategoryColors[playlist.category] ?? "var(--brand-primary)";
   const hasUrl = playlist.url && playlist.url.trim() !== "";
-  const thumbnail = hasUrl ? getYouTubeThumbnail(playlist.url) : null;
+  // Prefer the curated imageUrl (fetched via YouTube oEmbed), fall back to
+  // URL-pattern extraction for single-video URLs, fall back to gradient+emoji.
+  const thumbnail = playlist.imageUrl || (hasUrl ? getYouTubeThumbnail(playlist.url) : null);
   const [thumbFailed, setThumbFailed] = useState(false);
   const indexLabel =
     typeof index === "number" ? String(index + 1).padStart(2, "0") : "·";

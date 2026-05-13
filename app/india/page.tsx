@@ -343,7 +343,7 @@ export default function IndiaPage() {
 
               <div className="mt-8">
                 <Link href="/" className="btn-ghost inline-flex">
-                  See all 50 case studies
+                  See all {caseStudies.length} case studies
                   <ArrowUpRight size={12} strokeWidth={1.6} />
                 </Link>
               </div>
@@ -416,7 +416,7 @@ export default function IndiaPage() {
                 Start with the library you have today
               </h2>
               <Link href="/" className="btn-primary group">
-                Browse all 55 case studies
+                Browse all {caseStudies.length} case studies
                 <ArrowUpRight
                   size={14}
                   strokeWidth={1.8}

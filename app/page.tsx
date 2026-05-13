@@ -530,7 +530,7 @@ export default function HomePage() {
                     <span className="gradient-warm">and the failures behind them.</span>
                   </h2>
                   <p className="text-sm max-w-xl" style={{ color: "var(--text-muted)" }}>
-                    50 deep-dives — pivots, growth loops, design bets, hard lessons.
+                    {caseStudies.length} deep-dives — pivots, growth loops, design bets, hard lessons.
                   </p>
                 </div>
 
@@ -831,7 +831,7 @@ export default function HomePage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 mx-4 sm:mx-6 mt-6 mb-8 surface" style={{ borderRadius: 12 }}>
                 {[
                   { label: "books", value: "30", nav: null as string | null },
-                  { label: "case_studies", value: "50", nav: "casestudies" },
+                  { label: "case_studies", value: String(caseStudies.length), nav: "casestudies" },
                   { label: "playlists", value: String(playlists.length), nav: "learn" },
                   { label: "categories", value: "3", nav: null as string | null },
                 ].map(({ label, value, nav }, idx) => (

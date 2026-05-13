@@ -18,6 +18,7 @@ export interface Playlist {
   description: string;
   url: string;
   thumbnail: string;
+  imageUrl?: string; // Real YouTube thumbnail (fetched via oEmbed). Falls back to gradient+emoji if missing.
   videos?: number;
   level?: "Beginner" | "Intermediate" | "Advanced";
   tags?: string[];
@@ -65,6 +66,7 @@ export const playlists: Playlist[] = [
     category: "Design",
     description: "Curated playlist covering visual design principles, layout, and craft.",
     url: "https://www.youtube.com/playlist?list=PLAwxTw4SYaPlTr1MmjkAZXVv8Su2CfY7D",
+    imageUrl: "https://i.ytimg.com/vi/rsPuayaIZ9s/hqdefault.jpg",
     thumbnail: "🎨",
   },
   {
@@ -74,6 +76,7 @@ export const playlists: Playlist[] = [
     category: "Design",
     description: "Step-by-step lessons on user experience and interface design.",
     url: "https://www.youtube.com/playlist?list=PLlHtucAD9KT19ckHqXpPSStZOyDSq9AW-",
+    imageUrl: "https://i.ytimg.com/vi/bI6q16ffdgQ/hqdefault.jpg",
     thumbnail: "🎨",
   },
   {
@@ -83,6 +86,7 @@ export const playlists: Playlist[] = [
     category: "Design",
     description: "A standout talk on design thinking and craft.",
     url: "https://youtu.be/c0zhLzcVJRI",
+    imageUrl: "https://i.ytimg.com/vi/c0zhLzcVJRI/hqdefault.jpg",
     thumbnail: "🎨",
   },
 
@@ -94,6 +98,7 @@ export const playlists: Playlist[] = [
     category: "Product Management",
     description: "End-to-end PM curriculum covering discovery, delivery, and growth.",
     url: "https://youtube.com/playlist?list=PLEiEAq2VkUUIE8vrshd0pKiYl7PKpINPe",
+    imageUrl: "https://i.ytimg.com/vi/CIfkA9JhYIw/hqdefault.jpg",
     thumbnail: "📐",
   },
   {
@@ -103,6 +108,7 @@ export const playlists: Playlist[] = [
     category: "Product Management",
     description: "Building products in the AI era — frameworks, examples, and patterns.",
     url: "https://youtu.be/KjYCEiBTHFo",
+    imageUrl: "https://i.ytimg.com/vi/KjYCEiBTHFo/hqdefault.jpg",
     thumbnail: "📐",
   },
   {
@@ -112,6 +118,7 @@ export const playlists: Playlist[] = [
     category: "Product Management",
     description: "A deep masterclass on the craft of product management.",
     url: "https://youtu.be/abA-QZzbon0",
+    imageUrl: "https://i.ytimg.com/vi/abA-QZzbon0/hqdefault.jpg",
     thumbnail: "📐",
   },
 
@@ -123,6 +130,7 @@ export const playlists: Playlist[] = [
     category: "Data Analytics",
     description: "From raw data to insights — SQL, dashboards, and storytelling.",
     url: "https://youtube.com/playlist?list=PLjVLYmrlmjGdRs1sGqRrTE-EMraLclJga",
+    imageUrl: "https://i.ytimg.com/vi/VaSjiJMrq24/hqdefault.jpg",
     thumbnail: "📊",
   },
   {
@@ -132,6 +140,7 @@ export const playlists: Playlist[] = [
     category: "Data Analytics",
     description: "Hands-on playlist for analyst skills, tools, and case studies.",
     url: "https://www.youtube.com/playlist?list=PLUaB-1hjhk8FE_XZ87vPPSfHqb6OcM0cF",
+    imageUrl: "https://i.ytimg.com/vi/rGx1QNdYzvs/hqdefault.jpg",
     thumbnail: "📊",
   },
 
@@ -143,6 +152,7 @@ export const playlists: Playlist[] = [
     category: "Product Analytics",
     description: "Metrics, funnels, retention, and how PMs reason with data.",
     url: "https://youtube.com/playlist?list=PLZubw3yovSsj75rZjNHG0taO43QTppMN8",
+    imageUrl: "https://i.ytimg.com/vi/q_AlK1PU73I/hqdefault.jpg",
     thumbnail: "📈",
   },
   {
@@ -152,6 +162,7 @@ export const playlists: Playlist[] = [
     category: "Product Analytics",
     description: "A practical talk on building and using product metrics.",
     url: "https://youtu.be/N-Igkw7__z0",
+    imageUrl: "https://i.ytimg.com/vi/N-Igkw7__z0/hqdefault.jpg",
     thumbnail: "📈",
   },
 
@@ -163,6 +174,7 @@ export const playlists: Playlist[] = [
     category: "Marketing",
     description: "Positioning, funnels, channels — the modern marketing toolkit.",
     url: "https://youtube.com/playlist?list=PLByMooBE3Mif9_X7UNOX2LAjqTpzc1NbB",
+    imageUrl: "https://i.ytimg.com/vi/lJfo0UOe5I4/hqdefault.jpg",
     thumbnail: "📣",
   },
   {
@@ -172,6 +184,7 @@ export const playlists: Playlist[] = [
     category: "Marketing",
     description: "Long-running playlist on marketing strategy and tactics.",
     url: "https://youtube.com/playlist?list=PL14BB28B5FE99A733",
+    imageUrl: "https://i.ytimg.com/vi/dV1LbZg0if4/hqdefault.jpg",
     thumbnail: "📣",
   },
 
@@ -183,6 +196,7 @@ export const playlists: Playlist[] = [
     category: "Branding",
     description: "Logos, identity systems, and how to build a brand.",
     url: "https://youtube.com/playlist?list=PL-Sv3bpjab1tl3U-kWJZBFmsH7tcnYEYY",
+    imageUrl: "https://i.ytimg.com/vi/G38bYqGdYUQ/hqdefault.jpg",
     thumbnail: "✨",
   },
   {
@@ -192,6 +206,7 @@ export const playlists: Playlist[] = [
     category: "Branding",
     description: "Strategy, naming, voice, and visual identity.",
     url: "https://youtube.com/playlist?list=PLzKJi2GjpkEHa6aTy6PmvbUTKoFUes-DQ",
+    imageUrl: "https://i.ytimg.com/vi/sO4te2QNsHY/hqdefault.jpg",
     thumbnail: "✨",
   },
 
@@ -203,6 +218,7 @@ export const playlists: Playlist[] = [
     category: "Startup",
     description: "Founder-grade playlist on building, fundraising, and scaling.",
     url: "https://youtube.com/playlist?list=PL5q_lef6zVkaTY_cT1k7qFNF2TidHCe-1",
+    imageUrl: "https://i.ytimg.com/vi/CBYhVcO4WgI/hqdefault.jpg",
     thumbnail: "🚀",
   },
   {
@@ -212,6 +228,7 @@ export const playlists: Playlist[] = [
     category: "Startup",
     description: "0 to 1 — picking ideas, talking to users, shipping.",
     url: "https://youtube.com/playlist?list=PLAwxTw4SYaPnxzSuovATBMrNowGaaEBmW",
+    imageUrl: "https://i.ytimg.com/vi/VZvgj6B2JZs/hqdefault.jpg",
     thumbnail: "🚀",
   },
 
@@ -223,6 +240,7 @@ export const playlists: Playlist[] = [
     category: "Finances",
     description: "Cap tables, fundraising, runway — finance for product builders.",
     url: "https://youtube.com/playlist?list=PLUkh9m2BorqndWimijiJ-VCAXjJUrzJQU",
+    imageUrl: "https://i.ytimg.com/vi/aK4qHbDkJ-s/hqdefault.jpg",
     thumbnail: "💰",
   },
   {
@@ -232,6 +250,7 @@ export const playlists: Playlist[] = [
     category: "Finances",
     description: "Foundational finance concepts every operator should know.",
     url: "https://youtube.com/playlist?list=PLUl4u3cNGP63B2lDhyKOsImI7FjCf6eDW",
+    imageUrl: "https://i.ytimg.com/vi/HdHlfiOAJyE/hqdefault.jpg",
     thumbnail: "💰",
   },
 ];

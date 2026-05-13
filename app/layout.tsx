@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { caseStudies } from "@/data/caseStudies";
+import { playlists } from "@/data/learn";
+import { books } from "@/data/books";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
+const CASE_STUDY_COUNT = caseStudies.length;
+const BOOK_COUNT = books.length;
+const PLAYLIST_COUNT = playlists.length;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -11,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | northstar",
   },
   description:
-    "A free curated library of the best books, case studies, and YouTube playlists for product managers. 30 essential books, 50 real case studies (Apple, Spotify, Airbnb, Slack), and 19 hand-picked learning playlists across design, data, marketing, branding, startups and finance.",
+    `A free curated library of the best books, case studies, and YouTube playlists for product managers. ${BOOK_COUNT} essential books, ${CASE_STUDY_COUNT} real case studies (Apple, Spotify, Airbnb, Slack, Cred, Razorpay, Zerodha), and ${PLAYLIST_COUNT} hand-picked learning playlists across design, data, marketing, branding, startups and finance.`,
   keywords: [
     "product management",
     "product manager",
@@ -37,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "northstar",
     title: "northstar — Free Product Management Library, Case Studies & Playlists",
     description:
-      "30 books · 50 case studies · 19 curated playlists. The free, opinionated library for product managers and builders.",
+      `${BOOK_COUNT} books · ${CASE_STUDY_COUNT} case studies · ${PLAYLIST_COUNT} curated playlists. The free, opinionated library for product managers and builders.`,
   },
   twitter: {
     card: "summary_large_image",
