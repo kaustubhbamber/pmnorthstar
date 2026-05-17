@@ -65,6 +65,12 @@ export const companyDomains: Record<string, string> = {
   PhonePe: "phonepe.com",
   Nykaa: "nykaa.com",
   "Cult.fit": "cult.fit",
+  Meesho: "meesho.com",
+  Slice: "sliceit.com",
+  Groww: "groww.in",
+  Loom: "loom.com",
+  Discord: "discord.com",
+  Vercel: "vercel.com",
 };
 
 export function getCompanyLogoUrl(company: string): string | null {
