@@ -31,6 +31,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { AuthModal } from "@/components/AuthModal";
+import { topics } from "@/data/topics";
+import { comparisons } from "@/data/comparisons";
+import Link from "next/link";
 import {
   TrendingUp,
   TrendingDown,
@@ -148,7 +151,7 @@ export default function HomePage() {
   // #casestudies, set the active tab on mount so the right view loads.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const valid = ["home", "library", "casestudies", "learn", "saved", "favourites"];
+    const valid = ["home", "casestudies", "learn", "explore", "saved", "favourites"];
     const hash = window.location.hash.replace("#", "");
     if (hash && valid.includes(hash)) setActiveNav(hash);
   }, []);
@@ -732,6 +735,124 @@ export default function HomePage() {
     );
   }
 
+  // ── Explore View — topics + comparisons aggregator ────────────────────
+  if (activeNav === "explore") {
+    return (
+      <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
+        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <header
+            className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
+            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg lg:hidden flex-shrink-0" style={{ color: "var(--text-primary)" }}>
+                <Menu size={20} />
+              </button>
+              <div>
+                <p className="eyebrow hidden sm:block">Explore</p>
+                <h1 className="text-lg sm:text-xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                  Topics & Comparisons
+                </h1>
+              </div>
+            </div>
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          </header>
+
+          <MobileNav activeNav={activeNav} onNavChange={setActiveNav} savedCount={savedCount} favouriteCount={favouriteCount} />
+
+          <main className="flex-1 overflow-y-auto scroll-container">
+            {/* Hero */}
+            <section
+              className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+              style={{ borderBottom: "1px solid var(--card-border)" }}
+            >
+              <div className="max-w-3xl">
+                <p className="eyebrow mb-3 sm:mb-4" style={{ color: "#26A69A" }}>
+                  Curated paths through the library
+                </p>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] mb-3 sm:mb-4" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>
+                  <span className="gradient-warm">Different ways</span> to navigate the case studies.
+                </h2>
+                <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: "var(--text-muted)" }}>
+                  <strong style={{ color: "var(--text-primary)" }}>Topics</strong> group case studies by theme (Indian fintech, super-app failures). <strong style={{ color: "var(--text-primary)" }}>Comparisons</strong> put two companies head-to-head when they share a market.
+                </p>
+              </div>
+            </section>
+
+            {/* Topics */}
+            <section className="px-4 sm:px-6 lg:px-12 py-8 sm:py-12" style={{ borderBottom: "1px solid var(--card-border)" }}>
+              <div className="flex items-baseline gap-3 mb-5 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-semibold" style={{ color: "#26A69A", letterSpacing: "-0.02em" }}>
+                  Topics
+                </h2>
+                <span className="text-xs" style={{ color: "var(--text-faint)" }}>
+                  {topics.length} curated themes
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+                {topics.map((t) => (
+                  <Link
+                    key={t.slug}
+                    href={`/topics/${t.slug}`}
+                    className="playlist-card surface p-4 sm:p-5 group"
+                    style={{ ["--accent-color" as any]: t.accentColor } as React.CSSProperties}
+                  >
+                    <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider mb-2" style={{ color: t.accentColor, opacity: 0.85 }}>
+                      {t.eyebrow}
+                    </p>
+                    <p className="text-base sm:text-lg font-semibold leading-snug mb-2" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                      {t.title}
+                    </p>
+                    <p className="text-xs sm:text-sm line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>
+                      {t.intro}
+                    </p>
+                    <p className="text-xs font-medium" style={{ color: t.accentColor }}>
+                      {t.caseStudyIds.length} case studies →
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* Comparisons */}
+            <section className="px-4 sm:px-6 lg:px-12 py-8 sm:py-12">
+              <div className="flex items-baseline gap-3 mb-5 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-semibold" style={{ color: "#FF6B35", letterSpacing: "-0.02em" }}>
+                  Comparisons
+                </h2>
+                <span className="text-xs" style={{ color: "var(--text-faint)" }}>
+                  {comparisons.length} head-to-heads
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+                {comparisons.map((c) => (
+                  <Link
+                    key={c.slug}
+                    href={`/compare/${c.slug}`}
+                    className="playlist-card surface p-4 sm:p-5 group"
+                    style={{ ["--accent-color" as any]: c.accentColor } as React.CSSProperties}
+                  >
+                    <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider mb-2" style={{ color: c.accentColor, opacity: 0.85 }}>
+                      {c.eyebrow}
+                    </p>
+                    <p className="text-base sm:text-lg font-semibold leading-snug mb-2" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                      {c.title.split(" — ")[0]}
+                    </p>
+                    <p className="text-xs sm:text-sm line-clamp-2" style={{ color: "var(--text-muted)" }}>
+                      {c.intro.split(". ")[0]}.
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </main>
+        </div>
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} onSuccess={(u) => setUser(u)} />}
+      </div>
+    );
+  }
+
   // ── Main Home View ─────────────────────────────────────────────────────
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--page-bg)" }}>
@@ -937,6 +1058,56 @@ export default function HomePage() {
                           onSavedChange={handleSavedChange}
                           onLikedChange={handleLikedChange}
                     />
+                  ))}
+                </div>
+              </div>
+
+              {/* Explore preview — small teaser, full version on /explore tab */}
+              <div className="px-4 sm:px-6 mt-10 mb-8">
+                <div className="flex items-end justify-between mb-5">
+                  <div>
+                    <p className="eyebrow mb-1.5" style={{ color: "#26A69A", opacity: 0.85 }}>Explore</p>
+                    <div className="flex items-baseline gap-3">
+                      <h2 className="text-base sm:text-lg font-semibold" style={{ color: "#26A69A", letterSpacing: "-0.02em" }}>
+                        Topics & comparisons
+                      </h2>
+                      <span className="font-mono text-[11px]" style={{ color: "var(--text-faint)" }}>
+                        [{topics.length + comparisons.length}]
+                      </span>
+                    </div>
+                    <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+                      Curated themes & head-to-head comparisons
+                    </p>
+                  </div>
+                  <button onClick={() => setActiveNav("explore")} className="btn-ghost">
+                    View all
+                    <ArrowUpRight size={12} strokeWidth={1.6} />
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  {topics.slice(0, 4).map((t) => (
+                    <Link
+                      key={t.slug}
+                      href={`/topics/${t.slug}`}
+                      className="playlist-card surface p-4 sm:p-5 group"
+                      style={{ ["--accent-color" as any]: t.accentColor } as React.CSSProperties}
+                    >
+                      <p
+                        className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider mb-2"
+                        style={{ color: t.accentColor, opacity: 0.85 }}
+                      >
+                        {t.eyebrow}
+                      </p>
+                      <p
+                        className="text-base sm:text-lg font-semibold leading-snug mb-2"
+                        style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
+                      >
+                        {t.title}
+                      </p>
+                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                        {t.caseStudyIds.length} case studies
+                      </p>
+                    </Link>
                   ))}
                 </div>
               </div>

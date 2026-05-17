@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Library, BookMarked, Star, FlameIcon, GraduationCap, MapPin } from "lucide-react";
+import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
+import { topics } from "@/data/topics";
+import { comparisons } from "@/data/comparisons";
 
 interface MobileNavProps {
   activeNav: string;
@@ -20,9 +22,9 @@ export function MobileNav({
 }: MobileNavProps) {
   const items = [
     { id: "home",        label: "Home",        icon: Home,           count: null as number | null },
-    { id: "library",     label: "Library",     icon: Library,        count: null as number | null },
     { id: "casestudies", label: "Case Studies", icon: FlameIcon,     count: caseStudies.length },
     { id: "learn",       label: "Learn",       icon: GraduationCap,  count: playlists.length },
+    { id: "explore",     label: "Explore",     icon: Layers,         count: topics.length + comparisons.length },
     { id: "saved",       label: "Saved",       icon: BookMarked,     count: savedCount > 0 ? savedCount : null },
     { id: "favourites",  label: "Favourites",  icon: Star,           count: favouriteCount > 0 ? favouriteCount : null },
   ];

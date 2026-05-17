@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Library, BookMarked, Star, FlameIcon, GraduationCap, MapPin, X } from "lucide-react";
+import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers, X } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
+import { topics } from "@/data/topics";
+import { comparisons } from "@/data/comparisons";
 
 interface SidebarProps {
   activeNav: string;
@@ -16,9 +18,9 @@ interface SidebarProps {
 
 const primaryNav = [
   { id: "home",         label: "Home",         icon: Home,           count: null as number | null },
-  { id: "library",      label: "Library",      icon: Library,        count: null as number | null },
   { id: "casestudies",  label: "Case Studies", icon: FlameIcon,      count: caseStudies.length },
   { id: "learn",        label: "Learn",        icon: GraduationCap,  count: playlists.length },
+  { id: "explore",      label: "Explore",      icon: Layers,         count: topics.length + comparisons.length },
 ];
 
 export function Sidebar({
@@ -126,16 +128,6 @@ export function Sidebar({
           >
             <MapPin size={15} strokeWidth={1.6} />
             <span style={{ letterSpacing: "-0.005em" }}>India</span>
-            <span
-              className="ml-auto text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-              style={{
-                background: "rgba(255, 107, 53, 0.14)",
-                color: "#FF6B35",
-                letterSpacing: "0.08em",
-              }}
-            >
-              New
-            </span>
           </Link>
 
           <div className="pt-5">
