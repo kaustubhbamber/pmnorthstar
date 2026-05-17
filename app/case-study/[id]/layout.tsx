@@ -7,6 +7,7 @@ import {
   getCaseStudySlug,
   isLegacyId,
 } from "@/data/caseStudies";
+import { getCaseStudyFaqs } from "@/data/caseStudyFaqs";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
 
@@ -97,6 +98,23 @@ export default function CaseStudyLayout({
                   "@type": "WebPage",
                   "@id": `${SITE_URL}/case-study/${slug}`,
                 },
+              }),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: getCaseStudyFaqs(study.id).map((f) => ({
+                  "@type": "Question",
+                  name: f.question,
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: f.answer,
+                  },
+                })),
               }),
             }}
           />

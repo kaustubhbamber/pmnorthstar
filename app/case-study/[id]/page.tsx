@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { getCaseStudyById, getCaseStudyBySlug, getCaseStudySlug, caseStudies } from "@/data/caseStudies";
+import { getCaseStudyFaqs } from "@/data/caseStudyFaqs";
+import { CaseStudyFaqs } from "@/components/CaseStudyFaqs";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SubscribeForm } from "@/components/SubscribeForm";
@@ -280,6 +282,9 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                   <div />
                 )}
               </div>
+
+              {/* Frequently asked — long-tail SEO + reader engagement */}
+              <CaseStudyFaqs faqs={getCaseStudyFaqs(study.id)} />
 
               {/* Related case studies */}
               {related.length > 0 && (
