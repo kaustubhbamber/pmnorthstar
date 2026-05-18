@@ -367,18 +367,28 @@ export default function BookPage({ params }: { params: { slug: string } }) {
                     >
                       Key concepts
                     </h3>
-                    <ul className="space-y-2">
+                    <ul className="space-y-3">
                       {book.summary.keyConcepts.map((c, i) => (
                         <li
                           key={i}
                           className="flex gap-3 text-sm sm:text-base leading-relaxed"
-                          style={{ color: "var(--text-muted)" }}
                         >
                           <span
-                            className="flex-shrink-0 mt-1.5 w-1 h-1 rounded-full"
+                            className="flex-shrink-0 mt-2 w-1 h-1 rounded-full"
                             style={{ background: "var(--brand-primary)" }}
                           />
-                          <span>{c}</span>
+                          <span>
+                            <span
+                              className="font-semibold"
+                              style={{ color: "var(--text-primary)" }}
+                            >
+                              {c.name}
+                            </span>
+                            <span style={{ color: "var(--text-muted)" }}>
+                              {" — "}
+                              {c.explanation}
+                            </span>
+                          </span>
                         </li>
                       ))}
                     </ul>

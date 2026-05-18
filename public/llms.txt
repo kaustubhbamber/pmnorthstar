@@ -8,14 +8,14 @@ northstar is a single-page resource hub aimed at PMs, founders, and operators wh
 
 - [Home](https://pmnorthstar.in/): The main library — browse all books, case studies, and playlists in one place.
 - 30 essential books across Product Management, Startups, and Management — each with summary and direct external link.
-- 59 in-depth case studies on real products and companies (Apple, Spotify, Airbnb, Slack, Netflix, Figma, Cred, Razorpay, Zerodha, Cult.fit, and 49 more) — full multi-paragraph deep dives, written as articles rather than bullet points.
-- 19 curated YouTube playlists across 8 topics: Design, Product Management (incl. AI PM), Data Analytics, Product Analytics, Marketing, Branding, Startup, Finances.
+- 65 in-depth case studies on real products and companies (Apple, Spotify, Airbnb, Slack, Netflix, Figma, Cred, Razorpay, Zerodha, Cult.fit, and 55 more) — full multi-paragraph deep dives, written as articles rather than bullet points.
+- 18 curated YouTube playlists across 8 topics: Design, Product Management (incl. AI PM), Data Analytics, Product Analytics, Marketing, Branding, Startup, Finances.
 
 ## Case studies
 
-The full list of 59 case study URLs is available in the sitemap: https://pmnorthstar.in/sitemap.xml
+The full list of 65 case study URLs is available in the sitemap: https://pmnorthstar.in/sitemap.xml
 
-Each case study lives at `https://pmnorthstar.in/case-study/{slug}` where slug is a descriptive identifier (e.g. `cred-design-fintech`, `razorpay-pivot-fintech`, `apple-iphone-launch`). Legacy `/case-study/cs-{N}` URLs (N is 1 through 59) 301-redirect to the slug URL. Each page contains a 7-paragraph deep dive structured around: the company context, the core problem, the key decision, execution details, results, ripple effects, and lessons for product managers.
+Each case study lives at `https://pmnorthstar.in/case-study/{slug}` where slug is a descriptive identifier (e.g. `cred-design-fintech`, `razorpay-pivot-fintech`, `apple-iphone-launch`). Legacy `/case-study/cs-{N}` URLs (N is 1 through 65) 301-redirect to the slug URL. Each page contains a 7-paragraph deep dive structured around: the company context, the core problem, the key decision, execution details, results, ripple effects, and lessons for product managers.
 
 ## Categories covered
 
