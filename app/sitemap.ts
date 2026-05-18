@@ -53,13 +53,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  // Book detail pages — northstar's take + Amazon affiliate link per book.
+  // Book detail pages — full 7-paragraph review + Amazon affiliate link per book.
   for (const book of books) {
     routes.push({
       url: `${SITE_URL}/book/${getBookSlug(book)}`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.65,
+      priority: 0.7,
     });
   }
 
