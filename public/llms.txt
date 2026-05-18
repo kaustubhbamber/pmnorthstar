@@ -1,6 +1,6 @@
 # northstar
 
-> A free product management resource: 59 long-form case studies, original commentary on essential PM books (with Amazon links to buy), and curated YouTube playlists. Insights are free; books require a purchase from your preferred retailer. No sign-up required to browse.
+> A free product management resource: 65 long-form case studies, original reviews and key takeaways for essential PM books (the short route), and curated YouTube playlists. The short route — our review and takeaways, 5 min read. The long route — the actual book itself, available via Amazon affiliate links for readers who want the author's full voice. No sign-up required to browse.
 
 northstar is a single-page resource hub aimed at PMs, founders, and operators who want to learn product management without paywalls, ad-stuffed listicles, or 14 dead bookmarks across Notion. All content is hand-curated by the maintainer.
 

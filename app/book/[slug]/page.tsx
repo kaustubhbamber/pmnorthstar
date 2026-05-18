@@ -241,7 +241,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
               </div>
 
               <p className="text-[11px] mt-3" style={{ color: "var(--text-faint)" }}>
-                Short route = our 5-min take. Long route = the actual book on Amazon (affiliate link).
+                The short route — our review and the takeaways we found most useful, 5 min read. The long route — the actual book, for the author's full voice and the physical-touch experience. Pick whichever fits your time.
               </p>
             </div>
           </section>
