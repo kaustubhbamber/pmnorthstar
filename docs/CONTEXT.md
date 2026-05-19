@@ -20,9 +20,9 @@ All accounts on personal email (migrated from company email earlier in May 2026)
 
 | Service | Account | Plan |
 |---|---|---|
-| GitHub | `kaustubhbrao-apps/pmnorthstar` | personal, free |
+| GitHub | personal account (`*/pmnorthstar` repo) | personal, free |
 | Vercel | personal | Hobby (free) |
-| Supabase | "kaustubhbrao-apps's Org" | free |
+| Supabase | personal org | free |
 | Hostinger | personal email | domain hosting only |
 | Substack | `pmnorthstar.substack.com` (account: pmnorthstarindia@gmail.com) | free |
 | Google Search Console | personal email | verified |

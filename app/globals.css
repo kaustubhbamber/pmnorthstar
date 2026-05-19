@@ -250,30 +250,17 @@ input:focus        { outline: none; }
   position: relative;
   transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
-.playlist-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, transparent, transparent);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
+/* Hover: subtle lift + slightly brighter border. Dropped the previous
+   ::before gradient overlay that was creating asymmetric red bleed
+   along the top + right edges — it looked like a render bug more than
+   a hover state. */
 .playlist-card:hover {
   transform: translateY(-2px);
-  border-color: var(--accent-color, var(--brand-primary)) !important;
-}
-.playlist-card:hover::before {
-  background: linear-gradient(135deg, var(--accent-color, var(--brand-primary)), transparent 60%);
-  opacity: 0.6;
+  border-color: var(--text-muted) !important;
 }
 .playlist-card:hover .card-arrow {
   transform: translate(2px, -2px);
+  color: var(--brand-primary);
 }
 
 .card-arrow {
