@@ -16,7 +16,10 @@ function useAuthorPhoto(author: string): string | null {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const cacheKey = `pmnorthstar:author-photo:${author}`;
+    // v2 cache key — invalidates any stale 'none' entries that were
+    // saved during transient network failures in earlier sessions, so
+    // we get a fresh shot at fetching the photo.
+    const cacheKey = `pmnorthstar:author-photo-v2:${author}`;
     const cached = window.localStorage.getItem(cacheKey);
     if (cached === "none") return;
     if (cached) {

@@ -9,7 +9,7 @@ import {
 } from "@/data/caseStudies";
 import { getCaseStudyFaqs } from "@/data/caseStudyFaqs";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 
 // Prerender every case study at its slug URL (not cs-X).
 // The [id] route param now holds a slug; legacy cs-X params are

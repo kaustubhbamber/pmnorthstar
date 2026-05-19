@@ -6,7 +6,7 @@ import { playlists } from "@/data/learn";
 import { books } from "@/data/books";
 import "./globals.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 const CASE_STUDY_COUNT = caseStudies.length;
 const BOOK_COUNT = books.length;
 const PLAYLIST_COUNT = playlists.length;

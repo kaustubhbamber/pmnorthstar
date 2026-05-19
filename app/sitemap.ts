@@ -4,7 +4,7 @@ import { topics } from "@/data/topics";
 import { comparisons } from "@/data/comparisons";
 import { books, getBookSlug } from "@/data/books";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
