@@ -14,6 +14,8 @@ import { getCategoryColor } from "@/lib/category-colors";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BookFaqs } from "@/components/BookFaqs";
 import { getBookFaqs } from "@/data/bookFaqs";
+import { Byline } from "@/components/Byline";
+import { SITE_LAST_REVIEWED } from "@/lib/site";
 import {
   books,
   getBookSlug,
@@ -356,7 +358,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
                 The short route
               </p>
               <h2
-                className="text-2xl sm:text-3xl font-semibold mb-6"
+                className="text-2xl sm:text-3xl font-semibold mb-3"
                 style={{
                   color: "var(--text-primary)",
                   letterSpacing: "-0.02em",
@@ -364,6 +366,9 @@ export default function BookPage({ params }: { params: { slug: string } }) {
               >
                 northstar's take on this book
               </h2>
+              <div className="mb-7">
+                <Byline label="Reviewed" date={SITE_LAST_REVIEWED} />
+              </div>
 
               {book.summary ? (
                 <div className="space-y-6 sm:space-y-7">

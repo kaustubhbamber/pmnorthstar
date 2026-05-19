@@ -8,6 +8,8 @@ import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ShareButton } from "@/components/ShareButton";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Byline } from "@/components/Byline";
+import { SITE_LAST_REVIEWED } from "@/lib/site";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { Footer } from "@/components/Footer";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
@@ -182,11 +184,15 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               </div>
 
               <p
-                className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mb-6"
+                className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mb-4"
                 style={{ color: "var(--text-muted)" }}
               >
                 {study.description}
               </p>
+
+              <div className="mb-6">
+                <Byline label="Written" date={SITE_LAST_REVIEWED} />
+              </div>
 
               <ShareButton
                 title={`${study.title} — northstar case study`}
