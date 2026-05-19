@@ -1,8 +1,56 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 import { Book, getBookSlug } from "@/data/books";
 import { SaveButton } from "@/components/SaveButton";
+import { getCategoryColor } from "@/lib/category-colors";
+
+// Pull a Wikipedia thumbnail for the author. CORS-friendly, fast, cached
+// in localStorage so repeat visits don't re-fetch. Returns null while
+// loading or if Wikipedia has no thumbnail — the card falls back to a
+// red-gradient initials avatar in that case.
+function useAuthorPhoto(author: string): string | null {
+  const [photo, setPhoto] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const cacheKey = `pmnorthstar:author-photo:${author}`;
+    const cached = window.localStorage.getItem(cacheKey);
+    if (cached === "none") return;
+    if (cached) {
+      setPhoto(cached);
+      return;
+    }
+
+    let cancelled = false;
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+      author
+    )}`;
+    fetch(url, { headers: { Accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => {
+        if (cancelled) return;
+        const src = data?.thumbnail?.source;
+        if (src) {
+          window.localStorage.setItem(cacheKey, src);
+          setPhoto(src);
+        } else {
+          window.localStorage.setItem(cacheKey, "none");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) window.localStorage.setItem(cacheKey, "none");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [author]);
+
+  return photo;
+}
 
 interface ResourceCardProps {
   book: Book;
@@ -59,6 +107,9 @@ export function ResourceCard({
   onSavedChange,
   onLikedChange,
 }: ResourceCardProps) {
+  const authorPhoto = useAuthorPhoto(book.author);
+  const cat = getCategoryColor(book.category);
+
   // Width sizing per variant. Tighter than previous version to fit more
   // cards per row — PMs scan, they don't dwell on individual cards.
   const widthClass =
@@ -111,27 +162,39 @@ export function ResourceCard({
       )}
 
       <a href={`/book/${getBookSlug(book)}`} className="block">
-        {/* Compact author band — initials avatar inline with name.
-            Same treatment for every author, no external photo fetch. */}
+        {/* Compact author band — Wikipedia thumbnail when available,
+            initials avatar as fallback. Same size and position either way
+            so the layout doesn't shift when the photo loads. */}
         <div
           className="flex items-center gap-3 px-4 pt-4 pb-3"
           style={{ borderBottom: "1px solid var(--card-border)" }}
         >
-          <div
-            className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--brand-primary), #8B0000)",
-              boxShadow: "0 0 0 1px var(--card-border)",
-            }}
-          >
-            <span
-              className="text-xs font-bold text-white"
-              style={{ letterSpacing: "-0.01em" }}
+          {authorPhoto ? (
+            <img
+              src={authorPhoto}
+              alt={book.author}
+              loading="lazy"
+              decoding="async"
+              className="w-10 h-10 rounded-full flex-shrink-0 object-cover"
+              style={{ boxShadow: "0 0 0 1px var(--card-border)" }}
+            />
+          ) : (
+            <div
+              className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--brand-primary), #8B0000)",
+                boxShadow: "0 0 0 1px var(--card-border)",
+              }}
             >
-              {authorInitials(book.author)}
-            </span>
-          </div>
+              <span
+                className="text-xs font-bold text-white"
+                style={{ letterSpacing: "-0.01em" }}
+              >
+                {authorInitials(book.author)}
+              </span>
+            </div>
+          )}
           <div className="min-w-0 flex-1">
             <p
               className="text-[10px] font-medium uppercase tracking-wider"
@@ -162,13 +225,14 @@ export function ResourceCard({
           <span
             className="inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full mb-2.5"
             style={{
-              background: "var(--brand-soft)",
-              color: "var(--brand-primary)",
+              background: cat.bg,
+              color: cat.color,
+              border: `1px solid ${cat.border}`,
             }}
           >
             <span
               className="w-1 h-1 rounded-full flex-shrink-0"
-              style={{ background: "var(--brand-primary)" }}
+              style={{ background: cat.color }}
             />
             {book.category}
           </span>

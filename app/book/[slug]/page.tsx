@@ -10,6 +10,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { ShareButton } from "@/components/ShareButton";
 import { Footer } from "@/components/Footer";
+import { getCategoryColor } from "@/lib/category-colors";
 import {
   books,
   getBookSlug,
@@ -91,6 +92,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
   };
 
   const amazonUrl = getAmazonAffiliateUrl(book);
+  const cat = getCategoryColor(book.category);
 
   // Related books (same category, different book)
   const relatedBooks = books
@@ -156,13 +158,14 @@ export default function BookPage({ params }: { params: { slug: string } }) {
                 <span
                   className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full"
                   style={{
-                    background: "var(--brand-soft)",
-                    color: "var(--brand-primary)",
+                    background: cat.bg,
+                    color: cat.color,
+                    border: `1px solid ${cat.border}`,
                   }}
                 >
                   <span
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: "var(--brand-primary)" }}
+                    style={{ background: cat.color }}
                   />
                   {book.category}
                 </span>
