@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
+import { ShareButton } from "@/components/ShareButton";
 import { getCaseStudyById, getCaseStudySlug } from "@/data/caseStudies";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { getComparisonBySlug, comparisons } from "@/data/comparisons";
@@ -86,7 +87,14 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
               <span className="hidden sm:inline">Home</span>
             </Link>
           </div>
-          <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <ShareButton
+              title={`${cmp.title} — northstar comparison`}
+              text={`${cmp.title}: ${cmp.intro}`}
+              compact
+            />
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          </div>
         </header>
 
         <MobileNav activeNav="" onNavChange={handleNavChange} />

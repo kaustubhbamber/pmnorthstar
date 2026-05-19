@@ -6,6 +6,7 @@ import { getCaseStudyFaqs } from "@/data/caseStudyFaqs";
 import { CaseStudyFaqs } from "@/components/CaseStudyFaqs";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { ShareButton } from "@/components/ShareButton";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { ArrowLeft, ArrowUpRight, TrendingUp, TrendingDown, Clock, Menu } from "lucide-react";
@@ -113,9 +114,14 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs" style={{ color: "var(--text-faint)" }}>
+            <span className="hidden sm:inline text-xs" style={{ color: "var(--text-faint)" }}>
               {currentIndex + 1} of {caseStudies.length}
             </span>
+            <ShareButton
+              title={`${study.title} — northstar case study`}
+              text={`${study.title}: ${study.description} — via @pmnorthstar`}
+              compact
+            />
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} className="hidden sm:inline-flex" />
           </div>
         </header>

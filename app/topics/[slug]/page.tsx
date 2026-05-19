@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
+import { ShareButton } from "@/components/ShareButton";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
 import { caseStudies } from "@/data/caseStudies";
 import { getTopicBySlug, topics } from "@/data/topics";
@@ -84,7 +85,14 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               <span className="hidden sm:inline">Home</span>
             </Link>
           </div>
-          <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <ShareButton
+              title={`${topic.title} — northstar topic`}
+              text={`${topic.title}: ${topic.intro}`}
+              compact
+            />
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          </div>
         </header>
 
         <MobileNav activeNav="" onNavChange={handleNavChange} />

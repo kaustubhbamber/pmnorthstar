@@ -8,6 +8,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { ShareButton } from "@/components/ShareButton";
 import {
   books,
   getBookSlug,
@@ -138,7 +139,14 @@ export default function BookPage({ params }: { params: { slug: string } }) {
               <span className="sm:hidden">Back</span>
             </Link>
           </div>
-          <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <ShareButton
+              title={`${book.title} by ${book.author} — northstar review`}
+              text={`${book.title} by ${book.author}: ${book.description} — northstar's review`}
+              compact
+            />
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          </div>
         </header>
 
         <MobileNav activeNav="" onNavChange={handleNavChange} />
