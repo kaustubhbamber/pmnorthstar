@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers, X } from "lucide-react";
+import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers, X, Sparkles } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 import { topics } from "@/data/topics";
@@ -128,6 +128,26 @@ export function Sidebar({
           >
             <MapPin size={15} strokeWidth={1.6} />
             <span style={{ letterSpacing: "-0.005em" }}>India</span>
+          </Link>
+
+          {/* AI Decoded — editorial section on AI launches + tools */}
+          <Link
+            href="/ai-decoded"
+            onClick={onClose}
+            className="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <Sparkles size={15} strokeWidth={1.6} />
+            <span style={{ letterSpacing: "-0.005em" }}>AI Decoded</span>
+            <span
+              className="ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded"
+              style={{
+                background: "rgba(243, 18, 60, 0.15)",
+                color: "var(--brand-primary)",
+              }}
+            >
+              NEW
+            </span>
           </Link>
 
           <div className="pt-5">

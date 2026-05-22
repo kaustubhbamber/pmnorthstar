@@ -48,6 +48,7 @@ export default function CompareLayout({
   if (!cmp) notFound();
   const a = getCaseStudyById(cmp.companyA);
   const b = getCaseStudyById(cmp.companyB);
+  const url = `${SITE_URL}/compare/${cmp.slug}`;
   return (
     <>
       <script
@@ -65,13 +66,42 @@ export default function CompareLayout({
               url: SITE_URL,
             },
             about: [a?.company, b?.company].filter(Boolean).join(" and "),
-            mainEntityOfPage: {
-              "@type": "WebPage",
-              "@id": `${SITE_URL}/compare/${cmp.slug}`,
-            },
+            mainEntityOfPage: { "@type": "WebPage", "@id": url },
           }),
         }}
       />
+      {/* BreadcrumbList — matches visible breadcrumbs */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "northstar", item: SITE_URL },
+              { "@type": "ListItem", position: 2, name: "Compare", item: `${SITE_URL}/#explore` },
+              { "@type": "ListItem", position: 3, name: cmp.title, item: url },
+            ],
+          }),
+        }}
+      />
+      {/* FAQPage — eligible for People-Also-Ask rich snippets */}
+      {cmp.faqs && cmp.faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: cmp.faqs.map((f) => ({
+                "@type": "Question",
+                name: f.question,
+                acceptedAnswer: { "@type": "Answer", text: f.answer },
+              })),
+            }),
+          }}
+        />
+      )}
       {children}
     </>
   );

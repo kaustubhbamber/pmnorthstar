@@ -9,6 +9,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { Footer } from "@/components/Footer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { caseStudies, getIndianCaseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 import { books } from "@/data/books";
@@ -126,6 +127,13 @@ export default function IndiaPage() {
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
+              <Breadcrumbs
+                className="mb-5"
+                items={[
+                  { label: "northstar", href: "/" },
+                  { label: "India" },
+                ]}
+              />
               <p className="eyebrow mb-4" style={{ color: "#FF6B35" }}>
                 For builders in India
               </p>

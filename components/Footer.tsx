@@ -7,6 +7,7 @@ const navLinks: Array<{ label: string; href: string }> = [
   { label: "Books", href: "/#books" },
   { label: "Case studies", href: "/#casestudies" },
   { label: "Playlists", href: "/#playlists" },
+  { label: "AI Decoded", href: "/ai-decoded" },
   { label: "India", href: "/india" },
 ];
 

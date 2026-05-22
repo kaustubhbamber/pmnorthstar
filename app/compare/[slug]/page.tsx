@@ -12,6 +12,7 @@ import { Footer } from "@/components/Footer";
 import { getCaseStudyById, getCaseStudySlug } from "@/data/caseStudies";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { getComparisonBySlug, comparisons } from "@/data/comparisons";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ArrowLeft, ArrowUpRight, Menu } from "lucide-react";
 
 export default function ComparePage({ params }: { params: { slug: string } }) {
@@ -107,6 +108,14 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
+              <Breadcrumbs
+                className="mb-5"
+                items={[
+                  { label: "northstar", href: "/" },
+                  { label: "Compare" },
+                  { label: cmp.title },
+                ]}
+              />
               <p
                 className="eyebrow mb-3 sm:mb-4"
                 style={{ color: cmp.accentColor }}
@@ -305,6 +314,48 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
               </p>
             </div>
           </section>
+
+          {/* FAQ — captures X-vs-Y long-tail search queries.
+              FAQPage JSON-LD eligible for People-Also-Ask. */}
+          {cmp.faqs && cmp.faqs.length > 0 && (
+            <section
+              className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+              style={{ borderBottom: "1px solid var(--card-border)" }}
+            >
+              <div className="max-w-3xl">
+                <h2
+                  className="text-2xl sm:text-3xl font-semibold mb-6"
+                  style={{
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  Frequently asked
+                </h2>
+                <div className="space-y-5">
+                  {cmp.faqs.map((faq, i) => (
+                    <div key={i}>
+                      <h3
+                        className="text-base sm:text-lg font-semibold mb-2"
+                        style={{
+                          color: "var(--text-primary)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        {faq.question}
+                      </h3>
+                      <p
+                        className="text-sm sm:text-base leading-relaxed"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        {faq.answer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Other comparisons */}
           <section className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14">

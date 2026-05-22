@@ -45,6 +45,7 @@ export default function TopicLayout({
 }) {
   const topic = getTopicBySlug(params.slug);
   if (!topic) notFound();
+  const url = `${SITE_URL}/topics/${topic.slug}`;
   return (
     <>
       <script
@@ -55,11 +56,43 @@ export default function TopicLayout({
             "@type": "CollectionPage",
             name: topic.title,
             description: topic.metaDescription,
-            url: `${SITE_URL}/topics/${topic.slug}`,
+            url,
             isPartOf: { "@type": "WebSite", name: "northstar", url: SITE_URL },
           }),
         }}
       />
+      {/* BreadcrumbList — matches the visible breadcrumbs on the page */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "northstar", item: SITE_URL },
+              { "@type": "ListItem", position: 2, name: "Topics", item: `${SITE_URL}/#explore` },
+              { "@type": "ListItem", position: 3, name: topic.title, item: url },
+            ],
+          }),
+        }}
+      />
+      {/* FAQPage — eligible for People-Also-Ask rich snippets */}
+      {topic.faqs && topic.faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: topic.faqs.map((f) => ({
+                "@type": "Question",
+                name: f.question,
+                acceptedAnswer: { "@type": "Answer", text: f.answer },
+              })),
+            }),
+          }}
+        />
+      )}
       {children}
     </>
   );

@@ -12,6 +12,7 @@ import { Footer } from "@/components/Footer";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
 import { caseStudies } from "@/data/caseStudies";
 import { getTopicBySlug, topics } from "@/data/topics";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ArrowLeft, ArrowUpRight, Menu } from "lucide-react";
 
 export default function TopicPage({ params }: { params: { slug: string } }) {
@@ -105,6 +106,14 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
+              <Breadcrumbs
+                className="mb-5"
+                items={[
+                  { label: "northstar", href: "/" },
+                  { label: "Topics" },
+                  { label: topic.title },
+                ]}
+              />
               <p
                 className="eyebrow mb-3 sm:mb-4"
                 style={{ color: topic.accentColor }}
@@ -152,6 +161,48 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               ))}
             </div>
           </section>
+
+          {/* FAQ — captures category-level long-tail queries.
+              FAQPage JSON-LD eligible for People-Also-Ask rich snippets. */}
+          {topic.faqs && topic.faqs.length > 0 && (
+            <section
+              className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+              style={{ borderBottom: "1px solid var(--card-border)" }}
+            >
+              <div className="max-w-3xl">
+                <h2
+                  className="text-2xl sm:text-3xl font-semibold mb-6"
+                  style={{
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  Frequently asked
+                </h2>
+                <div className="space-y-5">
+                  {topic.faqs.map((faq, i) => (
+                    <div key={i}>
+                      <h3
+                        className="text-base sm:text-lg font-semibold mb-2"
+                        style={{
+                          color: "var(--text-primary)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        {faq.question}
+                      </h3>
+                      <p
+                        className="text-sm sm:text-base leading-relaxed"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        {faq.answer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Other topics — cross-link for internal SEO */}
           <section className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14">

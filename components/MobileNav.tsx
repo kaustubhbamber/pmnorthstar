@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers } from "lucide-react";
+import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers, Sparkles } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 import { topics } from "@/data/topics";
@@ -53,6 +53,15 @@ export function MobileNav({
           </button>
         );
       })}
+
+      {/* AI Decoded — editorial section on AI launches + tools */}
+      <Link
+        href="/ai-decoded"
+        className="chip flex-shrink-0 inline-flex items-center gap-1.5"
+      >
+        <Sparkles size={11} strokeWidth={1.6} />
+        AI Decoded
+      </Link>
 
       {/* India — separate Link, navigates to /india */}
       <Link

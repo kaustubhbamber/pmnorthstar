@@ -2,6 +2,11 @@
 // case studies can't target. Each comparison is a side-by-side analysis
 // with links to the underlying case studies.
 
+export interface ComparisonFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface Comparison {
   slug: string;
   companyA: string; // case study ID
@@ -15,6 +20,9 @@ export interface Comparison {
   keywords: string[];
   accentColor: string;
   rows: Array<{ label: string; a: string; b: string }>;
+  // 3-4 FAQ entries per comparison — direct "X vs Y" search queries.
+  // Eligible for FAQPage rich snippets + AEO citation.
+  faqs?: ComparisonFAQ[];
 }
 
 export const comparisons: Comparison[] = [
@@ -80,6 +88,24 @@ export const comparisons: Comparison[] = [
       },
       { label: "IPO plans", a: "No IPO plans", b: "IPO prep 2025-26" },
     ],
+    faqs: [
+      {
+        question: "Is Zerodha or Groww better for beginners?",
+        answer: "Groww. Zerodha's UI is built for serious traders — clean, dense, fast. Groww's UI is built for first-time investors — softer design, mutual funds upfront, tutorials inline. If you've never invested before, Groww's lower-friction onboarding wins. If you're trading actively, Zerodha's tooling pays off.",
+      },
+      {
+        question: "Which is cheaper — Zerodha or Groww?",
+        answer: "They charge the same brokerage on equity intraday and F&O — ₹20 flat per executed trade. Both offer zero brokerage on equity delivery. Mutual fund investing is free on both. There's no meaningful pricing difference; the choice is about UX and audience fit.",
+      },
+      {
+        question: "Why is Groww growing faster than Zerodha?",
+        answer: "Groww targets the audience Zerodha never optimized for — first-time investors, mobile-first users, mutual fund buyers before stock traders. By 2024, Groww overtook Zerodha in active users by serving demand Zerodha left on the table. Zerodha's deeper trader audience is still more profitable per user, but Groww's volume is bigger.",
+      },
+      {
+        question: "Should I use Zerodha or Groww in 2026?",
+        answer: "For active traders and F&O users: Zerodha — better tools, more mature platform. For first-time investors and mutual fund-led portfolios: Groww — easier onboarding, mobile-first UX. Many Indian investors use both — Zerodha for stocks/derivatives, Groww for MFs. Switching costs are low; pick based on your current investing style.",
+      },
+    ],
   },
   {
     slug: "phonepe-vs-paytm",
@@ -132,6 +158,24 @@ export const comparisons: Comparison[] = [
         label: "Reverse-flip tax",
         a: "~$1B (Singapore → India 2022)",
         b: "Already Indian",
+      },
+    ],
+    faqs: [
+      {
+        question: "Why did PhonePe overtake Paytm in UPI?",
+        answer: "PhonePe bet on UPI from day one. Paytm bet on wallets and split its attention across payments, commerce, gaming, and banking. By the time UPI became dominant, PhonePe had built a focused product while Paytm was running a super-app. The 2024 RBI shutdown of Paytm Payments Bank then accelerated PhonePe's lead.",
+      },
+      {
+        question: "Is PhonePe profitable?",
+        answer: "PhonePe approached operational breakeven by 2024-25 and is widely expected to be IPO-ready in 2025-26. Heavy infrastructure investment + merchant acquisition costs delayed profitability, but the unit economics on payments + lending have stabilized. Valuation last reported around $12B+.",
+      },
+      {
+        question: "Did Paytm's super-app strategy ever work?",
+        answer: "Briefly during 2020-2021. Then unit economics caught up. Each vertical (Paytm Mall, Paytm Games, Paytm Money) needed its own product investment, and bundling didn't produce the network effects that made WeChat's super-app work in China. The 2024 RBI shutdown of Paytm Payments Bank forced a refocus that the founders should have made years earlier.",
+      },
+      {
+        question: "Which is bigger today — PhonePe or Paytm?",
+        answer: "PhonePe by UPI market share (50%+ vs Paytm's 12-15%). Paytm has more merchant relationships in some categories but those have been migrating to other partner banks since the 2024 RBI shutdown. By total app users, Paytm still has more historically — but PhonePe's active user count has been growing faster for 4+ years.",
       },
     ],
   },
@@ -187,6 +231,24 @@ export const comparisons: Comparison[] = [
         label: "Geographic focus",
         a: "India + SEA expansion",
         b: "Global from day 1",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Razorpay India's Stripe?",
+        answer: "Functionally yes — both are developer-first payment infrastructure companies. But Razorpay has gone deeper than Stripe in adjacent verticals: RazorpayX (neo-banking), Razorpay Capital (lending), Razorpay Payroll, Razorpay POS. Stripe stayed closer to core payments + treasury. The two companies started similar but diverged significantly by 2024.",
+      },
+      {
+        question: "Could Razorpay expand globally to compete with Stripe?",
+        answer: "Possibly, but slowly. Razorpay's strength is deep India/SEA market understanding plus the neo-banking stack on top. Stripe's strength is global infrastructure (140+ currencies, 40+ countries) and developer mindshare. Razorpay would need to build that geographic depth before competing globally — and Stripe has 10+ years of head start.",
+      },
+      {
+        question: "Which is more profitable — Razorpay or Stripe?",
+        answer: "Razorpay reached operating profitability earlier in its lifecycle (around 2021-22) but at much smaller scale. Stripe was profitable on a smaller basis earlier in its history but reinvested aggressively. Both are now profitable; Stripe's absolute profit numbers are dramatically larger given its global TPV.",
+      },
+      {
+        question: "Why did Razorpay reverse-flip to India?",
+        answer: "Razorpay's parent entity was originally incorporated in Delaware (US). In 2024-25, they reverse-flipped the parent back to Bengaluru, paying nearly $200M in tax — one of the largest such bills in Indian startup history. The motivation: enable an Indian IPO on NSE/BSE, which is increasingly the preferred exit path for Indian-revenue-dominant companies.",
       },
     ],
   },
@@ -246,6 +308,20 @@ export const comparisons: Comparison[] = [
         b: "$5.9B (2024 round)",
       },
     ],
+    faqs: [
+      {
+        question: "How is Cred different from Monzo?",
+        answer: "Cred is closed-by-design: 750+ credit score gate, rejection-as-marketing, premium-only audience by deliberate construction. Monzo is open-by-design: anyone can sign up, the hot coral card and design are the brand signal. Both compete in 'premium feel' fintech but arrive there from opposite directions.",
+      },
+      {
+        question: "Can the Cred model work outside India?",
+        answer: "Probably not. Cred's positioning depends on India's specific market dynamics: a massive top-of-funnel of credit card users + a structurally underserved premium segment + a culture where status-signaling on apps has high resonance. Most Western markets don't have the same combination — Monzo's approach (broader audience, design-as-signal) translates better outside India.",
+      },
+      {
+        question: "Which is more profitable — Cred or Monzo?",
+        answer: "Monzo turned profitable in 2024 — its first full-year profitable quarter came after ~10 years of operating losses. Cred is still in monetization-build mode; the brand asset is genuine but the revenue lines (Cred Cash, Cred Money, Cred Garage) are scaling from a smaller base. Monzo is meaningfully more profitable in absolute terms today.",
+      },
+    ],
   },
   {
     slug: "discord-vs-clubhouse",
@@ -301,6 +377,20 @@ export const comparisons: Comparison[] = [
         label: "Status",
         a: "IPO prep 2026-27",
         b: "Pivoted multiple times; sold most of team",
+      },
+    ],
+    faqs: [
+      {
+        question: "Why did Discord succeed while Clubhouse failed?",
+        answer: "Architectural choice in year 1. Discord built persistent voice + text channels — communities could be left and rejoined. Clubhouse built ephemeral live rooms — content disappeared, communities couldn't compound. When the novelty of live audio faded in 2022, Clubhouse had no retention layer. Discord's persistent communities kept growing.",
+      },
+      {
+        question: "Could Clubhouse have survived?",
+        answer: "Only with a major architectural pivot. The ephemeral live-audio format was the wrong primitive for community-building — it optimized for FOMO instead of compound usage. Clubhouse waited too long to add recording and persistent rooms; by the time they did, Discord had already absorbed the audience.",
+      },
+      {
+        question: "What's the lesson from Discord vs Clubhouse?",
+        answer: "In community products, the year-1 architectural decision determines the next decade. Discord chose persistence + bots + cross-platform from day one — those compounded into a moat competitors couldn't replicate. Clubhouse chose live-only + invite-only + iOS-only — those compounded into a ceiling. Architectural decisions are strategic, not technical.",
       },
     ],
   },
