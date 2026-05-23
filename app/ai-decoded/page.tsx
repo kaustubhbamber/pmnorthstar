@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { SidebarShell } from "@/components/SidebarShell";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { solidColorFor } from "@/lib/category-colors";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 
@@ -110,17 +111,13 @@ export default function AIDecodedIndexPage() {
                   >
                     <div className="flex items-center gap-2.5 mb-3 flex-wrap">
                       <span
-                        className="inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full"
+                        className="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-md"
                         style={{
-                          background: "rgba(243, 18, 60, 0.10)",
-                          color: "var(--brand-primary)",
-                          border: "1px solid rgba(243, 18, 60, 0.30)",
+                          background: solidColorFor(a.frontmatter.category),
+                          color: "#ffffff",
+                          letterSpacing: "0.12em",
                         }}
                       >
-                        <span
-                          className="w-1 h-1 rounded-full"
-                          style={{ background: "var(--brand-primary)" }}
-                        />
                         {a.frontmatter.category}
                       </span>
                       <span className="meta-mono inline-flex items-center gap-1">

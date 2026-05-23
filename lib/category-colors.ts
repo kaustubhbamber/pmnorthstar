@@ -62,3 +62,25 @@ const FALLBACK: CategoryColor = {
 export function getCategoryColor(category: string): CategoryColor {
   return CATEGORY_COLORS[category] ?? FALLBACK;
 }
+
+// Deterministic color picker used for any taxonomy that doesn't have a
+// hand-picked entry above (AI Decoded categories, free-form tag chips
+// on case study cards). Hashes the string so the same name always maps
+// to the same color across the site. Brand red is reserved.
+const SOLID_PALETTE = [
+  "#EA580C", // orange
+  "#7C3AED", // purple
+  "#2563EB", // blue
+  "#0F9D58", // green
+  "#F59E0B", // amber
+  "#0891B2", // teal
+  "#DB2777", // magenta
+];
+export function solidColorFor(seed: string): string {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  return SOLID_PALETTE[Math.abs(hash) % SOLID_PALETTE.length];
+}

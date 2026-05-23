@@ -5,6 +5,7 @@ import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import { CaseStudy, getCaseStudySlug } from "@/data/caseStudies";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { SaveButton } from "@/components/SaveButton";
+import { solidColorFor } from "@/lib/category-colors";
 import Link from "next/link";
 
 interface CaseStudyCardProps {
@@ -16,28 +17,6 @@ interface CaseStudyCardProps {
   onAuthRequired?: () => void;
   onSavedChange?: (id: string, saved: boolean) => void;
   onLikedChange?: (id: string, liked: boolean) => void;
-}
-
-// Tag chips (hardware / UX / disruption / etc.) get distinct solid
-// colors. Deterministic hash of the tag name picks from a palette so
-// "hardware" is always the same color across every card. Brand red is
-// excluded — it's reserved for category-level signaling.
-const TAG_PALETTE = [
-  "#EA580C", // orange
-  "#7C3AED", // purple
-  "#2563EB", // blue
-  "#0F9D58", // green
-  "#F59E0B", // amber
-  "#0891B2", // teal
-  "#DB2777", // magenta
-];
-function colorForTag(tag: string): string {
-  let hash = 0;
-  for (let i = 0; i < tag.length; i++) {
-    hash = (hash << 5) - hash + tag.charCodeAt(i);
-    hash |= 0;
-  }
-  return TAG_PALETTE[Math.abs(hash) % TAG_PALETTE.length];
 }
 
 const categoryColors: Record<string, string> = {
@@ -189,7 +168,7 @@ export function CaseStudyCard({
                 key={tag}
                 className="text-[10px] font-semibold px-2 py-0.5 rounded-md"
                 style={{
-                  background: colorForTag(tag),
+                  background: solidColorFor(tag),
                   color: "#ffffff",
                 }}
               >

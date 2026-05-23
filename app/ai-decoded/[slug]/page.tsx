@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Byline } from "@/components/Byline";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { SidebarShell } from "@/components/SidebarShell";
+import { solidColorFor } from "@/lib/category-colors";
 
 // Split rendered HTML at the </p> tag closest to `ratio` through the
 // article so we can inject a CTA mid-read. Keeps both halves valid HTML.
@@ -58,17 +59,13 @@ export default function AIDecodedArticlePage({
           />
           <div className="flex flex-wrap items-center gap-3 mb-5">
             <span
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full"
+              className="inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded-md"
               style={{
-                background: "rgba(243, 18, 60, 0.10)",
-                color: "var(--brand-primary)",
-                border: "1px solid rgba(243, 18, 60, 0.30)",
+                background: solidColorFor(fm.category),
+                color: "#ffffff",
+                letterSpacing: "0.12em",
               }}
             >
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: "var(--brand-primary)" }}
-              />
               {fm.category}
             </span>
             <span className="meta-mono inline-flex items-center gap-1">

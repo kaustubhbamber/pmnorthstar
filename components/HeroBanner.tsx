@@ -65,7 +65,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
             fontSize: "clamp(30px, 4.5vw, 48px)",
           }}
         >
-          A product management library
+          A product management library{" "}
           <br className="hidden sm:block" />
           worth your weekend.
         </h1>
