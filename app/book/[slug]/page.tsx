@@ -8,6 +8,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { SmartEngagementBlock } from "@/components/SmartEngagementBlock";
 import { ShareButton } from "@/components/ShareButton";
 import { Footer } from "@/components/Footer";
 import { getCategoryColor } from "@/lib/category-colors";
@@ -375,17 +376,40 @@ export default function BookPage({ params }: { params: { slug: string } }) {
 
               {book.summary ? (
                 <div className="space-y-6 sm:space-y-7">
-                  {/* Analysis — multi-paragraph original commentary */}
+                  {/* Analysis — multi-paragraph original commentary.
+                      Engagement block injected at ~40% so anonymous readers
+                      see newsletter; engaged users see related-book recs. */}
                   <div className="space-y-4">
-                    {book.summary.analysis.map((para, i) => (
-                      <p
-                        key={i}
-                        className="text-sm sm:text-base leading-relaxed"
-                        style={{ color: "var(--text-muted)" }}
-                      >
-                        {para}
-                      </p>
-                    ))}
+                    {book.summary.analysis.map((para, i) => {
+                      const injectAfter = Math.max(2, Math.floor(book.summary!.analysis.length * 0.4));
+                      return (
+                        <div key={i}>
+                          <p
+                            className="text-sm sm:text-base leading-relaxed"
+                            style={{ color: "var(--text-muted)" }}
+                          >
+                            {para}
+                          </p>
+                          {i === injectAfter && (
+                            <div className="my-6">
+                              <SmartEngagementBlock
+                                fromType="book"
+                                fromSlug={getBookSlug(book)}
+                                newsletterHeadline="Like this review? Get the next book breakdown in your inbox."
+                                newsletterSubhead="One book or case study every few days — the short route, with the takeaways and our honest read. Free."
+                                recommendations={relatedBooks.slice(0, 3).map((b) => ({
+                                  type: "book",
+                                  slug: getBookSlug(b),
+                                  title: b.title,
+                                  eyebrow: `${b.category} · ${b.author}`,
+                                  href: `/book/${getBookSlug(b)}`,
+                                }))}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
 
                   {/* Key concepts */}
@@ -497,19 +521,6 @@ export default function BookPage({ params }: { params: { slug: string } }) {
             </div>
           </section>
 
-          {/* Newsletter signup — placed at the high-intent moment after the review + CTA */}
-          <section
-            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
-          >
-            <div className="max-w-3xl">
-              <SubscribeForm
-                variant="card"
-                headline="Like this review? Get the next book breakdown in your inbox."
-                subhead="One book or case study every few days — the short route, with the takeaways and our honest read. Free."
-              />
-            </div>
-          </section>
 
           {/* FAQ — captures 'Is X worth reading?' / 'Who should read X?'
               People-Also-Ask surfaces. Generated from the review text. */}

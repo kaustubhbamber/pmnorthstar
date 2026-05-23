@@ -11,6 +11,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Byline } from "@/components/Byline";
 import { SITE_LAST_REVIEWED } from "@/lib/site";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { SmartEngagementBlock } from "@/components/SmartEngagementBlock";
 import { Footer } from "@/components/Footer";
 import { getCompanyLogoUrl } from "@/data/companyDomains";
 import { ArrowLeft, ArrowUpRight, TrendingUp, TrendingDown, Clock, Menu } from "lucide-react";
@@ -242,17 +243,41 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 </div>
               </div>
 
-              {/* Article body */}
+              {/* Article body — engagement block injected after ~40% of
+                  paragraphs so the reader hits it when invested but not
+                  done. Anonymous users see newsletter; engaged logged-in
+                  users see related-content recommendations instead. */}
               <article>
-                {paragraphs.map((p, i) => (
-                  <p
-                    key={i}
-                    className="text-sm sm:text-base lg:text-lg leading-[1.85] mb-6"
-                    style={{ color: "var(--text-primary)", opacity: 0.9 }}
-                  >
-                    {p}
-                  </p>
-                ))}
+                {paragraphs.map((p, i) => {
+                  const injectAfter = Math.max(2, Math.floor(paragraphs.length * 0.4));
+                  return (
+                    <div key={i}>
+                      <p
+                        className="text-sm sm:text-base lg:text-lg leading-[1.85] mb-6"
+                        style={{ color: "var(--text-primary)", opacity: 0.9 }}
+                      >
+                        {p}
+                      </p>
+                      {i === injectAfter && (
+                        <div className="my-8">
+                          <SmartEngagementBlock
+                            fromType="case-study"
+                            fromSlug={getCaseStudySlug(study.id)}
+                            newsletterHeadline="Reading northstar? Get the next case study in your inbox."
+                            newsletterSubhead="One product deep dive every few days — Apple, Cred, Razorpay, Slack, Zerodha and more. Free."
+                            recommendations={related.slice(0, 3).map((c) => ({
+                              type: "case-study",
+                              slug: getCaseStudySlug(c.id),
+                              title: c.title,
+                              eyebrow: `${c.category} · ${c.company}`,
+                              href: `/case-study/${getCaseStudySlug(c.id)}`,
+                            }))}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </article>
 
               {/* Tags */}
@@ -276,15 +301,6 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Prev / Next */}
-              {/* Newsletter signup — placed at the high-intent moment after reading */}
-              <div className="py-8" style={{ borderTop: "1px solid var(--card-border)" }}>
-                <SubscribeForm
-                  variant="card"
-                  headline="Like this case study? Get the next one in your inbox."
-                  subhead="One product deep dive every few days — Apple, Cred, Razorpay, Slack, Zerodha and more. Free."
-                />
-              </div>
-
               <div
                 className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-8"
                 style={{ borderTop: "1px solid var(--card-border)" }}

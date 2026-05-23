@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Bookmark, Heart, Loader2 } from "lucide-react";
+import { track } from "@/lib/track";
 
 interface Resource {
   id: string;
@@ -60,6 +61,11 @@ export function SaveButton({
         const next = !saved;
         setSaved(next);
         onSavedChange?.(resource.id, next);
+        track({
+          name: next ? "save_clicked" : "save_removed",
+          resource_type: resource.category,
+          resource_id: resource.id,
+        });
       }
     } catch (error) {
       console.error("Save error:", error);
@@ -88,6 +94,11 @@ export function SaveButton({
         const next = !liked;
         setLiked(next);
         onLikedChange?.(resource.id, next);
+        track({
+          name: next ? "like_clicked" : "like_removed",
+          resource_type: resource.category,
+          resource_id: resource.id,
+        });
       }
     } catch (error) {
       console.error("Like error:", error);

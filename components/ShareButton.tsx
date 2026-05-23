@@ -9,6 +9,7 @@ import {
   Linkedin,
   MessageCircle,
 } from "lucide-react";
+import { track } from "@/lib/track";
 
 interface ShareButtonProps {
   title: string;
@@ -19,6 +20,8 @@ interface ShareButtonProps {
   // "subtle" is the muted header style; "prominent" is brand-tinted for
   // in-content placement next to primary CTAs where discoverability matters.
   variant?: "subtle" | "prominent";
+  // Identifies which page type the share is coming from, for analytics.
+  surface?: string;
 }
 
 export function ShareButton({
@@ -28,6 +31,7 @@ export function ShareButton({
   label = "Share",
   compact = false,
   variant = "subtle",
+  surface = "unknown",
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -57,6 +61,7 @@ export function ShareButton({
     if (canNativeShare) {
       try {
         await navigator.share({ title, text: shareText, url: shareUrl });
+        track({ name: "share_clicked", surface, target: "native" });
       } catch {
         // User cancelled or share failed; ignore.
       }
@@ -69,6 +74,7 @@ export function ShareButton({
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
+      track({ name: "share_clicked", surface, target: "copy" });
       setTimeout(() => setCopied(false), 1500);
     } catch (err) {
       console.error("Clipboard error:", err);
@@ -131,7 +137,10 @@ export function ShareButton({
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-2 text-sm transition-colors"
             style={{ color: "var(--text-primary)" }}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              track({ name: "share_clicked", surface, target: "twitter" });
+              setOpen(false);
+            }}
           >
             <Twitter size={14} />
             X / Twitter
@@ -142,7 +151,10 @@ export function ShareButton({
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-2 text-sm transition-colors"
             style={{ color: "var(--text-primary)" }}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              track({ name: "share_clicked", surface, target: "linkedin" });
+              setOpen(false);
+            }}
           >
             <Linkedin size={14} />
             LinkedIn
@@ -153,7 +165,10 @@ export function ShareButton({
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-2 text-sm transition-colors"
             style={{ color: "var(--text-primary)" }}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              track({ name: "share_clicked", surface, target: "whatsapp" });
+              setOpen(false);
+            }}
           >
             <MessageCircle size={14} />
             WhatsApp
