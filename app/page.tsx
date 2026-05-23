@@ -915,9 +915,12 @@ export default function HomePage() {
           onAuthRequired={() => setShowAuthModal(true)}
         />
 
-        {/* User bar */}
+        {/* User bar — hidden on mobile when not logged in (microcopy
+            adds a clutter row on small screens for no real value).
+            Stays visible on mobile when logged in (saved/fav shortcuts
+            are useful). */}
         <div
-          className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2"
+          className={`${user ? "flex" : "hidden sm:flex"} flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2`}
           style={{ borderBottom: "1px solid var(--card-border)", background: "var(--nav-bg)" }}
         >
           <p className="text-[11px] sm:text-xs truncate flex-shrink min-w-0" style={{ color: "var(--text-muted)" }}>
