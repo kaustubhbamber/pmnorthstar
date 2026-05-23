@@ -18,6 +18,28 @@ interface CaseStudyCardProps {
   onLikedChange?: (id: string, liked: boolean) => void;
 }
 
+// Tag chips (hardware / UX / disruption / etc.) get distinct solid
+// colors. Deterministic hash of the tag name picks from a palette so
+// "hardware" is always the same color across every card. Brand red is
+// excluded — it's reserved for category-level signaling.
+const TAG_PALETTE = [
+  "#EA580C", // orange
+  "#7C3AED", // purple
+  "#2563EB", // blue
+  "#0F9D58", // green
+  "#F59E0B", // amber
+  "#0891B2", // teal
+  "#DB2777", // magenta
+];
+function colorForTag(tag: string): string {
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = (hash << 5) - hash + tag.charCodeAt(i);
+    hash |= 0;
+  }
+  return TAG_PALETTE[Math.abs(hash) % TAG_PALETTE.length];
+}
+
 const categoryColors: Record<string, string> = {
   Product: "#9B8FFF",
   Growth: "#FF6B35",
@@ -157,9 +179,9 @@ export function CaseStudyCard({
           </span>
         </div>
 
-        {/* Tags — solid colored chips that echo the category color
-            (creates visual cohesion with the main category chip above
-            instead of mixing a neutral grey into a colored layout). */}
+        {/* Tags — each gets its own deterministic color from the
+            palette so a row of tags reads as a varied multi-color band
+            (not a monochrome echo of the category chip above). */}
         {study.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {study.tags.slice(0, 3).map((tag) => (
@@ -167,9 +189,8 @@ export function CaseStudyCard({
                 key={tag}
                 className="text-[10px] font-semibold px-2 py-0.5 rounded-md"
                 style={{
-                  background: color,
+                  background: colorForTag(tag),
                   color: "#ffffff",
-                  opacity: 0.78,
                 }}
               >
                 {tag}

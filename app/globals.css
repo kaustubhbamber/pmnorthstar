@@ -27,10 +27,11 @@
   --brand-hover:    #D4102F;
   --brand-soft:     rgba(243, 18, 60, 0.08);
 
-  /* Lighter shades for visibility on black */
+  /* Lighter shades for visibility on black. Body / muted text bumped
+     a notch brighter than before for legibility on the dark theme. */
   --text-primary:   #FFFFFF;
-  --text-muted:     #B5B5B5;
-  --text-faint:     #707070;
+  --text-muted:     #CFCFCF;
+  --text-faint:     #909090;
 
   --success:        #22C55E;
   --warning:        #F59E0B;
