@@ -34,6 +34,7 @@ import { AuthModal } from "@/components/AuthModal";
 import { Footer } from "@/components/Footer";
 import { topics } from "@/data/topics";
 import { comparisons } from "@/data/comparisons";
+import { getCaseStudyFaqs } from "@/data/caseStudyFaqs";
 import Link from "next/link";
 import {
   TrendingUp,
@@ -177,13 +178,32 @@ export default function HomePage() {
     if (activeFilter !== "All") result = result.filter((b) => b.category === activeFilter);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (b) =>
+      result = result.filter((b) => {
+        // Search the obvious fields first
+        if (
           b.title.toLowerCase().includes(q) ||
           b.author.toLowerCase().includes(q) ||
+          b.category.toLowerCase().includes(q) ||
           b.tags.some((t) => t.toLowerCase().includes(q)) ||
           b.description.toLowerCase().includes(q)
-      );
+        )
+          return true;
+        // Then the editorial review body — analysis paragraphs,
+        // key concept names + explanations, who-should-read.
+        const s = b.summary;
+        if (!s) return false;
+        if (s.whoShouldRead.toLowerCase().includes(q)) return true;
+        if (s.analysis.some((p) => p.toLowerCase().includes(q))) return true;
+        if (
+          s.keyConcepts.some(
+            (kc) =>
+              kc.name.toLowerCase().includes(q) ||
+              kc.explanation.toLowerCase().includes(q)
+          )
+        )
+          return true;
+        return false;
+      });
     }
     return result;
   }, [activeFilter, searchQuery]);
@@ -202,26 +222,100 @@ export default function HomePage() {
   const searchedCaseStudies = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return [] as typeof caseStudies;
-    return caseStudies.filter((c) =>
-      c.title.toLowerCase().includes(q) ||
-      c.company.toLowerCase().includes(q) ||
-      c.description.toLowerCase().includes(q) ||
-      c.outcome.toLowerCase().includes(q) ||
-      c.category.toLowerCase().includes(q) ||
-      c.tags.some((t) => t.toLowerCase().includes(q))
-    );
+    return caseStudies.filter((c) => {
+      if (
+        c.title.toLowerCase().includes(q) ||
+        c.company.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q) ||
+        c.outcome.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q) ||
+        (c.region && c.region.toLowerCase().includes(q)) ||
+        c.tags.some((t) => t.toLowerCase().includes(q)) ||
+        c.content.toLowerCase().includes(q)
+      )
+        return true;
+      // FAQ Q&A matching — surfaces case studies whose FAQs cover
+      // the query even if the body doesn't.
+      const faqs = getCaseStudyFaqs(c.id);
+      return faqs.some(
+        (f) =>
+          f.question.toLowerCase().includes(q) ||
+          f.answer.toLowerCase().includes(q)
+      );
+    });
   }, [searchQuery]);
 
   const searchedPlaylists = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return [] as typeof playlists;
-    return playlists.filter((p) =>
-      p.title.toLowerCase().includes(q) ||
-      p.channel.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q) ||
-      (p.tags ?? []).some((t) => t.toLowerCase().includes(q))
+    return playlists.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.channel.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        (p.level && p.level.toLowerCase().includes(q)) ||
+        (p.tags ?? []).some((t) => t.toLowerCase().includes(q))
     );
+  }, [searchQuery]);
+
+  const searchedTopics = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [] as typeof topics;
+    return topics.filter((t) => {
+      if (
+        t.title.toLowerCase().includes(q) ||
+        t.eyebrow.toLowerCase().includes(q) ||
+        t.intro.toLowerCase().includes(q) ||
+        t.metaTitle.toLowerCase().includes(q) ||
+        t.metaDescription.toLowerCase().includes(q) ||
+        t.keywords.some((k) => k.toLowerCase().includes(q))
+      )
+        return true;
+      if (
+        t.faqs &&
+        t.faqs.some(
+          (f) =>
+            f.question.toLowerCase().includes(q) ||
+            f.answer.toLowerCase().includes(q)
+        )
+      )
+        return true;
+      return false;
+    });
+  }, [searchQuery]);
+
+  const searchedComparisons = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [] as typeof comparisons;
+    return comparisons.filter((c) => {
+      if (
+        c.title.toLowerCase().includes(q) ||
+        c.eyebrow.toLowerCase().includes(q) ||
+        c.intro.toLowerCase().includes(q) ||
+        c.verdict.toLowerCase().includes(q) ||
+        c.metaTitle.toLowerCase().includes(q) ||
+        c.metaDescription.toLowerCase().includes(q) ||
+        c.keywords.some((k) => k.toLowerCase().includes(q)) ||
+        c.rows.some(
+          (r) =>
+            r.label.toLowerCase().includes(q) ||
+            r.a.toLowerCase().includes(q) ||
+            r.b.toLowerCase().includes(q)
+        )
+      )
+        return true;
+      if (
+        c.faqs &&
+        c.faqs.some(
+          (f) =>
+            f.question.toLowerCase().includes(q) ||
+            f.answer.toLowerCase().includes(q)
+        )
+      )
+        return true;
+      return false;
+    });
   }, [searchQuery]);
 
   const learnStats = useMemo(() => {
@@ -1186,12 +1280,12 @@ export default function HomePage() {
                         “{searchQuery}”
                       </h2>
                       <span className="font-mono text-xs" style={{ color: "var(--text-faint)" }}>
-                        {String(filteredBooks.length + searchedCaseStudies.length + searchedPlaylists.length)}
+                        {String(filteredBooks.length + searchedCaseStudies.length + searchedPlaylists.length + searchedTopics.length + searchedComparisons.length)}
                       </span>
                     </div>
                   </div>
 
-                  {filteredBooks.length + searchedCaseStudies.length + searchedPlaylists.length === 0 ? (
+                  {filteredBooks.length + searchedCaseStudies.length + searchedPlaylists.length + searchedTopics.length + searchedComparisons.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                       <p className="eyebrow mb-3">No results</p>
                       <p className="text-base font-semibold" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>Nothing matched</p>
@@ -1256,7 +1350,7 @@ export default function HomePage() {
 
                       {/* Playlists group */}
                       {searchedPlaylists.length > 0 && (
-                        <div>
+                        <div className="mb-10">
                           <div className="flex items-baseline gap-3 mb-4">
                             <p className="eyebrow">Playlists</p>
                             <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
@@ -1276,6 +1370,88 @@ export default function HomePage() {
                                 onSavedChange={handleSavedChange}
                                 onLikedChange={handleLikedChange}
                               />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Topics group — clickable cards link to /topics/[slug] */}
+                      {searchedTopics.length > 0 && (
+                        <div className="mb-10">
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <p className="eyebrow">Topics</p>
+                            <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+                              {String(searchedTopics.length)}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {searchedTopics.map((t) => (
+                              <Link
+                                key={t.slug}
+                                href={`/topics/${t.slug}`}
+                                className="surface p-4 group transition-colors"
+                                style={{ borderRadius: 12 }}
+                              >
+                                <p
+                                  className="text-[10px] font-medium uppercase tracking-wider mb-1.5"
+                                  style={{ color: t.accentColor }}
+                                >
+                                  Topic
+                                </p>
+                                <p
+                                  className="text-sm font-semibold leading-snug mb-1.5 line-clamp-2"
+                                  style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
+                                >
+                                  {t.title}
+                                </p>
+                                <p
+                                  className="text-xs leading-relaxed line-clamp-2"
+                                  style={{ color: "var(--text-muted)" }}
+                                >
+                                  {t.eyebrow}
+                                </p>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Comparisons group — clickable cards link to /compare/[slug] */}
+                      {searchedComparisons.length > 0 && (
+                        <div>
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <p className="eyebrow">Comparisons</p>
+                            <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+                              {String(searchedComparisons.length)}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {searchedComparisons.map((c) => (
+                              <Link
+                                key={c.slug}
+                                href={`/compare/${c.slug}`}
+                                className="surface p-4 group transition-colors"
+                                style={{ borderRadius: 12 }}
+                              >
+                                <p
+                                  className="text-[10px] font-medium uppercase tracking-wider mb-1.5"
+                                  style={{ color: c.accentColor }}
+                                >
+                                  Comparison
+                                </p>
+                                <p
+                                  className="text-sm font-semibold leading-snug mb-1.5 line-clamp-2"
+                                  style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
+                                >
+                                  {c.title}
+                                </p>
+                                <p
+                                  className="text-xs leading-relaxed line-clamp-2"
+                                  style={{ color: "var(--text-muted)" }}
+                                >
+                                  {c.eyebrow}
+                                </p>
+                              </Link>
                             ))}
                           </div>
                         </div>
