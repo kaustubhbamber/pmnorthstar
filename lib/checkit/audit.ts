@@ -1,21 +1,21 @@
-// CheckIt orchestrator. Fetches the page once + PageSpeed Insights in
-// parallel, then runs all 20 checks and assembles the scorecard.
+// CheckIt orchestrator. Single HTML fetch (with TTFB capture), then all
+// 20 checks run in parallel. Some checks issue additional sub-fetches
+// (robots.txt, sitemap.xml, favicon HEAD, og:image HEAD, 404 probe);
+// each has its own 5-6s timeout so the audit always completes within
+// the route's 60s budget.
 //
-// Time budget: ~30s worst-case. PSI dominates (can be 20s+ for a cold
-// audit). The HTML fetch is bounded to 12s; per-check sub-fetches
-// (robots, sitemap, favicon, og image, 404 probe) to 5-6s each. If a
-// check times out it returns pass:false with a "couldn't measure"
-// detail — the audit always completes.
+// No external API dependency. The performance dimension uses TTFB +
+// HTML payload size + image dimensions + font-display as deterministic
+// proxies for LCP/CLS/page-weight — fast, reliable, more actionable.
 
 import * as Checks from "./checks";
-import type { FetchCtx, PsiData } from "./checks";
+import type { FetchCtx } from "./checks";
 import { DIMENSIONS } from "./dimensions";
 import type { AuditResult, DimensionResult } from "./types";
 import { bandFor } from "./types";
 import { fetchWithTimeout, normalizeUrl } from "./util";
 
 const HTML_TIMEOUT_MS = 12_000;
-const PSI_TIMEOUT_MS = 22_000;
 
 export async function runAudit(rawUrl: string): Promise<AuditResult> {
   const url = normalizeUrl(rawUrl);
@@ -23,14 +23,19 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     return fatalResult(rawUrl, `"${rawUrl}" isn't a valid URL.`);
   }
 
-  // 1. Fetch the page HTML (the source for 14 of the 20 checks).
+  // 1. Fetch the page HTML. Capture wall-clock duration as TTFB —
+  //    not strictly TTFB (it includes the full body download), but
+  //    close enough for the purposes of "is your server fast."
   let html = "";
   let finalUrl = url;
   let status = 0;
   let headers = new Headers();
+  let ttfbMs = 0;
 
   try {
+    const start = Date.now();
     const res = await fetchWithTimeout(url.toString(), {}, HTML_TIMEOUT_MS);
+    ttfbMs = Date.now() - start;
     status = res.status;
     headers = res.headers;
     finalUrl = new URL(res.url);
@@ -44,27 +49,24 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     return fatalResult(url.toString(), `Site returned HTTP ${status}. Audit needs a page that loads.`);
   }
 
-  // 2. Kick off PSI in parallel with the per-check sub-fetches.
-  const psi = await fetchPsi(finalUrl.toString());
-
   const ctx: FetchCtx = {
     inputUrl: url,
     finalUrl,
     status,
     html,
     headers,
-    psi,
+    ttfbMs,
   };
 
-  // 3. Run all 20 checks in parallel.
+  // 2. Run all 20 checks in parallel.
   const results = await Promise.all([
     Checks.customDomain(ctx),
     Checks.realFavicon(ctx),
     Checks.ogImage(ctx),
     Checks.realTitle(ctx),
-    Checks.lcp(ctx),
-    Checks.cls(ctx),
-    Checks.pageWeight(ctx),
+    Checks.ttfb(ctx),
+    Checks.layoutShiftPrevention(ctx),
+    Checks.htmlPayload(ctx),
     Checks.modernImages(ctx),
     Checks.metaDescription(ctx),
     Checks.robotsTxt(ctx),
@@ -95,7 +97,7 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     return {
       id: d.id,
       label: d.label,
-      score: passed * 5, // 4 × 5 = 20 max
+      score: passed * 5,
       checks,
     };
   });
@@ -110,36 +112,6 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     band: bandFor(total),
     dimensions,
   };
-}
-
-async function fetchPsi(targetUrl: string): Promise<PsiData | undefined> {
-  // Google PageSpeed Insights v5. Anonymous calls are allowed but rate
-  // limited; for production scale add a key via GOOGLE_API_KEY env var.
-  const params = new URLSearchParams({
-    url: targetUrl,
-    strategy: "mobile",
-    category: "performance",
-  });
-  if (process.env.GOOGLE_API_KEY) {
-    params.set("key", process.env.GOOGLE_API_KEY);
-  }
-  const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?${params}`;
-
-  try {
-    const res = await fetchWithTimeout(apiUrl, {}, PSI_TIMEOUT_MS);
-    if (!res.ok) return undefined;
-    const data = (await res.json()) as {
-      lighthouseResult?: { audits?: Record<string, { numericValue?: number }> };
-    };
-    const audits = data?.lighthouseResult?.audits ?? {};
-    return {
-      lcpMs: audits["largest-contentful-paint"]?.numericValue,
-      cls: audits["cumulative-layout-shift"]?.numericValue,
-      totalByteWeight: audits["total-byte-weight"]?.numericValue,
-    };
-  } catch {
-    return undefined;
-  }
 }
 
 function fatalResult(url: string, message: string): AuditResult {

@@ -54,8 +54,8 @@ export const DIMENSIONS: DimensionConfig[] = [
     label: "Performance",
     oneLiner: "Does it load before users give up?",
     whyItMatters:
-      "Every 100ms of load time costs roughly 1% of conversions. On mobile 4G — where 60%+ of your traffic lives — a 4-second page loses more than half its visitors before they ever see your hero image. Performance isn't engineering vanity; it's the most direct lever on revenue you have, and the one almost every vibe-coded site ignores until traffic is flat. The fix is rarely a rewrite. It's image formats, lazy loading, and not shipping 500KB of unused JavaScript.",
-    checkIds: ["lcp", "cls", "page-weight", "modern-images"],
+      "Every 100ms of load time costs roughly 1% of conversions. On mobile 4G — where 60%+ of your traffic lives — a 4-second page loses more than half its visitors before they ever see your hero image. Performance isn't engineering vanity; it's the most direct lever on revenue you have. We measure the *causes* of slow load — how fast your server responds (TTFB), how much HTML it ships, whether your images and fonts are configured to prevent layout shift, and whether images use modern formats. Fix the causes and the user-perceived speed improves predictably; chasing a Lighthouse number rarely does.",
+    checkIds: ["ttfb", "layout-shift-prevention", "html-payload", "modern-images"],
     linkedResources: [
       {
         type: "case-study",

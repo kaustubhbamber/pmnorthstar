@@ -10,19 +10,15 @@
 import { fetchWithTimeout, stripTags, truncate } from "./util";
 import type { CheckResult } from "./types";
 
-export interface PsiData {
-  lcpMs?: number;
-  cls?: number;
-  totalByteWeight?: number;
-}
-
+// TTFB is captured during the orchestrator's HTML fetch and passed in
+// here so the perf checks stay pure (no extra network IO).
 export interface FetchCtx {
   inputUrl: URL;
   finalUrl: URL;
   status: number;
   html: string;
   headers: Headers;
-  psi?: PsiData;
+  ttfbMs: number;
 }
 
 // Subdomains that scream "vibe-coded side project." Order matters for
@@ -201,72 +197,78 @@ export async function realTitle(ctx: FetchCtx): Promise<CheckResult> {
   };
 }
 
-// ── Performance (needs PSI) ───────────────────────────────────────────────
+// ── Performance (deterministic proxies, no external API) ──────────────────
+//
+// We deliberately don't use Google PageSpeed Insights here. PSI takes
+// 10-30s, depends on Google's rate limits, and silently returns empty
+// data for low-traffic sites (no CrUX). For a "30-second audit on any
+// URL" we measure causes — TTFB, payload size, image dims + font-display
+// — which are deterministic, fast, and more actionable than an opaque
+// CLS score ("add width/height to your imgs" beats "your CLS is 0.18").
 
-export async function lcp(ctx: FetchCtx): Promise<CheckResult> {
-  const lcpMs = ctx.psi?.lcpMs;
-  if (lcpMs === undefined) {
-    return {
-      id: "lcp",
-      label: "Largest Contentful Paint < 2.5s",
-      pass: false,
-      detail: `Could not measure — Google PageSpeed didn't return data for this URL.`,
-    };
-  }
-  const sec = (lcpMs / 1000).toFixed(1);
-  const pass = lcpMs < 2500;
+export async function ttfb(ctx: FetchCtx): Promise<CheckResult> {
+  const ms = ctx.ttfbMs;
+  const pass = ms < 600;
   return {
-    id: "lcp",
-    label: "Largest Contentful Paint < 2.5s",
+    id: "ttfb",
+    label: "Server responds in under 600ms",
     pass,
     detail: pass
-      ? `LCP is ${sec}s — users see your content fast.`
-      : `LCP is ${sec}s — most visitors give up before the page paints.`,
+      ? `Server responded in ${ms}ms — fast first byte.`
+      : ms < 1000
+      ? `Server took ${ms}ms — borderline. Add a CDN or cache the response.`
+      : `Server took ${ms}ms — slow first byte. Every user waits this long before anything loads.`,
   };
 }
 
-export async function cls(ctx: FetchCtx): Promise<CheckResult> {
-  const v = ctx.psi?.cls;
-  if (v === undefined) {
-    return {
-      id: "cls",
-      label: "Cumulative Layout Shift < 0.1",
-      pass: false,
-      detail: `Could not measure layout shift.`,
-    };
-  }
-  const pass = v < 0.1;
+export async function htmlPayload(ctx: FetchCtx): Promise<CheckResult> {
+  const bytes = new TextEncoder().encode(ctx.html).length;
+  const kb = Math.round(bytes / 1024);
+  const pass = bytes < 200_000;
   return {
-    id: "cls",
-    label: "Cumulative Layout Shift < 0.1",
+    id: "html-payload",
+    label: "Initial HTML under 200KB",
     pass,
     detail: pass
-      ? `CLS is ${v.toFixed(3)} — layout stays put as the page loads.`
-      : `CLS is ${v.toFixed(3)} — elements jump around. Feels janky.`,
+      ? `HTML payload is ${kb}KB — parses fast on mobile 4G.`
+      : `HTML payload is ${kb}KB — too much markup ships before anything renders.`,
   };
 }
 
-export async function pageWeight(ctx: FetchCtx): Promise<CheckResult> {
-  const bytes = ctx.psi?.totalByteWeight;
-  if (bytes === undefined) {
-    // Fall back to HTML-only size — incomplete but better than nothing.
-    const htmlBytes = new TextEncoder().encode(ctx.html).length;
-    return {
-      id: "page-weight",
-      label: "Total page weight < 2MB",
-      pass: htmlBytes < 2_000_000,
-      detail: `Only measured HTML (${(htmlBytes / 1024).toFixed(0)}KB) — PSI total unavailable.`,
-    };
+export async function layoutShiftPrevention(ctx: FetchCtx): Promise<CheckResult> {
+  const html = ctx.html;
+  const imgs = Array.from(html.matchAll(/<img\b[^>]*>/gi)).map((m) => m[0]);
+  const sized = imgs.filter(
+    (tag) => /\bwidth\s*=\s*["']?\d/i.test(tag) && /\bheight\s*=\s*["']?\d/i.test(tag),
+  ).length;
+  // CSS-level CLS preventatives that show up in inline styles or the
+  // global @import in <head>.
+  const hasFontDisplay = /font-display\s*:\s*(swap|optional|fallback)/i.test(html);
+  const hasAspectRatio = /aspect-ratio\s*:/i.test(html);
+
+  const imgRatio = imgs.length === 0 ? 1 : sized / imgs.length;
+  const imgsOk = imgRatio >= 0.8;
+  const fontsOk = hasFontDisplay || hasAspectRatio || imgs.length === 0;
+  const pass = imgsOk && fontsOk;
+
+  let detail: string;
+  if (imgs.length === 0 && hasFontDisplay) {
+    detail = `No images and font-display is configured — layout will stay stable.`;
+  } else if (imgs.length === 0) {
+    detail = `No images on the page — minimal layout shift risk.`;
+  } else if (pass) {
+    detail = `${sized}/${imgs.length} images have width+height and font loading is configured.`;
+  } else if (!imgsOk) {
+    detail = `Only ${sized}/${imgs.length} images have width+height — missing dimensions cause content to jump as images load.`;
+  } else {
+    detail = `Images have dimensions but no font-display strategy — web fonts will cause text to reflow.`;
   }
-  const mb = (bytes / 1_048_576).toFixed(2);
-  const pass = bytes < 2_000_000;
+
   return {
-    id: "page-weight",
-    label: "Total page weight < 2MB",
+    id: "layout-shift-prevention",
+    label: "Layout shift prevention",
     pass,
-    detail: pass
-      ? `Page weighs ${mb}MB — light enough for mobile 4G.`
-      : `Page weighs ${mb}MB — too heavy for the average mobile connection.`,
+    detail,
   };
 }
 
