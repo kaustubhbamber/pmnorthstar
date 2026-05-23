@@ -6,7 +6,7 @@
 //
 // No external API dependency. The performance dimension uses TTFB +
 // HTML payload size + image dimensions + font-display as deterministic
-// proxies for LCP/CLS/page-weight — fast, reliable, more actionable.
+// proxies for LCP/CLS/page-weight, fast, reliable, more actionable.
 
 import * as Checks from "./checks";
 import type { FetchCtx } from "./checks";
@@ -23,7 +23,7 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     return fatalResult(rawUrl, `"${rawUrl}" isn't a valid URL.`);
   }
 
-  // 1. Fetch the page HTML. Capture wall-clock duration as TTFB —
+  // 1. Fetch the page HTML. Capture wall-clock duration as TTFB , 
   //    not strictly TTFB (it includes the full body download), but
   //    close enough for the purposes of "is your server fast."
   let html = "";
@@ -62,7 +62,7 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
   const results = await Promise.all([
     Checks.customDomain(ctx),
     Checks.realFavicon(ctx),
-    Checks.ogImage(ctx),
+    Checks.ogCompleteness(ctx),
     Checks.realTitle(ctx),
     Checks.ttfb(ctx),
     Checks.layoutShiftPrevention(ctx),
@@ -71,12 +71,12 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     Checks.metaDescription(ctx),
     Checks.robotsTxt(ctx),
     Checks.sitemapXml(ctx),
-    Checks.singleH1(ctx),
+    Checks.structuredData(ctx),
     Checks.viewportMeta(ctx),
     Checks.primaryCta(ctx),
     Checks.h1ValueProp(ctx),
-    Checks.navigation(ctx),
-    Checks.httpsEnforced(ctx),
+    Checks.placeholderText(ctx),
+    Checks.secureTransport(ctx),
     Checks.privacyLink(ctx),
     Checks.custom404(ctx),
     Checks.identitySignal(ctx),
@@ -88,7 +88,7 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     const checks = d.checkIds.map((id) => {
       const r = byId.get(id);
       if (!r) {
-        // Should be impossible — checkIds are typed against the audit set.
+        // Should be impossible, checkIds are typed against the audit set.
         throw new Error(`Missing check result for "${id}"`);
       }
       return r;

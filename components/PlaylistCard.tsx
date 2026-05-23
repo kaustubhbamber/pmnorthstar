@@ -104,8 +104,11 @@ export function PlaylistCard({
           {thumbnail && !thumbFailed ? (
             <img
               src={thumbnail}
-              alt={`${playlist.title} — ${playlist.category} YouTube playlist`}
+              alt={`${playlist.title}, ${playlist.category} YouTube playlist`}
               loading="lazy"
+              decoding="async"
+              width={480}
+              height={360}
               onError={() => setThumbFailed(true)}
               className="w-full h-full object-cover"
             />
@@ -133,13 +136,13 @@ export function PlaylistCard({
         {/* Top row: category · arrow */}
         <div className="flex items-center justify-between mb-5">
           <span
-            className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full truncate"
+            className="inline-flex items-center text-[10px] font-bold uppercase px-2.5 py-1 rounded-md truncate"
             style={{
-              background: `${color}14`,
-              color,
+              background: color,
+              color: "#ffffff",
+              letterSpacing: "0.12em",
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
             {playlist.category}
           </span>
 

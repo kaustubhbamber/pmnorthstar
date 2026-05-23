@@ -234,17 +234,13 @@ export function ResourceCard({
         {/* Content */}
         <div className="px-4 pt-3 pb-3">
           <span
-            className="inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full mb-2.5"
+            className="inline-flex items-center text-[10px] font-bold uppercase px-2.5 py-1 rounded-md mb-2.5"
             style={{
-              background: cat.bg,
-              color: cat.color,
-              border: `1px solid ${cat.border}`,
+              background: cat.color,
+              color: "#ffffff",
+              letterSpacing: "0.12em",
             }}
           >
-            <span
-              className="w-1 h-1 rounded-full flex-shrink-0"
-              style={{ background: cat.color }}
-            />
             {book.category}
           </span>
 

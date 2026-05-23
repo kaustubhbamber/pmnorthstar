@@ -92,7 +92,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
             <ShareButton
-              title={`${cmp.title} — northstar comparison`}
+              title={`${cmp.title} on northstar`}
               text={`${cmp.title}: ${cmp.intro}`}
               compact
             />
@@ -103,9 +103,9 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
         <MobileNav activeNav="" onNavChange={handleNavChange} />
 
         <main className="flex-1 overflow-y-auto scroll-container">
-          {/* Hero */}
+          {/* Hero — neutral with comparison-color eyebrow accent */}
           <section
-            className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
@@ -117,12 +117,16 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
                   { label: cmp.title },
                 ]}
               />
-              <p
-                className="eyebrow mb-3 sm:mb-4"
-                style={{ color: cmp.accentColor }}
+              <span
+                className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md mb-3 sm:mb-4"
+                style={{
+                  background: cmp.accentColor,
+                  color: "#ffffff",
+                  letterSpacing: "0.12em",
+                }}
               >
                 {cmp.eyebrow}
-              </p>
+              </span>
               <h1
                 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] mb-4 sm:mb-5"
                 style={{
@@ -297,7 +301,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
               <SubscribeForm
                 variant="card"
                 surface="compare-mid"
-                headline="More head-to-head product breakdowns — in your inbox."
+                headline="More head-to-head product breakdowns, in your inbox."
                 subhead="One sharp comparison every few days. Free."
               />
             </div>
@@ -406,12 +410,16 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
                       } as React.CSSProperties
                     }
                   >
-                    <p
-                      className="text-[11px] font-medium uppercase tracking-wider mb-2"
-                      style={{ color: c.accentColor, opacity: 0.85 }}
+                    <span
+                      className="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-md mb-2"
+                      style={{
+                        background: c.accentColor,
+                        color: "#ffffff",
+                        letterSpacing: "0.12em",
+                      }}
                     >
                       {c.eyebrow}
-                    </p>
+                    </span>
                     <p
                       className="text-base font-semibold leading-snug"
                       style={{

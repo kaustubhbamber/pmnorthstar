@@ -25,25 +25,12 @@ export default function AboutPage() {
       style={{ background: "var(--page-bg)" }}
     >
       <main className="flex-1">
-        {/* Hero */}
+        {/* Hero — neutral background, brand-red eyebrow accent only */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14 relative overflow-hidden"
+          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
           style={{ borderBottom: "1px solid var(--card-border)" }}
         >
-          <div
-            aria-hidden
-            className="absolute pointer-events-none"
-            style={{
-              top: -120,
-              left: -100,
-              width: 360,
-              height: 360,
-              borderRadius: 9999,
-              background: "rgba(243,18,60,0.14)",
-              filter: "blur(100px)",
-            }}
-          />
-          <div className="max-w-3xl relative z-10">
+          <div className="max-w-3xl">
             <Breadcrumbs
               className="mb-5"
               items={[
@@ -59,12 +46,21 @@ export default function AboutPage() {
               <ArrowLeft size={14} strokeWidth={1.6} />
               Back to the library
             </Link>
-            <p
-              className="text-xs font-semibold uppercase tracking-[0.18em] mb-4"
-              style={{ color: "var(--brand-primary)" }}
-            >
-              About
-            </p>
+            <div className="flex items-center gap-2.5 mb-4">
+              <span
+                className="w-5 h-px"
+                style={{ background: "var(--brand-primary)" }}
+              />
+              <span
+                className="text-[10px] font-mono uppercase"
+                style={{
+                  color: "var(--brand-primary)",
+                  letterSpacing: "0.16em",
+                }}
+              >
+                About
+              </span>
+            </div>
             <h1
               className="text-4xl sm:text-5xl font-bold leading-[1.05] mb-5"
               style={{
@@ -220,7 +216,7 @@ export default function AboutPage() {
                 <strong style={{ color: "var(--text-primary)" }}>No SEO-stuffed listicles.</strong> The site doesn&apos;t chase &quot;top 10 PM books 2026&quot; ranking traffic. Each page exists because it&apos;s actually useful.
               </li>
               <li>
-                <strong style={{ color: "var(--text-primary)" }}>No reselling your data.</strong> We don&apos;t collect emails for resale. Analytics is privacy-friendly (Vercel Analytics, no third-party trackers).
+                <strong style={{ color: "var(--text-primary)" }}>No reselling your data.</strong> We don&apos;t collect emails for resale. Analytics is privacy-friendly, with no third-party trackers.
               </li>
             </ul>
           </div>

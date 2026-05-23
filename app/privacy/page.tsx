@@ -8,7 +8,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 const LAST_UPDATED = "2026-05-24";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — northstar",
+  title: "Privacy Policy, northstar",
   description:
     "How northstar handles data. We collect almost none, share less, and never sell anything. Plain-language privacy policy.",
   alternates: { canonical: `${SITE_URL}/privacy` },
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
               <p className="mt-3">
                 We record the timestamp of your most recent login so we can
                 tell, in aggregate, how the site is being used. Nothing
-                granular — just a single &ldquo;last seen&rdquo; date per account.
+                granular, just a single &ldquo;last seen&rdquo; date per account.
               </p>
             </Block>
 
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
                 Book pages include Amazon affiliate links. If you buy
                 something through one, Amazon pays us a small commission at
                 no extra cost to you. We don&apos;t share any information about
-                you with Amazon — they only know that the click came from
+                you with Amazon, they only know that the click came from
                 pmnorthstar.in. Affiliate revenue funds the site so it can
                 stay free and paywall-less.
               </p>

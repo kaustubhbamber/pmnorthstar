@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, X, LogOut } from "lucide-react";
+import { Search, X, LogOut, Gauge } from "lucide-react";
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -77,7 +78,31 @@ export function TopNav({
         )}
       </div>
 
-      <div className="flex items-center gap-3 sm:ml-auto">
+      <div className="flex items-center gap-2 sm:gap-3 sm:ml-auto">
+        {/* CheckIt CTA — global discovery for the tool. Brand color +
+            NEW badge so it stands out from the rest of the header. */}
+        <Link
+          href="/checkit"
+          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90 flex-shrink-0"
+          style={{
+            background: "var(--brand-primary)",
+            color: "#ffffff",
+            letterSpacing: "-0.005em",
+          }}
+        >
+          <Gauge size={12} strokeWidth={2} />
+          <span className="hidden sm:inline">Try </span>CheckIt
+          <span
+            className="text-[8px] sm:text-[9px] font-bold px-1 py-0.5 rounded"
+            style={{
+              background: "rgba(255,255,255,0.22)",
+              letterSpacing: "0.06em",
+            }}
+          >
+            NEW
+          </span>
+        </Link>
+
         {/* Right actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="hidden lg:inline-flex">

@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     // Default home title kept under 60 chars so Bing/Google don't
     // truncate it in SERPs. The longer marketing line lives in the
     // description and OpenGraph blocks below instead.
-    default: "northstar — Free Product Management Library",
+    default: "northstar: Free Product Management Library",
     template: "%s | northstar",
   },
   // 50-160 chars — Google truncates beyond that in SERPs. Wider context
   // (counts, scope, the "no paywall" angle) lives in OpenGraph below.
   description:
-    `Free PM library — ${CASE_STUDY_COUNT} case studies, ${BOOK_COUNT} book reviews, ${PLAYLIST_COUNT} curated playlists. Hand-picked, opinionated, no paywall.`,
+    `Free PM library with ${CASE_STUDY_COUNT} case studies, ${BOOK_COUNT} book reviews, and ${PLAYLIST_COUNT} curated playlists. Hand-picked, opinionated, no paywall.`,
   keywords: [
     "product management",
     "product manager",
@@ -48,13 +48,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "northstar",
-    title: "northstar — Free Product Management Library, Case Studies & Playlists",
+    title: "northstar: Free Product Management Library, Case Studies & Playlists",
     description:
       `${BOOK_COUNT} books · ${CASE_STUDY_COUNT} case studies · ${PLAYLIST_COUNT} curated playlists. The free, opinionated library for product managers and builders.`,
   },
   twitter: {
     card: "summary_large_image",
-    title: "northstar — Product Management Library",
+    title: "northstar: Product Management Library",
     description: "Free curated books, case studies and playlists for PMs and builders.",
   },
   robots: {
@@ -73,11 +73,23 @@ export const metadata: Metadata = {
   },
 };
 
+// Read the saved theme and write data-theme on <html> before React
+// hydrates. Without this, every page renders with the default theme
+// for a beat (a "light flash" when the saved theme is dark), then
+// re-paints once a useEffect runs. This script is synchronous and
+// runs before paint, so the very first paint is the correct theme.
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+      </head>
       <body className="noise">
         {/* Site-wide JSON-LD: WebSite schema for search */}
         <script

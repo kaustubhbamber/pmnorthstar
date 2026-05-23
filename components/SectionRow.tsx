@@ -24,31 +24,43 @@ export function SectionRow({ title, subtitle, children, accentColor }: SectionRo
 
   const count = Children.count(children);
 
+  // Title becomes a solid-colored "section chip" so each row reads
+  // as its own labeled segment, magazine-style. accentColor sets the
+  // chip background; falls back to brand red.
+  const chipColor = accentColor || "var(--brand-primary)";
+
   return (
     <section className="animate-section">
-      <div className="flex items-end justify-between mb-4 px-4 sm:px-6">
-        <div>
-          <div className="flex items-baseline gap-3">
-            <h2
-              className="text-xl sm:text-2xl font-semibold"
+      <div className="flex items-end justify-between mb-4 px-4 sm:px-6 gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2.5 mb-2 flex-wrap">
+            <span
+              className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md"
               style={{
-                color: accentColor || "var(--text-primary)",
-                letterSpacing: "-0.02em",
+                background: chipColor,
+                color: "#ffffff",
+                letterSpacing: "0.12em",
               }}
             >
               {title}
-            </h2>
-            <span style={{ fontSize: 12, color: "var(--text-faint)" }}>
+            </span>
+            <span
+              className="font-mono text-[11px]"
+              style={{ color: "var(--text-faint)" }}
+            >
               {count} {count === 1 ? "item" : "items"}
             </span>
           </div>
           {subtitle && (
-            <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+            <p
+              className="text-sm"
+              style={{ color: "var(--text-muted)" }}
+            >
               {subtitle}
             </p>
           )}
         </div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-1.5 flex-shrink-0">
           <button
             onClick={() => scroll("left")}
             className="w-8 h-8 rounded-full flex items-center justify-center"

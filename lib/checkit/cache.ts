@@ -2,7 +2,7 @@
 //
 // V1 scope: process-local Map with a 24h TTL. On Vercel this means each
 // serverless instance has its own cache, so a popular site might still
-// run 2-3 audits per day across instances — that's fine. When we
+// run 2-3 audits per day across instances, that's fine. When we
 // outgrow this, move to KV or Redis.
 
 import type { AuditResult } from "./types";

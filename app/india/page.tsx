@@ -121,9 +121,11 @@ export default function IndiaPage() {
         <MobileNav activeNav="india" onNavChange={handleNavChange} />
 
         <main className="flex-1 overflow-y-auto scroll-container">
-          {/* Hero */}
+          {/* Hero — neutral background, colored eyebrow accent only.
+              Mirrors the home page treatment so the page chrome stays
+              calm; bold solid colors are reserved for small cards. */}
           <section
-            className="dot-grid px-4 sm:px-8 lg:px-12 py-12 sm:py-20"
+            className="px-4 sm:px-8 lg:px-12 py-12 sm:py-20"
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
@@ -134,9 +136,18 @@ export default function IndiaPage() {
                   { label: "India" },
                 ]}
               />
-              <p className="eyebrow mb-4" style={{ color: "#FF6B35" }}>
-                For builders in India
-              </p>
+              <div className="flex items-center gap-2.5 mb-4">
+                <span
+                  className="w-5 h-px"
+                  style={{ background: "#FF6B35" }}
+                />
+                <span
+                  className="text-[10px] font-mono uppercase"
+                  style={{ color: "#FF6B35", letterSpacing: "0.16em" }}
+                >
+                  For builders in India
+                </span>
+              </div>
               <h1
                 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-5"
                 style={{
@@ -146,7 +157,7 @@ export default function IndiaPage() {
               >
                 Product management,
                 <br />
-                <span className="gradient-warm">for the India context.</span>
+                for the India context.
               </h1>
               <p
                 className="text-base sm:text-lg leading-relaxed max-w-xl"
@@ -158,16 +169,13 @@ export default function IndiaPage() {
               </p>
 
               <div className="flex flex-wrap items-center gap-2.5 mt-7">
-                <Link href="/" className="btn-primary group">
+                <a href="#india-published" className="btn-primary group">
                   Browse the library
                   <ArrowUpRight
                     size={14}
                     strokeWidth={1.8}
                     className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
-                </Link>
-                <a href="#india-coming" className="btn-ghost">
-                  See what's coming
                 </a>
               </div>
             </div>
@@ -212,7 +220,8 @@ export default function IndiaPage() {
           {/* Published India case studies (auto-syndicated from main library) */}
           {publishedIndia.length > 0 && (
             <section
-              className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
+              id="india-published"
+              className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 scroll-mt-4"
               style={{ borderBottom: "1px solid var(--card-border)" }}
             >
               <div className="max-w-5xl">

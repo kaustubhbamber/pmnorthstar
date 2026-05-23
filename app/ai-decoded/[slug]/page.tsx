@@ -40,7 +40,7 @@ export default function AIDecodedArticlePage({
       backHref="/ai-decoded"
       backLabelDesktop="All AI Decoded"
       shareTitle={fm.title}
-      shareText={`${fm.title} — northstar's take`}
+      shareText={`${fm.title} (northstar's take)`}
     >
       {/* Hero */}
       <section
@@ -164,7 +164,7 @@ export default function AIDecodedArticlePage({
                       variant="card"
                       surface="ai-decoded-article"
                       headline="Like this decoded read? Get the next one in your inbox."
-                      subhead="One sharp take on the latest in AI for PMs, founders and operators — every few days. Free."
+                      subhead="One sharp take on the latest in AI for PMs, founders and operators. Every few days. Free."
                     />
                   </div>
                 </section>

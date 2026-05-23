@@ -90,7 +90,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
             <ShareButton
-              title={`${topic.title} — northstar topic`}
+              title={`${topic.title} on northstar`}
               text={`${topic.title}: ${topic.intro}`}
               compact
             />
@@ -101,9 +101,11 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         <MobileNav activeNav="" onNavChange={handleNavChange} />
 
         <main className="flex-1 overflow-y-auto scroll-container">
-          {/* Hero */}
+          {/* Hero — neutral background with topic-color eyebrow accent.
+              Bold solid colors live on small cards / chips elsewhere
+              on the page; the hero stays calm. */}
           <section
-            className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-16"
+            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-16"
             style={{ borderBottom: "1px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
@@ -115,12 +117,16 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                   { label: topic.title },
                 ]}
               />
-              <p
-                className="eyebrow mb-3 sm:mb-4"
-                style={{ color: topic.accentColor }}
+              <span
+                className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md mb-3 sm:mb-4"
+                style={{
+                  background: topic.accentColor,
+                  color: "#ffffff",
+                  letterSpacing: "0.12em",
+                }}
               >
                 {topic.eyebrow}
-              </p>
+              </span>
               <h1
                 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] mb-4 sm:mb-5"
                 style={{
@@ -174,7 +180,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               <SubscribeForm
                 variant="card"
                 surface="topic"
-                headline={`More case studies on ${topic.title.toLowerCase()} — in your inbox.`}
+                headline={`More case studies on ${topic.title.toLowerCase()}, in your inbox.`}
                 subhead="One product deep dive every few days. Free. No paywall."
               />
             </div>
@@ -253,12 +259,16 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                       } as React.CSSProperties
                     }
                   >
-                    <p
-                      className="text-[11px] font-medium uppercase tracking-wider mb-2"
-                      style={{ color: t.accentColor, opacity: 0.85 }}
+                    <span
+                      className="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-md mb-2"
+                      style={{
+                        background: t.accentColor,
+                        color: "#ffffff",
+                        letterSpacing: "0.12em",
+                      }}
                     >
                       {t.eyebrow}
-                    </p>
+                    </span>
                     <p
                       className="text-base font-semibold leading-snug mb-1.5"
                       style={{

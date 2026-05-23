@@ -1,4 +1,4 @@
-// CheckIt — public-facing audit result shapes.
+// CheckIt, public-facing audit result shapes.
 //
 // One AuditResult per URL. Five DimensionResults, each with 4 CheckResults.
 // Each check awards 5 points; a dimension is scored out of 20; total = 100.
@@ -51,7 +51,7 @@ export function bandFor(score: number): Band {
 export const BAND_COPY: Record<Band, { label: string; tagline: string }> = {
   ready: {
     label: "Production-ready",
-    tagline: "This isn't a vibe — it's a product.",
+    tagline: "This isn't a vibe, it's a product.",
   },
   almost: {
     label: "Almost there",

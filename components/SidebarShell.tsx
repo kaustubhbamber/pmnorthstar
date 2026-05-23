@@ -37,13 +37,14 @@ export function SidebarShell({
   shareText,
 }: SidebarShellProps) {
   const router = useRouter();
-  const [isDark, setIsDark] = useState(false);
+  // Lazy init from localStorage to avoid a paint flash when navigating
+  // here from a dark page. The inline script in app/layout.tsx already
+  // sets data-theme on <html> pre-paint; this keeps React state in sync.
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("theme") === "dark";
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem("theme") : null;
-    if (saved === "dark") setIsDark(true);
-  }, []);
 
   useEffect(() => {
     if (typeof document !== "undefined") {

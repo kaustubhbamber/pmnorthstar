@@ -12,12 +12,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 export const metadata: Metadata = {
   title: "AI Decoded — northstar",
   description:
-    "What's actually happening in AI, and what PMs, marketers, founders, and operators should do about it. Editorial commentary on AI launches, conferences, and tools — no hype, no fluff.",
+    "What's actually happening in AI, and what PMs, marketers, founders, and operators should do about it. Editorial commentary on AI launches, conferences, and tools. No hype, no fluff.",
   alternates: { canonical: `${SITE_URL}/ai-decoded` },
   openGraph: {
     type: "website",
     url: `${SITE_URL}/ai-decoded`,
-    title: "AI Decoded — northstar",
+    title: "AI Decoded by northstar",
     description:
       "Editorial commentary on AI for PMs, marketers and founders. No hype, no fluff.",
     siteName: "northstar",
@@ -31,28 +31,16 @@ export default function AIDecodedIndexPage() {
     <SidebarShell
       backHref="/"
       backLabelDesktop="Back to the library"
-      shareTitle="AI Decoded — northstar"
+      shareTitle="AI Decoded by northstar"
       shareText="What's actually happening in AI, and what PMs / marketers / founders should do about it."
     >
-      {/* Hero */}
+      {/* Hero — neutral background, green eyebrow accent ties back to
+          the AI Decoded card on the home page without overwhelming. */}
       <section
-        className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 relative overflow-hidden"
+        className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
         style={{ borderBottom: "1px solid var(--card-border)" }}
       >
-        <div
-          aria-hidden
-          className="absolute pointer-events-none"
-          style={{
-            top: -100,
-            left: -100,
-            width: 360,
-            height: 360,
-            borderRadius: 9999,
-            background: "rgba(243,18,60,0.14)",
-            filter: "blur(100px)",
-          }}
-        />
-        <div className="max-w-3xl relative z-10">
+        <div className="max-w-3xl">
           <Breadcrumbs
             className="mb-5"
             items={[
@@ -60,12 +48,18 @@ export default function AIDecodedIndexPage() {
               { label: "AI Decoded" },
             ]}
           />
-          <p
-            className="text-xs font-semibold uppercase tracking-[0.18em] mb-4"
-            style={{ color: "var(--brand-primary)" }}
-          >
-            AI Decoded
-          </p>
+          <div className="flex items-center gap-2.5 mb-4">
+            <span
+              className="w-5 h-px"
+              style={{ background: "#0F9D58" }}
+            />
+            <span
+              className="text-[10px] font-mono uppercase"
+              style={{ color: "#0F9D58", letterSpacing: "0.16em" }}
+            >
+              AI Decoded
+            </span>
+          </div>
           <h1
             className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.02] mb-5"
             style={{
@@ -79,7 +73,7 @@ export default function AIDecodedIndexPage() {
             className="text-base sm:text-lg leading-relaxed max-w-2xl"
             style={{ color: "var(--text-muted)" }}
           >
-            Editorial commentary on AI launches, conferences, and tools — and what PMs, marketers, founders, and operators should do about them. No hype. No fluff. Just the moves worth making.
+            Editorial commentary on AI launches, conferences, and tools, plus what PMs, marketers, founders, and operators should do about them. No hype. No fluff. Just the moves worth making.
           </p>
         </div>
       </section>
@@ -182,7 +176,7 @@ export default function AIDecodedIndexPage() {
             variant="card"
             surface="ai-decoded-index"
             headline="Get the next decoded read in your inbox."
-            subhead="One sharp take on AI for PMs, marketers, founders, and operators — every few days. Free."
+            subhead="One sharp take on AI for PMs, marketers, founders, and operators. Every few days. Free."
           />
         </div>
       </section>

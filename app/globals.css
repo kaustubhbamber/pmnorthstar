@@ -141,10 +141,15 @@ html, body {
   background: var(--card-border);
 }
 .nav-item.active {
-  color: var(--text-primary) !important;
+  color: #ffffff !important;
+  background: var(--brand-primary);
 }
 .nav-item.active::before {
   background: var(--brand-primary);
+}
+.nav-item.active:hover {
+  color: #ffffff !important;
+  background: var(--brand-hover);
 }
 
 /* ── FILTER CHIP ────────────────────────────────────────────────────────── */
@@ -290,15 +295,15 @@ input:focus        { outline: none; }
   border-color: var(--text-muted);
 }
 .chip.active {
-  color: var(--text-primary);
-  border-color: var(--text-primary);
-  background: transparent;
+  color: #ffffff;
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
 }
 .chip .chip-count {
   color: var(--text-faint);
   margin-left: 6px;
 }
-.chip.active .chip-count { color: var(--text-muted); }
+.chip.active .chip-count { color: rgba(255, 255, 255, 0.85); }
 
 /* Dotted grid backdrop — removed per design feedback. Class is kept
    as a no-op so the dozen call sites don't need editing; restore the

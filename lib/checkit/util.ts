@@ -31,7 +31,7 @@ export function truncate(s: string, n: number): string {
 }
 
 // Accept inputs like "pmnorthstar.in", "https://pmnorthstar.in", "  HTTP://X "
-// — return a usable URL or null. Defaults to https.
+//, return a usable URL or null. Defaults to https.
 export function normalizeUrl(raw: string): URL | null {
   const trimmed = raw.trim();
   if (!trimmed) return null;

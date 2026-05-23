@@ -70,13 +70,15 @@ const caseStudyCategoryColors: Record<string, string> = {
 };
 
 export default function HomePage() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") setIsDark(true);
-    else setIsDark(false);
-  }, []);
+  // Lazy-init from localStorage so the home page doesn't flash light
+  // when a user navigates here from a dark-mode page. SSR-safe: the
+  // typeof check returns false on the server (initial HTML is light),
+  // and the inline script in app/layout.tsx already sets data-theme on
+  // the <html> tag before React hydrates, so there's no visible flash.
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("theme") === "dark";
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
@@ -675,23 +677,37 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  {/* Section heading */}
+                  {/* Section heading. Category becomes a solid colored chip
+                      (same idiom as section row eyebrows), with the count
+                      sitting next to it. */}
                   {(() => {
-                    const csColor = activeCsFilter === "All" ? undefined : caseStudyCategoryColors[activeCsFilter];
+                    const csColor =
+                      activeCsFilter === "All"
+                        ? "var(--brand-primary)"
+                        : caseStudyCategoryColors[activeCsFilter];
+                    const csLabel =
+                      activeCsFilter === "All" ? "All Categories" : activeCsFilter;
                     return (
-                      <div className="flex items-baseline justify-between mb-5">
-                        <div className="flex items-baseline gap-3">
+                      <div className="flex items-center justify-between mb-5 gap-3">
+                        <div className="flex items-center gap-2.5 flex-wrap">
                           <span
-                            className="eyebrow"
-                            style={csColor ? { color: csColor, opacity: 0.85 } : undefined}
+                            className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md"
+                            style={{
+                              background: csColor,
+                              color: "#ffffff",
+                              letterSpacing: "0.12em",
+                            }}
                           >
-                            {activeCsFilter === "All" ? "All Categories" : activeCsFilter}
+                            {csLabel}
                           </span>
-                          <span className="text-xs" style={{ color: "var(--text-faint)" }}>
-                            {String(filteredCaseStudies.length)}
+                          <span
+                            className="font-mono text-[11px]"
+                            style={{ color: "var(--text-faint)" }}
+                          >
+                            {filteredCaseStudies.length} {filteredCaseStudies.length === 1 ? "study" : "studies"}
                           </span>
                         </div>
-                        <div className="hidden sm:flex items-center gap-4 text-[12px]">
+                        <div className="hidden sm:flex items-center gap-4 text-[12px] flex-shrink-0">
                           <span className="inline-flex items-center gap-1.5" style={{ color: "#50C878" }}>
                             <TrendingUp size={11} strokeWidth={1.6} /> {wins} wins
                           </span>
@@ -806,18 +822,30 @@ export default function HomePage() {
 
                   {/* Section heading */}
                   {(() => {
-                    const lnColor = activeLearnFilter === "All" ? undefined : learnCategoryColors[activeLearnFilter];
+                    const lnColor =
+                      activeLearnFilter === "All"
+                        ? "var(--brand-primary)"
+                        : learnCategoryColors[activeLearnFilter];
+                    const lnLabel =
+                      activeLearnFilter === "All" ? "All Topics" : activeLearnFilter;
                     return (
-                      <div className="flex items-baseline justify-between mb-5">
-                        <div className="flex items-baseline gap-3">
+                      <div className="flex items-center mb-5">
+                        <div className="flex items-center gap-2.5 flex-wrap">
                           <span
-                            className="eyebrow"
-                            style={lnColor ? { color: lnColor, opacity: 0.85 } : undefined}
+                            className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md"
+                            style={{
+                              background: lnColor,
+                              color: "#ffffff",
+                              letterSpacing: "0.12em",
+                            }}
                           >
-                            {activeLearnFilter === "All" ? "All Topics" : activeLearnFilter}
+                            {lnLabel}
                           </span>
-                          <span className="text-xs" style={{ color: "var(--text-faint)" }}>
-                            {String(filteredPlaylists.length)}
+                          <span
+                            className="font-mono text-[11px]"
+                            style={{ color: "var(--text-faint)" }}
+                          >
+                            {filteredPlaylists.length} {filteredPlaylists.length === 1 ? "playlist" : "playlists"}
                           </span>
                         </div>
                       </div>
@@ -1070,44 +1098,55 @@ export default function HomePage() {
             <div className="pb-12">
               {heroBook && <HeroBanner onNavChange={setActiveNav} />}
 
-              {/* Stats ticker. All four tiles are now clickable jump anchors —
-                  books and categories scroll to the relevant section / filter
-                  bar; case_studies and playlists switch nav. */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 mx-4 sm:mx-6 mt-6 mb-8 surface" style={{ borderRadius: 12 }}>
+              {/* Stats ticker. Solid-color magazine grid — each tile its
+                  own bold color, white type. Different from the hero
+                  blue/green (which signal Tool / Editorial) so the page
+                  doesn't read as a single-system color block. */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mx-4 sm:mx-6 mt-6 mb-8">
                 {[
-                  { label: "books", value: String(books.length), action: () => document.getElementById("books-section")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
-                  { label: "case_studies", value: String(caseStudies.length), action: () => setActiveNav("casestudies") },
-                  { label: "playlists", value: String(playlists.length), action: () => setActiveNav("learn") },
-                  { label: "categories", value: "3", action: () => document.getElementById("books-section")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
-                ].map(({ label, value, action }, idx) => (
+                  { label: "books", value: String(books.length), color: "#EA580C", action: () => document.getElementById("books-section")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
+                  { label: "case studies", value: String(caseStudies.length), color: "#F3123C", action: () => setActiveNav("casestudies") },
+                  { label: "playlists", value: String(playlists.length), color: "#7C3AED", action: () => setActiveNav("learn") },
+                  { label: "categories", value: "3", color: "#0891B2", action: () => document.getElementById("books-section")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
+                ].map(({ label, value, color, action }) => (
                   <button
                     key={label}
                     type="button"
-                    className={`text-left p-4 ${idx > 0 ? "border-l" : ""} transition-colors group hover:bg-[color:var(--tag-bg)]`}
-                    style={{ borderColor: "var(--card-border)", cursor: "pointer" }}
+                    className="text-left p-4 rounded-2xl transition-all group hover:opacity-95 hover:-translate-y-0.5"
+                    style={{ background: color, color: "#ffffff" }}
                     onClick={action}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-medium tracking-wider uppercase" style={{ color: "var(--text-faint)" }}>
-                        {label.replace("_", " ")}
+                      <span
+                        className="text-[11px] font-semibold tracking-wider uppercase"
+                        style={{ color: "rgba(255, 255, 255, 0.85)" }}
+                      >
+                        {label}
                       </span>
                       <ArrowUpRight
                         size={12}
-                        strokeWidth={1.6}
-                        style={{ color: "var(--text-faint)" }}
-                        className="transition-all group-hover:text-[color:var(--brand-primary)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        strokeWidth={2}
+                        style={{ color: "rgba(255, 255, 255, 0.85)" }}
+                        className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                       />
                     </div>
-                    <div className="text-2xl sm:text-3xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                    <div
+                      className="font-display text-2xl sm:text-3xl font-bold"
+                      style={{ color: "#ffffff", letterSpacing: "-0.02em" }}
+                    >
                       {value}
                     </div>
                   </button>
                 ))}
               </div>
 
-              {/* Featured Row */}
+              {/* Featured Row. Capped at 8 picks on the home view — the
+                  full set lives on the per-category rows below. Keeps
+                  the initial SSR payload lean (CheckIt was flagging
+                  297KB) without hiding content from crawlers, since
+                  every book gets its own page in the sitemap. */}
               <SectionRow title="Latest Picks" subtitle="Hand-curated for product learners" accentColor="#FF6B35">
-                {featured.map((book, index) => (
+                {featured.slice(0, 8).map((book, index) => (
                   <ResourceCard
                     key={book.id}
                     book={book}
@@ -1125,13 +1164,20 @@ export default function HomePage() {
 
               <div className="section-divider my-8" id="books-section" />
 
-              {/* Per-Category Rows */}
+              {/* Per-Category Rows. 6-cap per row for the same payload
+                  reason; the "View all" hint sits in the section subtitle. */}
               {categories.map((cat) => {
                 const catBooks = books.filter((b) => b.category === cat);
+                const shown = catBooks.slice(0, 6);
+                const moreCount = catBooks.length - shown.length;
+                const subtitle =
+                  moreCount > 0
+                    ? `Showing 6 of ${catBooks.length}`
+                    : `${catBooks.length} essential books`;
                 return (
                   <div key={cat} className="mt-8">
-                    <SectionRow title={cat} subtitle={`${catBooks.length} essential books`} accentColor={categoryAccents[cat]}>
-                      {catBooks.map((book, index) => (
+                    <SectionRow title={cat} subtitle={subtitle} accentColor={categoryAccents[cat]}>
+                      {shown.map((book, index) => (
                         <ResourceCard
                           key={book.id}
                           book={book}
@@ -1163,7 +1209,7 @@ export default function HomePage() {
                       <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>[50]</span>
                     </div>
                   </div>
-                  <button onClick={() => setActiveNav("casestudies")} className="btn-ghost">
+                  <button onClick={() => setActiveNav("casestudies")} className="btn-accent" style={{ padding: "8px 14px", fontSize: 12 }}>
                     View all
                     <ArrowUpRight size={12} strokeWidth={1.6} />
                   </button>
@@ -1202,7 +1248,7 @@ export default function HomePage() {
                       Curated themes & head-to-head comparisons
                     </p>
                   </div>
-                  <button onClick={() => setActiveNav("explore")} className="btn-ghost">
+                  <button onClick={() => setActiveNav("explore")} className="btn-accent" style={{ padding: "8px 14px", fontSize: 12 }}>
                     View all
                     <ArrowUpRight size={12} strokeWidth={1.6} />
                   </button>
@@ -1215,12 +1261,16 @@ export default function HomePage() {
                       className="playlist-card surface p-4 sm:p-5 group"
                       style={{ ["--accent-color" as any]: t.accentColor } as React.CSSProperties}
                     >
-                      <p
-                        className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider mb-2"
-                        style={{ color: t.accentColor, opacity: 0.85 }}
+                      <span
+                        className="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-md mb-2"
+                        style={{
+                          background: t.accentColor,
+                          color: "#ffffff",
+                          letterSpacing: "0.12em",
+                        }}
                       >
                         {t.eyebrow}
-                      </p>
+                      </span>
                       <p
                         className="text-base sm:text-lg font-semibold leading-snug mb-2"
                         style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
@@ -1250,7 +1300,7 @@ export default function HomePage() {
                       Curated YouTube playlists across {learnCategories.length} topics
                     </p>
                   </div>
-                  <button onClick={() => setActiveNav("learn")} className="btn-ghost">
+                  <button onClick={() => setActiveNav("learn")} className="btn-accent" style={{ padding: "8px 14px", fontSize: 12 }}>
                     View all
                     <ArrowUpRight size={12} strokeWidth={1.6} />
                   </button>

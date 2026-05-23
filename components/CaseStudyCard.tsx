@@ -78,13 +78,13 @@ export function CaseStudyCard({
       <Link href={`/case-study/${getCaseStudySlug(study.id)}`} className="block px-5 pt-5 pb-4 group">
         <div className="flex items-center justify-between mb-5">
           <span
-            className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full truncate"
+            className="inline-flex items-center text-[10px] font-bold uppercase px-2.5 py-1 rounded-md truncate"
             style={{
-              background: `${color}14`,
-              color,
+              background: color,
+              color: "#ffffff",
+              letterSpacing: "0.12em",
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
             {study.category}
           </span>
           <div className="card-arrow flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0"
@@ -157,16 +157,19 @@ export function CaseStudyCard({
           </span>
         </div>
 
-        {/* Tags */}
+        {/* Tags — solid colored chips that echo the category color
+            (creates visual cohesion with the main category chip above
+            instead of mixing a neutral grey into a colored layout). */}
         {study.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {study.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="text-[11px] px-2 py-0.5 rounded-full"
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-md"
                 style={{
-                  background: "var(--tag-bg)",
-                  color: "var(--text-muted)",
+                  background: color,
+                  color: "#ffffff",
+                  opacity: 0.78,
                 }}
               >
                 {tag}

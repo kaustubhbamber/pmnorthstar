@@ -120,7 +120,7 @@ export function Footer() {
             © {year} northstar · made for the product community
           </p>
           <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-            Amazon affiliate links help fund the work — no paywall, ever.
+            Amazon affiliate links help fund the work. No paywall, ever.
           </p>
         </div>
       </div>

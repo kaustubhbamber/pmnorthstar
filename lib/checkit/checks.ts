@@ -5,7 +5,7 @@
 //
 // Why regex over a real HTML parser: keeps the dependency surface zero
 // (we don't ship cheerio) and the misses we'd catch with a real parser
-// — malformed tags, weird quoting — also tell us a site is broken.
+//, malformed tags, weird quoting, also tell us a site is broken.
 
 import { fetchWithTimeout, stripTags, truncate } from "./util";
 import type { CheckResult } from "./types";
@@ -22,7 +22,7 @@ export interface FetchCtx {
 }
 
 // Subdomains that scream "vibe-coded side project." Order matters for
-// matching — we use endsWith so longer matches naturally win.
+// matching, we use endsWith so longer matches naturally win.
 const PLATFORM_HOSTS = [
   ".vercel.app",
   ".netlify.app",
@@ -81,8 +81,8 @@ export async function customDomain(ctx: FetchCtx): Promise<CheckResult> {
     label: "Custom domain",
     pass: !platform,
     detail: platform
-      ? `Your URL ends in ${platform} — users read this as "side project, not yet a product."`
-      : `Custom domain ${host} — reads as a real product.`,
+      ? `Your URL ends in ${platform}. Users read this as a side project, not a product.`
+      : `Custom domain ${host}. Reads as a real product.`,
   };
 }
 
@@ -132,52 +132,70 @@ export async function realFavicon(ctx: FetchCtx): Promise<CheckResult> {
   }
 }
 
-export async function ogImage(ctx: FetchCtx): Promise<CheckResult> {
-  // og:image meta — try both attribute orders.
-  const match =
-    ctx.html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i) ||
-    ctx.html.match(/<meta\s+content=["']([^"']+)["']\s+property=["']og:image["']/i) ||
-    ctx.html.match(/<meta\s+name=["']og:image["']\s+content=["']([^"']+)["']/i);
+// og:image alone isn't enough for a usable link preview. Slack and
+// Twitter need title + description + image; type is conventional. We
+// require all four to score this slot.
+export async function ogCompleteness(ctx: FetchCtx): Promise<CheckResult> {
+  const html = ctx.html;
+  const ogMatch = (prop: string): string | null => {
+    const re = new RegExp(
+      `<meta\\s+(?:property|name)=["']og:${prop}["']\\s+content=["']([^"']+)["']`,
+      "i",
+    );
+    const re2 = new RegExp(
+      `<meta\\s+content=["']([^"']+)["']\\s+(?:property|name)=["']og:${prop}["']`,
+      "i",
+    );
+    return html.match(re)?.[1] ?? html.match(re2)?.[1] ?? null;
+  };
 
-  if (!match) {
-    return {
-      id: "og-image",
-      label: "OG image set",
-      pass: false,
-      detail: `No og:image meta tag — links to this page render as a blank box on Slack, Twitter, WhatsApp.`,
-    };
+  const ogTitle = ogMatch("title");
+  const ogDesc = ogMatch("description");
+  const ogType = ogMatch("type");
+  const ogImg = ogMatch("image");
+
+  const present = [ogTitle, ogDesc, ogType, ogImg].filter(Boolean).length;
+
+  // Image still needs to actually load — render as blank box otherwise.
+  let imageReachable = false;
+  if (ogImg) {
+    try {
+      const imgUrl = new URL(ogImg, ctx.finalUrl);
+      const res = await fetchWithTimeout(imgUrl.toString(), { method: "HEAD" }, 5000);
+      imageReachable = res.ok;
+    } catch {
+      /* leave false */
+    }
   }
 
-  let imgUrl: URL;
-  try {
-    imgUrl = new URL(match[1], ctx.finalUrl);
-  } catch {
-    return {
-      id: "og-image",
-      label: "OG image set",
-      pass: false,
-      detail: `og:image points to "${truncate(match[1], 40)}" — not a valid URL.`,
-    };
+  const pass = present === 4 && imageReachable;
+
+  let detail: string;
+  if (present === 0) {
+    detail = `No Open Graph tags. Links to this page render as a blank box on Slack, Twitter, WhatsApp.`;
+  } else if (!ogImg) {
+    detail = `Missing og:image. ${present} of 4 OG tags present.`;
+  } else if (!imageReachable) {
+    detail = `og:image is set but doesn't load. Link previews render blank.`;
+  } else if (present < 4) {
+    const missing = [
+      !ogTitle && "title",
+      !ogDesc && "description",
+      !ogType && "type",
+    ]
+      .filter(Boolean)
+      .join(", ");
+    detail = `og:image works but missing og:${missing}. Link previews will show fallback values.`;
+  } else {
+    detail = `All four OG tags present and og:image loads.`;
   }
 
-  try {
-    const res = await fetchWithTimeout(imgUrl.toString(), { method: "HEAD" }, 5000);
-    return {
-      id: "og-image",
-      label: "OG image set",
-      pass: res.ok,
-      detail: res.ok
-        ? `og:image loads from ${imgUrl.host}.`
-        : `og:image URL returned ${res.status} — link previews render blank.`,
-    };
-  } catch {
-    return {
-      id: "og-image",
-      label: "OG image set",
-      pass: false,
-      detail: `Could not reach og:image at ${imgUrl.host}.`,
-    };
-  }
+  return {
+    id: "og-completeness",
+    label: "Open Graph link preview",
+    pass,
+    detail,
+  };
 }
 
 export async function realTitle(ctx: FetchCtx): Promise<CheckResult> {
@@ -190,9 +208,9 @@ export async function realTitle(ctx: FetchCtx): Promise<CheckResult> {
     label: "Descriptive page title",
     pass: !isDefault,
     detail: !title
-      ? `No <title> tag — Google and browser tabs show your URL instead.`
+      ? `No <title> tag. Google and browser tabs show your URL instead.`
       : isDefault
-      ? `Title is "${title}" — looks like a framework default.`
+      ? `Title is "${title}". Looks like a framework default.`
       : `Title is "${truncate(title, 60)}".`,
   };
 }
@@ -202,8 +220,8 @@ export async function realTitle(ctx: FetchCtx): Promise<CheckResult> {
 // We deliberately don't use Google PageSpeed Insights here. PSI takes
 // 10-30s, depends on Google's rate limits, and silently returns empty
 // data for low-traffic sites (no CrUX). For a "30-second audit on any
-// URL" we measure causes — TTFB, payload size, image dims + font-display
-// — which are deterministic, fast, and more actionable than an opaque
+// URL" we measure causes, TTFB, payload size, image dims + font-display
+//, which are deterministic, fast, and more actionable than an opaque
 // CLS score ("add width/height to your imgs" beats "your CLS is 0.18").
 
 export async function ttfb(ctx: FetchCtx): Promise<CheckResult> {
@@ -214,10 +232,10 @@ export async function ttfb(ctx: FetchCtx): Promise<CheckResult> {
     label: "Server responds in under 600ms",
     pass,
     detail: pass
-      ? `Server responded in ${ms}ms — fast first byte.`
+      ? `Server responded in ${ms}ms. Fast first byte.`
       : ms < 1000
-      ? `Server took ${ms}ms — borderline. Add a CDN or cache the response.`
-      : `Server took ${ms}ms — slow first byte. Every user waits this long before anything loads.`,
+      ? `Server took ${ms}ms. Borderline. Add a CDN or cache the response.`
+      : `Server took ${ms}ms. Slow first byte. Every visitor waits this long before anything loads.`,
   };
 }
 
@@ -230,8 +248,8 @@ export async function htmlPayload(ctx: FetchCtx): Promise<CheckResult> {
     label: "Initial HTML under 200KB",
     pass,
     detail: pass
-      ? `HTML payload is ${kb}KB — parses fast on mobile 4G.`
-      : `HTML payload is ${kb}KB — too much markup ships before anything renders.`,
+      ? `HTML payload is ${kb}KB. Parses fast on mobile 4G.`
+      : `HTML payload is ${kb}KB. Too much markup ships before anything renders.`,
   };
 }
 
@@ -253,15 +271,15 @@ export async function layoutShiftPrevention(ctx: FetchCtx): Promise<CheckResult>
 
   let detail: string;
   if (imgs.length === 0 && hasFontDisplay) {
-    detail = `No images and font-display is configured — layout will stay stable.`;
+    detail = `No images and font-display is configured. Layout will stay stable.`;
   } else if (imgs.length === 0) {
-    detail = `No images on the page — minimal layout shift risk.`;
+    detail = `No images on the page. Minimal layout shift risk.`;
   } else if (pass) {
-    detail = `${sized}/${imgs.length} images have width+height and font loading is configured.`;
+    detail = `${sized} of ${imgs.length} images have width+height and font loading is configured.`;
   } else if (!imgsOk) {
-    detail = `Only ${sized}/${imgs.length} images have width+height — missing dimensions cause content to jump as images load.`;
+    detail = `Only ${sized} of ${imgs.length} images have width+height. Missing dimensions cause content to jump as images load.`;
   } else {
-    detail = `Images have dimensions but no font-display strategy — web fonts will cause text to reflow.`;
+    detail = `Images have dimensions but no font-display strategy. Web fonts will cause text to reflow.`;
   }
 
   return {
@@ -279,7 +297,7 @@ export async function modernImages(ctx: FetchCtx): Promise<CheckResult> {
       id: "modern-images",
       label: "Modern image formats or lazy loading",
       pass: true,
-      detail: `No <img> tags on the page — nothing to optimize.`,
+      detail: `No <img> tags on the page. Nothing to optimize.`,
     };
   }
   let good = 0;
@@ -297,8 +315,8 @@ export async function modernImages(ctx: FetchCtx): Promise<CheckResult> {
     label: "Modern image formats or lazy loading",
     pass,
     detail: pass
-      ? `${good}/${tags.length} images use webp/avif or lazy-load.`
-      : `Only ${good}/${tags.length} images optimized — the rest block initial paint.`,
+      ? `${good} of ${tags.length} images use webp/avif or lazy-load.`
+      : `Only ${good} of ${tags.length} images optimized. The rest block initial paint.`,
   };
 }
 
@@ -312,14 +330,14 @@ export async function metaDescription(ctx: FetchCtx): Promise<CheckResult> {
   const pass = desc.length >= 50 && desc.length <= 160;
   return {
     id: "meta-description",
-    label: "Meta description (50–160 chars)",
+    label: "Meta description (50 to 160 chars)",
     pass,
     detail: !desc
-      ? `No meta description — Google guesses what your page is about.`
+      ? `No meta description. Google guesses what your page is about.`
       : desc.length < 50
-      ? `Meta description is only ${desc.length} chars — too short to be useful.`
+      ? `Meta description is only ${desc.length} chars. Too short to be useful.`
       : desc.length > 160
-      ? `Meta description is ${desc.length} chars — Google truncates after ~160.`
+      ? `Meta description is ${desc.length} chars. Google truncates after about 160.`
       : `Meta description is ${desc.length} chars and sets clear expectations.`,
   };
 }
@@ -333,7 +351,7 @@ export async function robotsTxt(ctx: FetchCtx): Promise<CheckResult> {
         id: "robots-txt",
         label: "robots.txt accessible",
         pass: false,
-        detail: `/robots.txt returned ${res.status} — crawlers don't know what to do.`,
+        detail: `/robots.txt returned ${res.status}. Crawlers don't know what to do.`,
       };
     }
     const body = await res.text();
@@ -344,7 +362,7 @@ export async function robotsTxt(ctx: FetchCtx): Promise<CheckResult> {
       pass: true,
       detail: hasSitemap
         ? `robots.txt found and points crawlers to your sitemap.`
-        : `robots.txt found — consider adding a "Sitemap:" line.`,
+        : `robots.txt found. Consider adding a "Sitemap:" line.`,
     };
   } catch {
     return {
@@ -382,37 +400,57 @@ export async function sitemapXml(ctx: FetchCtx): Promise<CheckResult> {
     id: "sitemap-xml",
     label: "sitemap.xml present",
     pass: false,
-    detail: `No sitemap found — Google has to guess which pages exist.`,
+    detail: `No sitemap found. Google has to guess which pages exist.`,
   };
 }
 
-export async function singleH1(ctx: FetchCtx): Promise<CheckResult> {
-  const matches = Array.from(ctx.html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi));
-  if (matches.length === 0) {
+// JSON-LD structured data is what Google uses for rich results and what
+// LLM-powered search (Perplexity, ChatGPT, Google AI Overviews) leans on
+// most heavily. A site without any schema is invisible to Answer Engines.
+export async function structuredData(ctx: FetchCtx): Promise<CheckResult> {
+  const blocks = Array.from(
+    ctx.html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi),
+  );
+
+  if (blocks.length === 0) {
     return {
-      id: "single-h1",
-      label: "Exactly one descriptive H1",
+      id: "structured-data",
+      label: "Structured data (JSON-LD)",
       pass: false,
-      detail: `No <h1> tag — search engines can't identify the page's main topic.`,
+      detail: `No JSON-LD schema on the page. Invisible to Google rich results and AI answer engines.`,
     };
   }
-  if (matches.length > 1) {
+
+  const types: string[] = [];
+  for (const [, json] of blocks) {
+    try {
+      const parsed = JSON.parse(json.trim());
+      const items = Array.isArray(parsed) ? parsed : [parsed];
+      for (const item of items) {
+        const t = item?.["@type"];
+        if (typeof t === "string") types.push(t);
+        else if (Array.isArray(t)) types.push(...t.filter((x) => typeof x === "string"));
+      }
+    } catch {
+      /* malformed, skip */
+    }
+  }
+
+  if (types.length === 0) {
     return {
-      id: "single-h1",
-      label: "Exactly one descriptive H1",
+      id: "structured-data",
+      label: "Structured data (JSON-LD)",
       pass: false,
-      detail: `Found ${matches.length} <h1> tags — should be exactly one per page.`,
+      detail: `Found ${blocks.length} JSON-LD block(s) but none parse to valid schema.`,
     };
   }
-  const text = stripTags(matches[0][1]).trim();
-  const pass = text.length >= 5;
+
+  const unique = Array.from(new Set(types));
   return {
-    id: "single-h1",
-    label: "Exactly one descriptive H1",
-    pass,
-    detail: pass
-      ? `Single H1: "${truncate(text, 60)}"`
-      : `H1 is "${text}" — too short to convey the page's purpose.`,
+    id: "structured-data",
+    label: "Structured data (JSON-LD)",
+    pass: true,
+    detail: `Found ${unique.length} schema type${unique.length === 1 ? "" : "s"}: ${unique.slice(0, 4).join(", ")}${unique.length > 4 ? "…" : ""}.`,
   };
 }
 
@@ -427,7 +465,7 @@ export async function viewportMeta(ctx: FetchCtx): Promise<CheckResult> {
     label: "Mobile viewport configured",
     pass,
     detail: !match
-      ? `No <meta name="viewport"> — page renders zoomed-out on phones.`
+      ? `No <meta name="viewport">. Page renders zoomed-out on phones.`
       : pass
       ? `Viewport tag set for mobile.`
       : `Viewport tag exists but is missing width=device-width.`,
@@ -446,8 +484,8 @@ export async function primaryCta(ctx: FetchCtx): Promise<CheckResult> {
     label: "Clear call-to-action",
     pass,
     detail: pass
-      ? `Found ${total} button-like elements — users have clear actions.`
-      : `Only ${total} clear CTA${total === 1 ? "" : "s"} — visitors don't know what to do next.`,
+      ? `Found ${total} button-like elements. Visitors have clear actions.`
+      : `Only ${total} clear CTA${total === 1 ? "" : "s"}. Visitors don't know what to do next.`,
   };
 }
 
@@ -458,7 +496,7 @@ export async function h1ValueProp(ctx: FetchCtx): Promise<CheckResult> {
       id: "h1-value-prop",
       label: "H1 names the value proposition",
       pass: false,
-      detail: `No <h1> — visitors have to read the whole page to learn what this is.`,
+      detail: `No <h1>. Visitors have to read the whole page to learn what this is.`,
     };
   }
   const text = stripTags(match[1]).trim();
@@ -469,40 +507,96 @@ export async function h1ValueProp(ctx: FetchCtx): Promise<CheckResult> {
     label: "H1 names the value proposition",
     pass,
     detail: words < 4
-      ? `H1 "${text}" is only ${words} word${words === 1 ? "" : "s"} — not enough to explain the product.`
+      ? `H1 "${text}" is only ${words} word${words === 1 ? "" : "s"}. Not enough to explain the product.`
       : words > 20
-      ? `H1 has ${words} words — too long to scan in 5 seconds.`
+      ? `H1 has ${words} words. Too long to scan in 5 seconds.`
       : `H1 is "${truncate(text, 80)}".`,
   };
 }
 
-export async function navigation(ctx: FetchCtx): Promise<CheckResult> {
-  const hasNav = /<nav\b/i.test(ctx.html);
-  const linkCount = (ctx.html.match(/<a\b[^>]+href=/gi) || []).length;
-  const pass = hasNav || linkCount >= 4;
+// The single most embarrassing failure mode for a vibe-coded site:
+// shipping with template placeholder text still in the page. We strip
+// HTML, lowercase, and look for known boilerplate phrases.
+const PLACEHOLDER_PATTERNS: RegExp[] = [
+  /\blorem ipsum\b/i,
+  /\bdolor sit amet\b/i,
+  /\byour headline here\b/i,
+  /\byour text here\b/i,
+  /\byour tagline here\b/i,
+  /\b\[your [a-z ]+\]/i,
+  /\bedit (?:src\/|pages\/|app\/)/i, // Next/CRA boilerplate copy
+  /\bget started by editing\b/i, // Next.js default
+  /\bvite \+ react\b/i,
+  /\bvite \+ vue\b/i,
+  /\bdeploy succeeded\b/i, // Vercel default placeholder
+  /\bplaceholder text\b/i,
+  /\bcoming soon\.{0,3}$/im, // standalone "coming soon" line, not a future-tense mention
+  /\btodo:?\s/i,
+];
+
+export async function placeholderText(ctx: FetchCtx): Promise<CheckResult> {
+  const visible = stripTags(ctx.html).replace(/\s+/g, " ").trim();
+  const hits: string[] = [];
+  for (const re of PLACEHOLDER_PATTERNS) {
+    const m = visible.match(re);
+    if (m) hits.push(m[0].slice(0, 40));
+  }
+  const pass = hits.length === 0;
   return {
-    id: "navigation",
-    label: "Navigation present",
+    id: "placeholder-text",
+    label: "No placeholder text",
     pass,
-    detail: hasNav
-      ? `<nav> element found — visitors have somewhere to go.`
-      : linkCount >= 4
-      ? `${linkCount} links on the page — visitors can explore.`
-      : `Only ${linkCount} link${linkCount === 1 ? "" : "s"} — page is a dead end.`,
+    detail: pass
+      ? `No template boilerplate found. Site reads as finished.`
+      : `Found leftover placeholder text: "${hits[0]}"${hits.length > 1 ? ` (and ${hits.length - 1} more)` : ""}.`,
   };
 }
 
 // ── Trust & Compliance ────────────────────────────────────────────────────
 
-export async function httpsEnforced(ctx: FetchCtx): Promise<CheckResult> {
-  const pass = ctx.finalUrl.protocol === "https:";
+// HTTPS by itself isn't enough for "secure transport". HSTS instructs
+// browsers to never speak HTTP to this origin again, and
+// X-Content-Type-Options stops MIME sniffing attacks. Both ship as
+// response headers we already have from the audit fetch.
+export async function secureTransport(ctx: FetchCtx): Promise<CheckResult> {
+  const isHttps = ctx.finalUrl.protocol === "https:";
+  const hsts = ctx.headers.get("strict-transport-security");
+  const noSniff = ctx.headers.get("x-content-type-options");
+
+  const passes = [isHttps, !!hsts, /^nosniff$/i.test(noSniff ?? "")];
+  const passCount = passes.filter(Boolean).length;
+  const pass = passCount === 3;
+
+  if (!isHttps) {
+    return {
+      id: "secure-transport",
+      label: "Secure transport (HTTPS + headers)",
+      pass: false,
+      detail: `Site loads over ${ctx.finalUrl.protocol}. Browsers show a "Not Secure" warning.`,
+    };
+  }
+
+  if (pass) {
+    return {
+      id: "secure-transport",
+      label: "Secure transport (HTTPS + headers)",
+      pass: true,
+      detail: `HTTPS enforced with HSTS and nosniff headers. Strong transport security.`,
+    };
+  }
+
+  const missing = [
+    !hsts && "Strict-Transport-Security",
+    !/^nosniff$/i.test(noSniff ?? "") && "X-Content-Type-Options: nosniff",
+  ]
+    .filter(Boolean)
+    .join(" and ");
+
   return {
-    id: "https-enforced",
-    label: "HTTPS enforced",
-    pass,
-    detail: pass
-      ? `Site loads over HTTPS.`
-      : `Site loads over ${ctx.finalUrl.protocol} — browsers show a "Not Secure" warning.`,
+    id: "secure-transport",
+    label: "Secure transport (HTTPS + headers)",
+    pass: false,
+    detail: `HTTPS works but missing ${missing}. Easy fix in your hosting config.`,
   };
 }
 
@@ -516,7 +610,7 @@ export async function privacyLink(ctx: FetchCtx): Promise<CheckResult> {
     pass: !!found,
     detail: found
       ? `Found link to "${truncate(stripTags(found[2]).trim() || found[1], 40)}".`
-      : `No privacy or terms link on the page — required once you collect any user data.`,
+      : `No privacy or terms link on the page. Required once you collect any user data.`,
   };
 }
 
@@ -531,7 +625,7 @@ export async function custom404(ctx: FetchCtx): Promise<CheckResult> {
         id: "custom-404",
         label: "Custom 404 handling",
         pass: true,
-        detail: `Unknown path returns 200 — handled by your client-side router.`,
+        detail: `Unknown path returns 200. Handled by your client-side router.`,
       };
     }
     if (res.status === 404) {
@@ -543,8 +637,8 @@ export async function custom404(ctx: FetchCtx): Promise<CheckResult> {
         label: "Custom 404 handling",
         pass,
         detail: pass
-          ? `404 page returns ${visible.length} chars of content — looks custom.`
-          : `404 returns ${visible.length} chars — looks like the framework default.`,
+          ? `404 page returns ${visible.length} chars of content. Looks custom.`
+          : `404 returns ${visible.length} chars. Looks like the framework default.`,
       };
     }
     return {
@@ -591,6 +685,6 @@ export async function identitySignal(ctx: FetchCtx): Promise<CheckResult> {
       ? hasAboutContact
         ? `Found About, Contact, or email link.`
         : `Found social media link in the page.`
-      : `No About / Contact / social link — visitors can't tell who's behind this.`,
+      : `No About, Contact, or social link. Visitors can't tell who's behind this.`,
   };
 }

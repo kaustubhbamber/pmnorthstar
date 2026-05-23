@@ -23,13 +23,26 @@ type ViewState =
   | { kind: "error"; message: string }
   | { kind: "ready"; result: AuditResult };
 
-// Color per band — matches the visual hierarchy of the score ring.
+// Color per band, matches the visual hierarchy of the score ring.
 const BAND_COLOR: Record<Band, string> = {
   ready: "#22C55E",
   almost: "#22C55E",
   polish: "#F59E0B",
   vibe: "var(--brand-primary)",
 };
+
+// Per-dimension accent, color-codes the left border of each result
+// card so users can scan their scorecard at a glance.
+const DIMENSION_ACCENT: Record<string, string> = {
+  brand: "#9B8FFF",
+  performance: "#FF6B35",
+  seo: "#26A69A",
+  ux: "#F5C842",
+  trust: "#F3123C",
+};
+
+// Curated example sites users can click to try the tool without typing.
+const EXAMPLE_URLS = ["stripe.com", "linear.app", "vercel.com"];
 
 function safeHost(url: string): string {
   try {
@@ -77,7 +90,7 @@ export default function CheckItPage() {
   }, []);
 
   // Read ?url= from the address bar on mount and auto-run. Pure client
-  // read (window.location) — avoids the useSearchParams Suspense
+  // read (window.location), avoids the useSearchParams Suspense
   // requirement in Next 14.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -114,6 +127,10 @@ export default function CheckItPage() {
           setInput={setInput}
           onSubmit={handleSubmit}
           isLoading={view.kind === "loading"}
+          onPickExample={(url) => {
+            setInput(url);
+            runAudit(url);
+          }}
         />
 
         {view.kind === "loading" && <LoadingState url={view.url} />}
@@ -134,11 +151,13 @@ function Hero({
   setInput,
   onSubmit,
   isLoading,
+  onPickExample,
 }: {
   input: string;
   setInput: (s: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
+  onPickExample: (url: string) => void;
 }) {
   return (
     <div className="text-center mb-10 sm:mb-12">
@@ -154,7 +173,7 @@ function Hero({
           className="text-xs font-medium"
           style={{ color: "var(--brand-primary)", letterSpacing: "0.02em" }}
         >
-          CheckIt — by northstar
+          CheckIt, by northstar
         </span>
       </div>
 
@@ -177,7 +196,7 @@ function Hero({
         className="text-base sm:text-lg max-w-xl mx-auto mb-8 leading-relaxed"
         style={{ color: "var(--text-muted)" }}
       >
-        We check 20 things across brand, performance, SEO, UX, and trust — the
+        We check 20 things across brand, performance, SEO, UX, and trust, the
         basics that decide whether users treat you as a product or a project.
       </p>
 
@@ -223,6 +242,35 @@ function Hero({
               </>
             )}
           </button>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 mt-4">
+          <span
+            className="text-xs"
+            style={{ color: "var(--text-faint)" }}
+          >
+            Try:
+          </span>
+          {EXAMPLE_URLS.map((url, i) => (
+            <span key={url} className="inline-flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onPickExample(url)}
+                disabled={isLoading}
+                className="text-xs font-mono transition-opacity hover:opacity-80 disabled:opacity-40"
+                style={{ color: "var(--brand-primary)" }}
+              >
+                {url}
+              </button>
+              {i < EXAMPLE_URLS.length - 1 && (
+                <span
+                  className="text-xs"
+                  style={{ color: "var(--text-faint)" }}
+                >
+                  ·
+                </span>
+              )}
+            </span>
+          ))}
         </div>
         <p className="text-xs mt-3" style={{ color: "var(--text-faint)" }}>
           Free. No signup. The result URL is shareable.
@@ -292,7 +340,7 @@ function LoadingState({ url }: { url: string }) {
         Running 20 checks across your site
       </p>
       <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-        Fetching {safeHost(url)} and Google PageSpeed — can take up to 30 seconds.
+        Fetching {safeHost(url)} and Google PageSpeed, can take up to 30 seconds.
       </p>
     </div>
   );
@@ -356,7 +404,7 @@ function ResultView({ result }: { result: AuditResult }) {
       try {
         await navigator.share({
           title: `CheckIt: ${host} scored ${result.totalScore}/100`,
-          text: `${band.label} — ${band.tagline}`,
+          text: `${band.label}, ${band.tagline}`,
           url: shareUrl,
         });
         return;
@@ -408,27 +456,31 @@ function ScoreHeader({
   host: string;
   onShare: () => void;
 }) {
+  // CheckIt score header. Solid band-colored background so the result
+  // announces itself before the user reads a single word. White type
+  // on color, white score ring with translucent track. The color signals
+  // the band tier visually: green = ready, amber = polish, red = vibe.
   return (
     <div
       className="rounded-2xl px-5 sm:px-8 py-6 sm:py-7 flex flex-col sm:flex-row items-start sm:items-center gap-5"
       style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--card-border)",
+        background: bandColor,
+        color: "#ffffff",
       }}
     >
       <div className="flex items-center gap-4 sm:gap-5">
-        <ScoreRing score={score} color={bandColor} />
+        <ScoreRing score={score} color="#ffffff" onColor />
         <div className="min-w-0">
           <p
-            className="text-[10px] uppercase tracking-wider mb-1 font-medium"
-            style={{ color: "var(--text-faint)" }}
+            className="text-[10px] uppercase tracking-wider mb-1 font-semibold"
+            style={{ color: "rgba(255, 255, 255, 0.85)" }}
           >
             CheckIt score
           </p>
           <p
             className="font-display text-xl sm:text-2xl font-bold mb-0.5 leading-tight"
             style={{
-              color: "var(--text-primary)",
+              color: "#ffffff",
               letterSpacing: "-0.02em",
             }}
           >
@@ -436,7 +488,7 @@ function ScoreHeader({
           </p>
           <p
             className="text-xs sm:text-sm leading-snug"
-            style={{ color: "var(--text-muted)" }}
+            style={{ color: "rgba(255, 255, 255, 0.85)" }}
           >
             {bandTagline}
           </p>
@@ -446,7 +498,7 @@ function ScoreHeader({
       <div className="sm:ml-auto flex flex-col sm:items-end gap-2 w-full sm:w-auto">
         <p
           className="text-xs font-mono truncate max-w-full"
-          style={{ color: "var(--text-faint)" }}
+          style={{ color: "rgba(255, 255, 255, 0.75)" }}
         >
           {host}
         </p>
@@ -454,9 +506,9 @@ function ScoreHeader({
           onClick={onShare}
           className="inline-flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           style={{
-            background: "var(--tag-bg)",
-            color: "var(--text-primary)",
-            border: "1px solid var(--card-border)",
+            background: "rgba(255, 255, 255, 0.15)",
+            color: "#ffffff",
+            border: "1px solid rgba(255, 255, 255, 0.25)",
           }}
         >
           <Share2 size={14} /> Share result
@@ -466,47 +518,68 @@ function ScoreHeader({
   );
 }
 
-function ScoreRing({ score, color }: { score: number; color: string }) {
-  const radius = 36;
+function ScoreRing({
+  score,
+  color,
+  onColor = false,
+}: {
+  score: number;
+  color: string;
+  onColor?: boolean;
+}) {
+  const SIZE = 116;
+  const STROKE = 8;
+  const radius = (SIZE - STROKE) / 2;
   const circ = 2 * Math.PI * radius;
   const progress = (Math.max(0, Math.min(100, score)) / 100) * circ;
+  const trackColor = onColor ? "rgba(255, 255, 255, 0.25)" : "var(--divider)";
+  const textColor = onColor ? "#ffffff" : "var(--text-primary)";
+  const subTextColor = onColor ? "rgba(255, 255, 255, 0.75)" : "var(--text-faint)";
   return (
-    <div className="relative flex-shrink-0" style={{ width: 88, height: 88 }}>
+    <div
+      className="relative flex-shrink-0"
+      style={{ width: SIZE, height: SIZE }}
+    >
       <svg
-        width="88"
-        height="88"
-        viewBox="0 0 88 88"
+        width={SIZE}
+        height={SIZE}
+        viewBox={`0 0 ${SIZE} ${SIZE}`}
         style={{ transform: "rotate(-90deg)" }}
       >
         <circle
-          cx="44"
-          cy="44"
+          cx={SIZE / 2}
+          cy={SIZE / 2}
           r={radius}
-          stroke="var(--divider)"
-          strokeWidth="6"
+          stroke={trackColor}
+          strokeWidth={STROKE}
           fill="none"
         />
         <circle
-          cx="44"
-          cy="44"
+          cx={SIZE / 2}
+          cy={SIZE / 2}
           r={radius}
           stroke={color}
-          strokeWidth="6"
+          strokeWidth={STROKE}
           fill="none"
           strokeDasharray={circ}
           strokeDashoffset={circ - progress}
           strokeLinecap="round"
-          style={{ transition: "stroke-dashoffset 0.8s ease" }}
+          style={{
+            transition: "stroke-dashoffset 0.9s ease-out",
+            filter: onColor
+              ? undefined
+              : `drop-shadow(0 0 6px ${color}55)`,
+          }}
         />
       </svg>
       <div
         className="absolute inset-0 flex flex-col items-center justify-center font-display leading-none"
-        style={{ color: "var(--text-primary)" }}
+        style={{ color: textColor }}
       >
-        <span className="text-2xl font-bold">{score}</span>
+        <span className="text-[34px] font-bold">{score}</span>
         <span
-          className="text-[9px] mt-1 font-mono"
-          style={{ color: "var(--text-faint)" }}
+          className="text-[10px] mt-1.5 font-mono uppercase tracking-wider"
+          style={{ color: subTextColor }}
         >
           /100
         </span>
@@ -527,6 +600,9 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
       : ratio >= 0.5
       ? "#F59E0B"
       : "var(--brand-primary)";
+  const accent = DIMENSION_ACCENT[dimension.id] ?? "var(--brand-primary)";
+  const passed = dimension.checks.filter((c) => c.pass).length;
+  const total = dimension.checks.length;
 
   const handleToggle = () => {
     const next = !open;
@@ -538,10 +614,11 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden"
+      className="rounded-xl overflow-hidden relative"
       style={{
         background: "var(--card-bg)",
         border: "1px solid var(--card-border)",
+        borderLeft: `3px solid ${accent}`,
       }}
     >
       <button
@@ -579,15 +656,26 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
             {config.oneLiner}
           </p>
         </div>
-        <ChevronDown
-          size={18}
-          className="flex-shrink-0"
-          style={{
-            color: "var(--text-faint)",
-            transform: open ? "rotate(180deg)" : "none",
-            transition: "transform 0.2s",
-          }}
-        />
+        <div className="flex items-center gap-2.5 flex-shrink-0">
+          <span
+            className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded"
+            style={{
+              color: "var(--text-faint)",
+              background: "var(--tag-bg)",
+            }}
+            title="Passed / total checks"
+          >
+            {passed}/{total}
+          </span>
+          <ChevronDown
+            size={18}
+            style={{
+              color: "var(--text-faint)",
+              transform: open ? "rotate(180deg)" : "none",
+              transition: "transform 0.2s",
+            }}
+          />
+        </div>
       </button>
 
       {open && (
