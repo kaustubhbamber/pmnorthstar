@@ -13,6 +13,9 @@ model User {
   email          String          @unique
   name           String
   passwordHash   String          @map("password_hash")
+  // Set on every successful login. Query in Supabase SQL Editor:
+  //   SELECT email, name, last_login_at FROM users ORDER BY last_login_at DESC NULLS LAST;
+  lastLoginAt    DateTime?       @map("last_login_at")
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   likedResources      LikedResource[]

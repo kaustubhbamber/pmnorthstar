@@ -36,6 +36,16 @@ export async function POST(req: NextRequest) {
     const token = await signToken(user.id);
     await setTokenCookie(token);
 
+    // Record the login timestamp so we can see who's actually using
+    // the site via Supabase SQL Editor. Fire-and-forget — failure
+    // here shouldn't block the login response.
+    prisma.user
+      .update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      })
+      .catch((err) => console.error("Failed to update lastLoginAt:", err));
+
     return NextResponse.json({
       user: {
         id: user.id,
