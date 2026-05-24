@@ -84,3 +84,22 @@ model PasswordResetToken {
   @@index([userId])
   @@map("password_reset_tokens")
 }
+
+// One row per CheckIt audit run. No relation to User on purpose: most
+// CheckIt visitors are anonymous, and tracking who ran what would be
+// privacy-hostile. Query via Supabase SQL Editor for usage analytics:
+//   SELECT COUNT(*) FROM checkit_audits;
+//   SELECT host, COUNT(*) FROM checkit_audits GROUP BY host ORDER BY 2 DESC LIMIT 20;
+//   SELECT band, COUNT(*) FROM checkit_audits GROUP BY band;
+model CheckitAudit {
+  id        String   @id @default(uuid())
+  host      String
+  score     Int
+  band      String
+  cached    Boolean  @default(false)
+  fetchedAt DateTime @default(now()) @map("fetched_at")
+
+  @@index([fetchedAt])
+  @@index([host])
+  @@map("checkit_audits")
+}

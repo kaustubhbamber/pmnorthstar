@@ -52,9 +52,28 @@ function safeHost(url: string): string {
   }
 }
 
+interface CheckitStats {
+  total: number;
+  week: number;
+  today: number;
+}
+
 export default function CheckItPage() {
   const [input, setInput] = useState("");
   const [view, setView] = useState<ViewState>({ kind: "idle" });
+  const [stats, setStats] = useState<CheckitStats | null>(null);
+
+  // Pull aggregate usage counts for the hero social-proof line. Best-
+  // effort — if the endpoint fails or returns zeros, the line just
+  // doesn't render.
+  useEffect(() => {
+    fetch("/api/checkit/stats")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && setStats(d))
+      .catch(() => {
+        /* swallow */
+      });
+  }, []);
 
   const runAudit = useCallback(async (url: string) => {
     setView({ kind: "loading", url });
@@ -127,6 +146,7 @@ export default function CheckItPage() {
           setInput={setInput}
           onSubmit={handleSubmit}
           isLoading={view.kind === "loading"}
+          stats={stats}
           onPickExample={(url) => {
             setInput(url);
             runAudit(url);
@@ -152,12 +172,14 @@ function Hero({
   onSubmit,
   isLoading,
   onPickExample,
+  stats,
 }: {
   input: string;
   setInput: (s: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
   onPickExample: (url: string) => void;
+  stats: CheckitStats | null;
 }) {
   return (
     <div className="text-center mb-10 sm:mb-12">
@@ -274,6 +296,15 @@ function Hero({
         </div>
         <p className="text-xs mt-3" style={{ color: "var(--text-faint)" }}>
           Free. No signup. The result URL is shareable.
+          {stats && stats.week > 0 && (
+            <>
+              {" · "}
+              <span style={{ color: "var(--text-muted)" }}>
+                {stats.week.toLocaleString()}{" "}
+                {stats.week === 1 ? "site" : "sites"} scored this week
+              </span>
+            </>
+          )}
         </p>
       </form>
     </div>
