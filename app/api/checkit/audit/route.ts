@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   const key = cacheKey(url);
   const cached = getCached(key);
   if (cached) {
-    logAudit(cached.finalUrl || url.toString(), cached.totalScore, cached.band, true);
+    await logAudit(cached.finalUrl || url.toString(), cached.totalScore, cached.band, true);
     return NextResponse.json({ result: cached, cached: true });
   }
 
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     // poison the cache for 24h.
     if (!result.fatalError) {
       setCached(key, result);
-      logAudit(result.finalUrl || url.toString(), result.totalScore, result.band, false);
+      await logAudit(result.finalUrl || url.toString(), result.totalScore, result.band, false);
     }
     return NextResponse.json({ result, cached: false });
   } catch (error) {
@@ -49,19 +49,24 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Fire-and-forget Postgres insert so we can answer "how many CheckIts
-// have been run?" via Supabase SQL Editor. Never throws. Same pattern
-// as lastLoginAt: failure here must not block the audit response.
-function logAudit(finalUrl: string, score: number, band: string, cached: boolean) {
+// Postgres insert so we can answer "how many CheckIts have been run?"
+// via Supabase SQL Editor. Awaited (not fire-and-forget) because Vercel
+// terminates the serverless function as soon as we return the response,
+// which kills the in-flight promise before it lands. The await adds
+// ~50ms vs a multi-second audit — negligible. Try/catch ensures a DB
+// failure never blocks the audit response to the user.
+async function logAudit(finalUrl: string, score: number, band: string, cached: boolean) {
   let host = finalUrl;
   try {
     host = new URL(finalUrl).hostname;
   } catch {
     /* keep the raw string as a fallback */
   }
-  prisma.checkitAudit
-    .create({
+  try {
+    await prisma.checkitAudit.create({
       data: { host, score, band, cached },
-    })
-    .catch((err) => console.error("Failed to log CheckIt audit:", err));
+    });
+  } catch (err) {
+    console.error("Failed to log CheckIt audit:", err);
+  }
 }
