@@ -68,9 +68,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e02020'/><path d='M16 4l3.7 7.5L28 13l-6 5.8 1.4 8.2L16 23l-7.4 4 1.4-8.2L4 13l8.3-1.5z' fill='white'/></svg>",
-  },
+  // Favicon + apple-touch-icon are auto-routed from app/icon.tsx and
+  // app/apple-icon.tsx as real PNGs. Don't set `icons` here — that
+  // would override the auto-generated tags.
 };
 
 // Read the saved theme and write data-theme on <html> before React

@@ -76,7 +76,7 @@ export function SubscribeForm({
         style={{
           borderRadius: 8,
           overflow: "hidden",
-          border: "1px solid var(--card-border)",
+          border: "1.5px solid var(--card-border)",
           background: "#ffffff",
         }}
       >

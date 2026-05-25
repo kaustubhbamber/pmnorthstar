@@ -66,7 +66,7 @@ export function SectionRow({ title, subtitle, children, accentColor }: SectionRo
             className="w-8 h-8 rounded-full flex items-center justify-center"
             style={{
               background: "transparent",
-              border: "1px solid var(--card-border)",
+              border: "1.5px solid var(--card-border)",
               color: "var(--text-muted)",
             }}
           >
@@ -77,7 +77,7 @@ export function SectionRow({ title, subtitle, children, accentColor }: SectionRo
             className="w-8 h-8 rounded-full flex items-center justify-center"
             style={{
               background: "transparent",
-              border: "1px solid var(--card-border)",
+              border: "1.5px solid var(--card-border)",
               color: "var(--text-muted)",
             }}
           >
@@ -87,7 +87,10 @@ export function SectionRow({ title, subtitle, children, accentColor }: SectionRo
       </div>
       <div
         ref={scrollRef}
-        className="flex gap-3 sm:gap-4 overflow-x-auto scroll-container px-4 sm:px-6 pb-2"
+        // Horizontal-scroll container. Top padding leaves room for the
+        // -2px hover translate on cards (otherwise overflow-x:auto
+        // implicitly clips overflow-y, which crops the hovered card).
+        className="flex gap-3 sm:gap-4 overflow-x-auto scroll-container px-4 sm:px-6 pt-1 pb-3"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {children}

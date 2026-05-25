@@ -16,7 +16,7 @@ export function BookFaqs({ faqs }: BookFaqsProps) {
   return (
     <section
       className="py-8 sm:py-10"
-      style={{ borderTop: "1px solid var(--card-border)" }}
+      style={{ borderTop: "1.5px solid var(--card-border)" }}
     >
       <div className="flex items-baseline gap-3 mb-5 sm:mb-6">
         <h2

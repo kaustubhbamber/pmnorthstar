@@ -39,7 +39,7 @@ export default function AIDecodedIndexPage() {
           the AI Decoded card on the home page without overwhelming. */}
       <section
         className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
-        style={{ borderBottom: "1px solid var(--card-border)" }}
+        style={{ borderBottom: "1.5px solid var(--card-border)" }}
       >
         <div className="max-w-3xl">
           <Breadcrumbs
@@ -166,7 +166,7 @@ export default function AIDecodedIndexPage() {
 
       <section
         className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-        style={{ borderTop: "1px solid var(--card-border)" }}
+        style={{ borderTop: "1.5px solid var(--card-border)" }}
       >
         <div className="max-w-3xl">
           <SubscribeForm

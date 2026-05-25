@@ -128,7 +128,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
           style={{
             background: "var(--nav-bg)",
-            borderBottom: "1px solid var(--card-border)",
+            borderBottom: "1.5px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-3 min-w-0">
@@ -158,7 +158,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           {/* Hero */}
           <section
             className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <Breadcrumbs
@@ -176,7 +176,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
                   style={{
                     background: cat.bg,
                     color: cat.color,
-                    border: `1px solid ${cat.border}`,
+                    border: `1.5px solid ${cat.border}`,
                   }}
                 >
                   <span
@@ -276,7 +276,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           {/* Two-column: author photo + tags */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 sm:gap-7 items-start">
               <div className="flex-shrink-0">
@@ -352,7 +352,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           <section
             id="short-route"
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <p
@@ -527,7 +527,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           {faqs.length > 0 && (
             <section
               className="px-4 sm:px-8 lg:px-12"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-3xl">
                 <BookFaqs faqs={faqs} />
@@ -539,7 +539,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           {relatedCaseStudies.length > 0 && (
             <section
               className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-5xl">
                 <p

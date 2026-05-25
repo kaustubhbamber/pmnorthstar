@@ -18,7 +18,7 @@ export function CaseStudyFaqs({ faqs }: CaseStudyFaqsProps) {
   return (
     <section
       className="py-8 sm:py-10"
-      style={{ borderTop: "1px solid var(--card-border)" }}
+      style={{ borderTop: "1.5px solid var(--card-border)" }}
     >
       <div className="flex items-baseline gap-3 mb-5 sm:mb-6">
         <h2
@@ -75,7 +75,7 @@ export function CaseStudyFaqs({ faqs }: CaseStudyFaqsProps) {
                 <div
                   className="px-4 sm:px-5 pb-4 sm:pb-5"
                   style={{
-                    borderTop: "1px solid var(--card-border)",
+                    borderTop: "1.5px solid var(--card-border)",
                     paddingTop: "14px",
                   }}
                 >

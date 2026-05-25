@@ -55,7 +55,7 @@ export function PlaylistCard({
       style={
         {
           background: initialLiked || initialSaved ? `${color}08` : "var(--card-bg)",
-          border: `1px solid ${initialLiked || initialSaved ? color : "var(--card-border)"}`,
+          border: `1.5px solid ${initialLiked || initialSaved ? color : "var(--card-border)"}`,
           ["--accent-color" as any]: color,
         } as React.CSSProperties
       }
@@ -98,7 +98,7 @@ export function PlaylistCard({
             background: thumbnail && !thumbFailed
               ? "transparent"
               : `linear-gradient(135deg, ${color}30, ${color}10)`,
-            borderBottom: "1px solid var(--card-border)",
+            borderBottom: "1.5px solid var(--card-border)",
           }}
         >
           {thumbnail && !thumbFailed ? (
@@ -149,7 +149,7 @@ export function PlaylistCard({
           <div
             className="card-arrow flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0"
             style={{
-              border: `1px solid var(--card-border)`,
+              border: `1.5px solid var(--card-border)`,
               color: hasUrl ? color : "var(--text-faint)",
             }}
           >
@@ -206,7 +206,7 @@ export function PlaylistCard({
       {/* Footer */}
       <div
         className="px-5 py-3 flex items-center justify-between"
-        style={{ borderTop: "1px solid var(--card-border)" }}
+        style={{ borderTop: "1.5px solid var(--card-border)" }}
       >
         <span
           className="text-xs"

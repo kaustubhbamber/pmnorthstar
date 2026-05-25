@@ -68,7 +68,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
           style={{
             background: "var(--nav-bg)",
-            borderBottom: "1px solid var(--card-border)",
+            borderBottom: "1.5px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-3 min-w-0">
@@ -106,7 +106,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               on the page; the hero stays calm. */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-16"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <Breadcrumbs
@@ -148,7 +148,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
           {/* Case studies grid */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="flex items-baseline gap-3 mb-6 sm:mb-8">
               <h2
@@ -174,7 +174,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               "commit point" in the page flow. */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-2xl mx-auto">
               <SubscribeForm
@@ -191,7 +191,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
           {topic.faqs && topic.faqs.length > 0 && (
             <section
               className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-3xl">
                 <h2

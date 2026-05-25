@@ -17,7 +17,7 @@ export function ThemeToggle({ isDark, onToggle, className = "" }: ThemeTogglePro
       className={`inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors ${className}`}
       style={{
         background: "transparent",
-        border: "1px solid var(--card-border)",
+        border: "1.5px solid var(--card-border)",
         color: "var(--text-muted)",
       }}
       onMouseEnter={(e) => {

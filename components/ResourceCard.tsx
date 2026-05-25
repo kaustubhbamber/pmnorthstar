@@ -170,7 +170,7 @@ export function ResourceCard({
             so the layout doesn't shift when the photo loads. */}
         <div
           className="flex items-center gap-3 px-4 pt-4 pb-3"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           {/* Avatar slot — always reserves a fixed 40x40 box via explicit
               dimensions + aspect-ratio. Prevents CLS when the Wikipedia
@@ -223,7 +223,7 @@ export function ResourceCard({
           <div
             className="card-arrow flex items-center justify-center w-6 h-6 rounded-full flex-shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             style={{
-              border: "1px solid var(--card-border)",
+              border: "1.5px solid var(--card-border)",
               color: "var(--brand-primary)",
             }}
           >
@@ -279,7 +279,7 @@ export function ResourceCard({
           a link to the book, so a separate 'Open book' label was redundant. */}
       <div
         className="px-4 py-2.5 flex items-center justify-end"
-        style={{ borderTop: "1px solid var(--card-border)" }}
+        style={{ borderTop: "1.5px solid var(--card-border)" }}
       >
         <SaveButton
           resource={book}

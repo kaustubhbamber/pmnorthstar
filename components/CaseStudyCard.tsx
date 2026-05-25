@@ -89,7 +89,7 @@ export function CaseStudyCard({
             {study.category}
           </span>
           <div className="card-arrow flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0"
-            style={{ border: "1px solid var(--card-border)", color }}>
+            style={{ border: "1.5px solid var(--card-border)", color }}>
             <ArrowUpRight size={14} strokeWidth={1.6} />
           </div>
         </div>
@@ -105,7 +105,7 @@ export function CaseStudyCard({
               background: logoUrl && !logoFailed ? "#fff" : "transparent",
               border:
                 logoUrl && !logoFailed
-                  ? "1px solid var(--card-border)"
+                  ? "1.5px solid var(--card-border)"
                   : "none",
             }}
           >
@@ -144,7 +144,7 @@ export function CaseStudyCard({
           className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg mb-3"
           style={{
             background: "transparent",
-            border: `1px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
+            border: `1.5px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
             color: isFailure ? "#FF4B4B" : "#50C878",
           }}
         >
@@ -181,7 +181,7 @@ export function CaseStudyCard({
 
       <div
         className="px-5 py-3 flex items-center justify-between"
-        style={{ borderTop: "1px solid var(--card-border)" }}
+        style={{ borderTop: "1.5px solid var(--card-border)" }}
       >
         <span className="text-xs" style={{ color: "var(--text-muted)" }}>
           Read case study

@@ -367,7 +367,7 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
-            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+            style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="flex items-center gap-3">
               <button
@@ -496,7 +496,7 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
-            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+            style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="flex items-center gap-3">
               <button
@@ -624,7 +624,7 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
-            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+            style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="flex items-center gap-3">
               <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg lg:hidden" style={{ color: "var(--text-primary)" }}>
@@ -645,7 +645,7 @@ export default function HomePage() {
           <main className="flex-1 overflow-y-auto scroll-container">
               <>
                 {/* Hero strip */}
-                <div className="dot-grid px-4 sm:px-8 py-10 sm:py-14" style={{ borderBottom: "1px solid var(--card-border)" }}>
+                <div className="dot-grid px-4 sm:px-8 py-10 sm:py-14" style={{ borderBottom: "1.5px solid var(--card-border)" }}>
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <span className="eyebrow">{caseStudies.length} studies</span>
                     <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
@@ -751,7 +751,7 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
-            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+            style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="flex items-center gap-3">
               <button
@@ -778,7 +778,7 @@ export default function HomePage() {
                 {/* Hero strip */}
                 <div
                   className="dot-grid px-4 sm:px-8 py-10 sm:py-14"
-                  style={{ borderBottom: "1px solid var(--card-border)" }}
+                  style={{ borderBottom: "1.5px solid var(--card-border)" }}
                 >
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <span className="eyebrow">{playlists.length} playlists</span>
@@ -892,7 +892,7 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header
             className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3"
-            style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+            style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="flex items-center gap-3 min-w-0">
               <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg lg:hidden flex-shrink-0" style={{ color: "var(--text-primary)" }}>
@@ -914,7 +914,7 @@ export default function HomePage() {
             {/* Hero */}
             <section
               className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-3xl">
                 <p className="eyebrow mb-3 sm:mb-4" style={{ color: "#26A69A" }}>
@@ -930,7 +930,7 @@ export default function HomePage() {
             </section>
 
             {/* Topics */}
-            <section className="px-4 sm:px-6 lg:px-12 py-8 sm:py-12" style={{ borderBottom: "1px solid var(--card-border)" }}>
+            <section className="px-4 sm:px-6 lg:px-12 py-8 sm:py-12" style={{ borderBottom: "1.5px solid var(--card-border)" }}>
               <div className="flex items-baseline gap-3 mb-5 sm:mb-6">
                 <h2 className="text-xl sm:text-2xl font-semibold" style={{ color: "#26A69A", letterSpacing: "-0.02em" }}>
                   Topics
@@ -1011,7 +1011,7 @@ export default function HomePage() {
         {/* Mobile header with hamburger */}
         <div
           className="flex items-center justify-between px-4 py-3 lg:hidden flex-shrink-0"
-          style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+          style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="flex items-center gap-3">
             <button
@@ -1054,7 +1054,7 @@ export default function HomePage() {
             are useful). */}
         <div
           className={`${user ? "flex" : "hidden sm:flex"} flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2`}
-          style={{ borderBottom: "1px solid var(--card-border)", background: "var(--nav-bg)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)", background: "var(--nav-bg)" }}
         >
           <p className="text-[11px] sm:text-xs truncate flex-shrink min-w-0" style={{ color: "var(--text-muted)" }}>
             {user ? `Welcome back, ${user.name}` : "Browse freely. Sign in only if you want to save."}
@@ -1064,7 +1064,7 @@ export default function HomePage() {
               <button
                 onClick={() => setActiveNav("saved")}
                 className="text-[11px] font-medium inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg"
-                style={{ background: "transparent", border: "1px solid var(--card-border)", color: "var(--text-muted)" }}
+                style={{ background: "transparent", border: "1.5px solid var(--card-border)", color: "var(--text-muted)" }}
               >
                 <Bookmark size={10} strokeWidth={1.6} />
                 <span className="hidden sm:inline">Saved </span><span style={{ color: "var(--text-faint)" }}>{savedCount}</span>
@@ -1072,7 +1072,7 @@ export default function HomePage() {
               <button
                 onClick={() => setActiveNav("favourites")}
                 className="text-[11px] font-medium inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg"
-                style={{ background: "transparent", border: "1px solid var(--card-border)", color: "var(--text-muted)" }}
+                style={{ background: "transparent", border: "1.5px solid var(--card-border)", color: "var(--text-muted)" }}
               >
                 <Heart size={10} strokeWidth={1.6} />
                 <span className="hidden sm:inline">Fav </span><span style={{ color: "var(--text-faint)" }}>{favouriteCount}</span>
@@ -1080,7 +1080,7 @@ export default function HomePage() {
               <button
                 onClick={handleLogout}
                 className="text-[11px] font-medium inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg"
-                style={{ background: "transparent", border: "1px solid var(--card-border)", color: "var(--text-muted)" }}
+                style={{ background: "transparent", border: "1.5px solid var(--card-border)", color: "var(--text-muted)" }}
               >
                 <LogOut size={10} strokeWidth={1.6} />
                 <span className="hidden sm:inline">Log out</span>

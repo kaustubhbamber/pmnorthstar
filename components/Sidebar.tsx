@@ -84,7 +84,7 @@ export function Sidebar({
         className={`flex flex-col h-full w-56 flex-shrink-0 py-6 px-3 fixed top-0 left-0 lg:static z-[200] transition-transform duration-200 ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
-        style={{ background: "var(--sidebar-bg)", borderRight: "1px solid var(--sidebar-border)" }}
+        style={{ background: "var(--sidebar-bg)", borderRight: "1.5px solid var(--sidebar-border)" }}
       >
         <button
           onClick={onClose}
@@ -182,7 +182,7 @@ export function Sidebar({
         </nav>
 
         {/* Footer mark */}
-        <div className="px-3 pt-4" style={{ borderTop: "1px solid var(--sidebar-border)" }}>
+        <div className="px-3 pt-4" style={{ borderTop: "1.5px solid var(--sidebar-border)" }}>
           <p className="text-[11px]" style={{ color: "var(--text-faint)" }}>v3 public beta</p>
         </div>
       </aside>

@@ -116,7 +116,7 @@ export function SaveButton({
         style={{
           background: saved ? "var(--brand-primary)" : "var(--tag-bg)",
           color: saved ? "#ffffff" : "var(--text-muted)",
-          border: `1px solid ${saved ? "var(--brand-primary)" : "var(--card-border)"}`,
+          border: `1.5px solid ${saved ? "var(--brand-primary)" : "var(--card-border)"}`,
         }}
       >
         {savingLoading ? (
@@ -134,7 +134,7 @@ export function SaveButton({
         style={{
           background: liked ? "rgba(243,18,60,0.1)" : "var(--tag-bg)",
           color: liked ? "var(--brand-primary)" : "var(--text-muted)",
-          border: `1px solid ${liked ? "rgba(243,18,60,0.3)" : "var(--card-border)"}`,
+          border: `1.5px solid ${liked ? "rgba(243,18,60,0.3)" : "var(--card-border)"}`,
         }}
       >
         {likingLoading ? (

@@ -187,7 +187,7 @@ function Hero({
         className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5"
         style={{
           background: "var(--brand-soft)",
-          border: "1px solid rgba(243, 18, 60, 0.2)",
+          border: "1.5px solid rgba(243, 18, 60, 0.2)",
         }}
       >
         <Sparkles size={12} style={{ color: "var(--brand-primary)" }} />
@@ -242,7 +242,7 @@ function Hero({
             className="flex-1 px-4 py-3.5 text-base bg-transparent outline-none rounded-xl sm:rounded-none"
             style={{
               color: "var(--text-primary)",
-              border: "1px solid var(--card-border)",
+              border: "1.5px solid var(--card-border)",
             }}
           />
           <button
@@ -327,7 +327,7 @@ function IdleProof() {
           className="text-center px-4 py-5 rounded-xl"
           style={{
             background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
+            border: "1.5px solid var(--card-border)",
           }}
         >
           <p
@@ -356,7 +356,7 @@ function LoadingState({ url }: { url: string }) {
       className="text-center py-12 px-6 rounded-xl"
       style={{
         background: "var(--card-bg)",
-        border: "1px solid var(--card-border)",
+        border: "1.5px solid var(--card-border)",
       }}
     >
       <Loader2
@@ -389,7 +389,7 @@ function ErrorState({
       className="text-center py-10 px-6 rounded-xl"
       style={{
         background: "var(--card-bg)",
-        border: "1px solid var(--card-border)",
+        border: "1.5px solid var(--card-border)",
       }}
     >
       <X
@@ -539,7 +539,7 @@ function ScoreHeader({
           style={{
             background: "rgba(255, 255, 255, 0.15)",
             color: "#ffffff",
-            border: "1px solid rgba(255, 255, 255, 0.25)",
+            border: "1.5px solid rgba(255, 255, 255, 0.25)",
           }}
         >
           <Share2 size={14} /> Share result
@@ -648,7 +648,7 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
       className="rounded-xl overflow-hidden relative"
       style={{
         background: "var(--card-bg)",
-        border: "1px solid var(--card-border)",
+        border: "1.5px solid var(--card-border)",
         borderLeft: `3px solid ${accent}`,
       }}
     >
@@ -712,7 +712,7 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
       {open && (
         <div
           className="px-4 pb-5 sm:px-6 sm:pb-6"
-          style={{ borderTop: "1px solid var(--divider)" }}
+          style={{ borderTop: "1.5px solid var(--divider)" }}
         >
           <Section title="Why this matters">
             <p
@@ -785,7 +785,7 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
                   className="block p-3 rounded-lg transition-colors"
                   style={{
                     background: "var(--tag-bg)",
-                    border: "1px solid var(--card-border)",
+                    border: "1.5px solid var(--card-border)",
                   }}
                 >
                   <p
@@ -842,7 +842,7 @@ function FooterCta() {
       className="rounded-xl px-5 sm:px-6 py-5 mt-8"
       style={{
         background: "var(--brand-soft)",
-        border: "1px solid rgba(243, 18, 60, 0.2)",
+        border: "1.5px solid rgba(243, 18, 60, 0.2)",
       }}
     >
       <p

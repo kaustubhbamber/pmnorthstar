@@ -38,7 +38,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
         className="rounded-2xl px-5 sm:px-10 py-8 sm:py-12"
         style={{
           background: "var(--card-bg)",
-          border: "1px solid var(--card-border)",
+          border: "1.5px solid var(--card-border)",
         }}
       >
         <div className="flex items-center gap-2.5 mb-5">
@@ -111,7 +111,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
           className="group rounded-2xl px-5 py-5 sm:py-6 transition-all flex items-center gap-4 hover:opacity-95"
           style={{
             background: "#2563EB",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
+            border: "1.5px solid rgba(255, 255, 255, 0.12)",
           }}
         >
           <MiniRing score={92} onColor />
@@ -157,7 +157,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
           className="group rounded-2xl px-5 py-5 transition-all hover:opacity-95"
           style={{
             background: "#0F9D58",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
+            border: "1.5px solid rgba(255, 255, 255, 0.12)",
           }}
         >
           <div className="flex items-center gap-3 mb-2">

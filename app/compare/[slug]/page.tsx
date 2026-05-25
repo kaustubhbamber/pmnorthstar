@@ -70,7 +70,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
           style={{
             background: "var(--nav-bg)",
-            borderBottom: "1px solid var(--card-border)",
+            borderBottom: "1.5px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-3 min-w-0">
@@ -106,7 +106,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           {/* Hero — neutral with comparison-color eyebrow accent */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <Breadcrumbs
@@ -148,7 +148,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           {/* Two-column header — A vs B */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="grid grid-cols-2 gap-3 sm:gap-6 max-w-5xl">
               {[
@@ -167,7 +167,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
                         className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex-shrink-0 overflow-hidden"
                         style={{
                           background: "#fff",
-                          border: "1px solid var(--card-border)",
+                          border: "1.5px solid var(--card-border)",
                         }}
                       >
                         <img
@@ -217,7 +217,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           {/* Comparison table */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-12"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-5xl">
               <p
@@ -245,7 +245,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
                   className="grid grid-cols-3 gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 text-[11px] sm:text-xs font-semibold uppercase tracking-wider"
                   style={{
                     color: "var(--text-muted)",
-                    borderBottom: "1px solid var(--card-border)",
+                    borderBottom: "1.5px solid var(--card-border)",
                     background: "var(--tag-bg)",
                   }}
                 >
@@ -262,7 +262,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
                     style={{
                       borderBottom:
                         i < cmp.rows.length - 1
-                          ? "1px solid var(--card-border)"
+                          ? "1.5px solid var(--card-border)"
                           : "none",
                     }}
                   >
@@ -295,7 +295,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
               before they see the call. */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-2xl mx-auto">
               <SubscribeForm
@@ -310,7 +310,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           {/* Verdict */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <p
@@ -342,7 +342,7 @@ export default function ComparePage({ params }: { params: { slug: string } }) {
           {cmp.faqs && cmp.faqs.length > 0 && (
             <section
               className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-3xl">
                 <h2

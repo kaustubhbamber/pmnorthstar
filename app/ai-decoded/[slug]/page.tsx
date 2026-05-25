@@ -46,7 +46,7 @@ export default function AIDecodedArticlePage({
       {/* Hero */}
       <section
         className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-        style={{ borderBottom: "1px solid var(--card-border)" }}
+        style={{ borderBottom: "1.5px solid var(--card-border)" }}
       >
         <div className="max-w-3xl">
           <Breadcrumbs
@@ -106,7 +106,7 @@ export default function AIDecodedArticlePage({
       {fm.heroImage && (
         <section
           className="px-4 sm:px-8 lg:px-12 py-8"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-3xl">
             <figure>
@@ -145,7 +145,7 @@ export default function AIDecodedArticlePage({
               style={
                 secondHalf
                   ? undefined
-                  : { borderBottom: "1px solid var(--card-border)", paddingBottom: "2.5rem" }
+                  : { borderBottom: "1.5px solid var(--card-border)", paddingBottom: "2.5rem" }
               }
             >
               <div
@@ -167,7 +167,7 @@ export default function AIDecodedArticlePage({
                 </section>
                 <section
                   className="px-4 sm:px-8 lg:px-12 pb-10 sm:pb-14"
-                  style={{ borderBottom: "1px solid var(--card-border)" }}
+                  style={{ borderBottom: "1.5px solid var(--card-border)" }}
                 >
                   <div
                     className="max-w-3xl article-prose"
@@ -184,7 +184,7 @@ export default function AIDecodedArticlePage({
       {fm.faqs && fm.faqs.length > 0 && (
         <section
           className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-3xl">
             <h2

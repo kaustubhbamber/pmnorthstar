@@ -44,7 +44,7 @@ export function ConsentBanner() {
         className="max-w-3xl mx-auto flex items-start gap-3 sm:gap-4 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl shadow-lg"
         style={{
           background: "var(--card-bg)",
-          border: "1px solid var(--card-border)",
+          border: "1.5px solid var(--card-border)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
         }}
       >
@@ -76,7 +76,7 @@ export function ConsentBanner() {
           className="flex-shrink-0 p-1.5 rounded-lg transition-colors"
           style={{
             color: "var(--text-muted)",
-            border: "1px solid var(--card-border)",
+            border: "1.5px solid var(--card-border)",
           }}
         >
           <X size={14} strokeWidth={1.8} />

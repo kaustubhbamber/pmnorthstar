@@ -28,7 +28,7 @@ export default function AboutPage() {
         {/* Hero — neutral background, brand-red eyebrow accent only */}
         <section
           className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-3xl">
             <Breadcrumbs
@@ -82,7 +82,7 @@ export default function AboutPage() {
         {/* Why this exists */}
         <section
           className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-3xl">
             <p
@@ -120,7 +120,7 @@ export default function AboutPage() {
         {/* How the editorial works */}
         <section
           className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-3xl">
             <p
@@ -163,7 +163,7 @@ export default function AboutPage() {
             of the page so readers get the ask while still engaged. */}
         <section
           className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-2xl mx-auto">
             <SubscribeForm
@@ -178,7 +178,7 @@ export default function AboutPage() {
         {/* What's deliberately NOT here */}
         <section
           className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-          style={{ borderBottom: "1px solid var(--card-border)" }}
+          style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="max-w-3xl">
             <p
@@ -226,7 +226,7 @@ export default function AboutPage() {
         {socials.length > 0 && (
           <section
             className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <p
@@ -263,7 +263,7 @@ export default function AboutPage() {
                       style={{
                         background: "var(--tag-bg)",
                         color: "var(--text-primary)",
-                        border: "1px solid var(--card-border)",
+                        border: "1.5px solid var(--card-border)",
                       }}
                     >
                       <Icon size={14} strokeWidth={1.8} />

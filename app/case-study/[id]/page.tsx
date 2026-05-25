@@ -100,7 +100,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <header
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
-          style={{ background: "var(--nav-bg)", borderBottom: "1px solid var(--card-border)" }}
+          style={{ background: "var(--nav-bg)", borderBottom: "1.5px solid var(--card-border)" }}
         >
           <div className="flex items-center gap-3">
             <button
@@ -130,7 +130,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
           {/* Hero */}
           <div
             className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <Breadcrumbs
@@ -167,7 +167,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                     background: logoUrl && !logoFailed ? "#fff" : "transparent",
                     border:
                       logoUrl && !logoFailed
-                        ? "1px solid var(--card-border)"
+                        ? "1.5px solid var(--card-border)"
                         : "none",
                   }}
                 >
@@ -223,7 +223,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 className="text-sm px-5 py-4 rounded-xl mb-10 flex items-start gap-3"
                 style={{
                   background: "transparent",
-                  border: `1px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
+                  border: `1.5px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
                   color: isFailure ? "#FF4B4B" : "#50C878",
                 }}
               >
@@ -283,7 +283,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               {/* Tags */}
               <div
                 className="flex flex-wrap items-center gap-2 py-6 mt-4"
-                style={{ borderTop: "1px solid var(--card-border)" }}
+                style={{ borderTop: "1.5px solid var(--card-border)" }}
               >
                 <span className="eyebrow mr-2">Tags</span>
                 {study.tags.map((tag) => (
@@ -303,7 +303,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               {/* Prev / Next */}
               <div
                 className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-8"
-                style={{ borderTop: "1px solid var(--card-border)" }}
+                style={{ borderTop: "1.5px solid var(--card-border)" }}
               >
                 {prevStudy ? (
                   <Link
@@ -342,7 +342,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               {related.length > 0 && (
                 <div
                   className="py-10"
-                  style={{ borderTop: "1px solid var(--card-border)" }}
+                  style={{ borderTop: "1.5px solid var(--card-border)" }}
                 >
                   <div className="flex items-baseline gap-3 mb-6">
                     <h2

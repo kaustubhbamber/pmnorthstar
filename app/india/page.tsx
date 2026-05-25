@@ -96,7 +96,7 @@ export default function IndiaPage() {
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
           style={{
             background: "var(--nav-bg)",
-            borderBottom: "1px solid var(--card-border)",
+            borderBottom: "1.5px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-3">
@@ -126,7 +126,7 @@ export default function IndiaPage() {
               calm; bold solid colors are reserved for small cards. */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-12 sm:py-20"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-3xl">
               <Breadcrumbs
@@ -184,7 +184,7 @@ export default function IndiaPage() {
           {/* Stats */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 grid grid-cols-3 max-w-3xl"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             {[
               { value: books.length, label: "books" },
@@ -222,7 +222,7 @@ export default function IndiaPage() {
             <section
               id="india-published"
               className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 scroll-mt-4"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-5xl">
                 <p className="eyebrow mb-3" style={{ color: "#FF6B35" }}>
@@ -259,7 +259,7 @@ export default function IndiaPage() {
             <section
               id="india-coming"
               className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
-              style={{ borderBottom: "1px solid var(--card-border)" }}
+              style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
               <div className="max-w-3xl">
                 <p className="eyebrow mb-3" style={{ color: "#FF6B35" }}>
@@ -330,7 +330,7 @@ export default function IndiaPage() {
           {/* Globally relevant for India */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-5xl">
               <p className="eyebrow mb-3" style={{ color: "#9B8FFF" }}>
@@ -371,7 +371,7 @@ export default function IndiaPage() {
           {/* Why this exists */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-2xl">
               <p className="eyebrow mb-3" style={{ color: "#50C878" }}>
@@ -412,7 +412,7 @@ export default function IndiaPage() {
           {/* Newsletter signup */}
           <section
             className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
-            style={{ borderBottom: "1px solid var(--card-border)" }}
+            style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
             <div className="max-w-2xl mx-auto">
               <SubscribeForm

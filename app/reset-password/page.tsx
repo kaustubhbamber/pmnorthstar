@@ -126,7 +126,7 @@ function ResetPasswordForm() {
               className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all pr-10"
               style={{
                 background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
+                border: "1.5px solid var(--card-border)",
                 color: "var(--text-primary)",
               }}
               onFocus={(e) => (e.target.style.borderColor = "var(--brand-primary)")}
@@ -156,7 +156,7 @@ function ResetPasswordForm() {
             className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
             style={{
               background: "var(--card-bg)",
-              border: "1px solid var(--card-border)",
+              border: "1.5px solid var(--card-border)",
               color: "var(--text-primary)",
             }}
             onFocus={(e) => (e.target.style.borderColor = "var(--brand-primary)")}
@@ -170,7 +170,7 @@ function ResetPasswordForm() {
           className="mt-4 px-3 py-2.5 rounded-xl text-sm"
           style={{
             background: "rgba(243,18,60,0.08)",
-            border: "1px solid rgba(243,18,60,0.2)",
+            border: "1.5px solid rgba(243,18,60,0.2)",
             color: "var(--brand-primary)",
           }}
         >
@@ -213,7 +213,7 @@ export default function ResetPasswordPage() {
         className="w-full max-w-md rounded-2xl p-5 sm:p-8"
         style={{
           background: "var(--page-bg)",
-          border: "1px solid var(--card-border)",
+          border: "1.5px solid var(--card-border)",
         }}
       >
         {/* Logo */}

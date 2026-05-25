@@ -80,7 +80,7 @@ export function SidebarShell({
           className="flex-shrink-0 px-4 sm:px-6 py-3 flex items-center justify-between gap-3"
           style={{
             background: "var(--nav-bg)",
-            borderBottom: "1px solid var(--card-border)",
+            borderBottom: "1.5px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-3 min-w-0">

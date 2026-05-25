@@ -102,7 +102,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           className="relative w-full max-w-md rounded-2xl p-5 sm:p-8"
           style={{
             background: "var(--page-bg)",
-            border: "1px solid var(--card-border)",
+            border: "1.5px solid var(--card-border)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -152,7 +152,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           {mode !== "forgot" && (
             <div
               className="flex rounded-lg p-0.5 mb-6"
-              style={{ border: "1px solid var(--card-border)" }}
+              style={{ border: "1.5px solid var(--card-border)" }}
             >
               {(["login", "signup"] as const).map((m) => (
                 <button
@@ -224,7 +224,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                       className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
                       style={{
                         background: "var(--card-bg)",
-                        border: "1px solid var(--card-border)",
+                        border: "1.5px solid var(--card-border)",
                         color: "var(--text-primary)",
                       }}
                       onFocus={(e) =>
@@ -255,7 +255,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                     className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
                     style={{
                       background: "var(--card-bg)",
-                      border: "1px solid var(--card-border)",
+                      border: "1.5px solid var(--card-border)",
                       color: "var(--text-primary)",
                     }}
                     onFocus={(e) =>
@@ -290,7 +290,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all pr-10"
                         style={{
                           background: "var(--card-bg)",
-                          border: "1px solid var(--card-border)",
+                          border: "1.5px solid var(--card-border)",
                           color: "var(--text-primary)",
                         }}
                         onFocus={(e) =>
@@ -334,7 +334,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                   className="mt-4 px-3 py-2.5 rounded-xl text-sm"
                   style={{
                     background: "rgba(243,18,60,0.08)",
-                    border: "1px solid rgba(243,18,60,0.2)",
+                    border: "1.5px solid rgba(243,18,60,0.2)",
                     color: "var(--brand-primary)",
                   }}
                 >

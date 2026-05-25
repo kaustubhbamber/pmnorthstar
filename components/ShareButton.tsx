@@ -103,12 +103,12 @@ export function ShareButton({
       ? {
           background: "var(--brand-soft)",
           color: "var(--brand-primary)",
-          border: "1px solid rgba(243, 18, 60, 0.35)",
+          border: "1.5px solid rgba(243, 18, 60, 0.35)",
         }
       : {
           background: "var(--tag-bg)",
           color: "var(--text-muted)",
-          border: "1px solid var(--card-border)",
+          border: "1.5px solid var(--card-border)",
         };
 
   return (
@@ -127,7 +127,7 @@ export function ShareButton({
           className="absolute right-0 mt-2 z-50 w-44 rounded-lg overflow-hidden"
           style={{
             background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
+            border: "1.5px solid var(--card-border)",
             boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
           }}
         >

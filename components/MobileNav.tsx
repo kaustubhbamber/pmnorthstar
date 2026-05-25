@@ -56,7 +56,7 @@ export function MobileNav({ activeNav, onNavChange }: MobileNavProps) {
       className="lg:hidden flex items-center gap-1.5 px-3 sm:px-6 py-2 overflow-x-auto scroll-container flex-shrink-0"
       style={{
         background: "var(--nav-bg)",
-        borderBottom: "1px solid var(--card-border)",
+        borderBottom: "1.5px solid var(--card-border)",
       }}
     >
       {items.slice(0, 2).map(({ id, label, icon: Icon, count }) => {

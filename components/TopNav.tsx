@@ -46,7 +46,7 @@ export function TopNav({
       style={{
         background: "var(--nav-bg)",
         backdropFilter: "blur(16px)",
-        borderBottom: "1px solid var(--card-border)",
+        borderBottom: "1.5px solid var(--card-border)",
         position: "sticky",
         top: 0,
         zIndex: 100,
@@ -57,7 +57,7 @@ export function TopNav({
         className="flex items-center gap-2 flex-1 sm:max-w-sm px-3 py-2 rounded-lg transition-colors"
         style={{
           background: "transparent",
-          border: `1px solid ${focused ? "var(--text-muted)" : "var(--card-border)"}`,
+          border: `1.5px solid ${focused ? "var(--text-muted)" : "var(--card-border)"}`,
         }}
       >
         <Search size={14} strokeWidth={1.6} style={{ color: "var(--text-faint)", flexShrink: 0 }} />
@@ -115,7 +115,7 @@ export function TopNav({
                 className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs"
                 style={{
                   background: "transparent",
-                  border: "1px solid var(--card-border)",
+                  border: "1.5px solid var(--card-border)",
                   color: "var(--text-primary)",
                   letterSpacing: "0.04em",
                 }}
@@ -129,13 +129,13 @@ export function TopNav({
                   className="absolute right-0 mt-2 w-48 rounded-lg overflow-hidden"
                   style={{
                     background: "var(--card-bg)",
-                    border: "1px solid var(--card-border)",
+                    border: "1.5px solid var(--card-border)",
                     zIndex: 200,
                   }}
                 >
                   <div
                     className="px-4 py-3"
-                    style={{ borderBottom: "1px solid var(--card-border)" }}
+                    style={{ borderBottom: "1.5px solid var(--card-border)" }}
                   >
                     <p className="eyebrow mb-1">// account</p>
                     <p className="text-sm font-semibold" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>

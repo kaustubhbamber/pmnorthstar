@@ -26,7 +26,7 @@ export function Footer() {
     <footer
       className="px-4 sm:px-8 lg:px-12 pt-10 sm:pt-14 pb-8"
       style={{
-        borderTop: "1px solid var(--card-border)",
+        borderTop: "1.5px solid var(--card-border)",
         background: "var(--page-bg)",
       }}
     >
@@ -114,7 +114,7 @@ export function Footer() {
         {/* Bottom: small print */}
         <div
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-6"
-          style={{ borderTop: "1px solid var(--card-border)" }}
+          style={{ borderTop: "1.5px solid var(--card-border)" }}
         >
           <p className="text-xs" style={{ color: "var(--text-faint)" }}>
             © {year} northstar · made for the product community
