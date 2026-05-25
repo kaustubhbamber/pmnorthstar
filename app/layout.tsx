@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { caseStudies } from "@/data/caseStudies";
@@ -6,6 +7,24 @@ import { playlists } from "@/data/learn";
 import { books } from "@/data/books";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import "./globals.css";
+
+// Self-hosted fonts via next/font. Eliminates the render-blocking
+// fonts.googleapis.com roundtrip that PSI flagged for ~1.9s LCP
+// savings. display:swap keeps the page paintable while fonts arrive;
+// the metric-similar system-ui fallback prevents visible reflow.
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--font-jetbrains-mono",
+});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 const CASE_STUDY_COUNT = caseStudies.length;
@@ -84,7 +103,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}

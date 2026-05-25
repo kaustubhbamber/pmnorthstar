@@ -1,8 +1,8 @@
-/* display=optional eliminates FOUT-driven CLS — browser uses fallback
-   immediately and skips the swap if the web font doesn't arrive within
-   ~100ms. Better Core Web Vitals score; slower connections just see
-   system-ui (Space Grotesk's metric-similar fallback). */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=optional');
+/* Fonts are now loaded via next/font in app/layout.tsx. That self-
+   hosts the woff2 files, removes the render-blocking @import roundtrip
+   to fonts.googleapis.com (was costing ~1.9s LCP per PSI), and exposes
+   --font-space-grotesk / --font-jetbrains-mono on <html> for the
+   variables below to consume. */
 
 @tailwind base;
 @tailwind components;
@@ -11,9 +11,9 @@
 /* ── DARK MODE (default) ───────────────────────────────────────────────── */
 :root,
 [data-theme="dark"] {
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body:    'Space Grotesk', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-body:    var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
 
   --page-bg:        #000000;
   --surface-bg:     #000000;

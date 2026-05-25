@@ -1164,18 +1164,15 @@ export default function HomePage() {
 
               <div className="section-divider my-8" id="books-section" />
 
-              {/* Per-Category Rows. Cap 4 per row — keeps the SSR HTML
-                  payload under 200KB (CheckIt was flagging 234KB at 6).
-                  Every book still has its own page in the sitemap, so
-                  this is a render limit, not a content limit. */}
+              {/* Per-Category Rows. All books per category visible in
+                  the horizontal-scroll SectionRow. The font preload
+                  conversion (next/font) recovers far more perceived
+                  perf than card trimming ever did, so payload isn't
+                  the binding constraint here anymore. */}
               {categories.map((cat) => {
                 const catBooks = books.filter((b) => b.category === cat);
-                const shown = catBooks.slice(0, 4);
-                const moreCount = catBooks.length - shown.length;
-                const subtitle =
-                  moreCount > 0
-                    ? `Showing 4 of ${catBooks.length}`
-                    : `${catBooks.length} essential books`;
+                const shown = catBooks;
+                const subtitle = `${catBooks.length} essential books`;
                 return (
                   <div key={cat} className="mt-8">
                     <SectionRow title={cat} subtitle={subtitle} accentColor={categoryAccents[cat]}>
