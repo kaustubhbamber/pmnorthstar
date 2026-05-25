@@ -1196,39 +1196,28 @@ export default function HomePage() {
                 );
               })}
 
-              {/* Case Studies Preview */}
-              <div className="px-4 sm:px-6 mt-10 mb-8">
-                <div className="flex items-end justify-between mb-5">
-                  <div>
-                    <p className="eyebrow mb-1.5" style={{ color: "#F3123C", opacity: 0.85 }}>Case Studies</p>
-                    <div className="flex items-baseline gap-3">
-                      <h2 className="text-base sm:text-lg font-semibold" style={{ color: "#F3123C", letterSpacing: "-0.02em" }}>
-                        Case Studies
-                      </h2>
-                      <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>[50]</span>
-                    </div>
-                  </div>
-                  <button onClick={() => setActiveNav("casestudies")} className="btn-accent" style={{ padding: "8px 14px", fontSize: 12 }}>
-                    View all
-                    <ArrowUpRight size={12} strokeWidth={1.6} />
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {caseStudies.slice(0, 3).map((study, idx) => (
+              {/* Case Studies Preview — horizontal carousel, 8 cards.
+                  Wrapped in fixed-width containers so SectionRow's
+                  horizontal-scroll can do its job. */}
+              <SectionRow title="Case Studies" subtitle="Featured deep dives" accentColor="#F3123C">
+                {caseStudies.slice(0, 8).map((study, idx) => (
+                  <div
+                    key={study.id}
+                    className="flex-shrink-0 w-[280px] sm:w-[320px]"
+                  >
                     <CaseStudyCard
-                      key={study.id}
                       study={study}
                       index={idx}
                       isLoggedIn={!!user}
                       initialSaved={savedIds.has(study.id)}
                       initialLiked={likedIds.has(study.id)}
                       onAuthRequired={() => setShowAuthModal(true)}
-                          onSavedChange={handleSavedChange}
-                          onLikedChange={handleLikedChange}
+                      onSavedChange={handleSavedChange}
+                      onLikedChange={handleLikedChange}
                     />
-                  ))}
-                </div>
-              </div>
+                  </div>
+                ))}
+              </SectionRow>
 
               {/* Explore preview — small teaser, full version on /explore tab */}
               <div className="px-4 sm:px-6 mt-10 mb-8">
@@ -1284,42 +1273,30 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Learn Preview */}
-              <div className="px-4 sm:px-6 mt-10 mb-8">
-                <div className="flex items-end justify-between mb-5">
-                  <div>
-                    <p className="eyebrow mb-1.5" style={{ color: "#9B8FFF", opacity: 0.85 }}>Learn</p>
-                    <div className="flex items-baseline gap-3">
-                      <h2 className="text-base sm:text-lg font-semibold" style={{ color: "#9B8FFF", letterSpacing: "-0.02em" }}>
-                        Learn
-                      </h2>
-                      <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>{String(playlists.length)}</span>
-                    </div>
-                    <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                      Curated YouTube playlists across {learnCategories.length} topics
-                    </p>
-                  </div>
-                  <button onClick={() => setActiveNav("learn")} className="btn-accent" style={{ padding: "8px 14px", fontSize: 12 }}>
-                    View all
-                    <ArrowUpRight size={12} strokeWidth={1.6} />
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {interleavedPlaylists.slice(0, 3).map((playlist, idx) => (
+              {/* Learn Preview — horizontal carousel, 8 cards */}
+              <SectionRow
+                title="Learn"
+                subtitle={`Curated YouTube playlists across ${learnCategories.length} topics`}
+                accentColor="#9B8FFF"
+              >
+                {interleavedPlaylists.slice(0, 8).map((playlist, idx) => (
+                  <div
+                    key={playlist.id}
+                    className="flex-shrink-0 w-[280px] sm:w-[320px]"
+                  >
                     <PlaylistCard
-                      key={playlist.id}
                       playlist={playlist}
                       index={idx}
                       isLoggedIn={!!user}
                       initialSaved={savedIds.has(playlist.id)}
                       initialLiked={likedIds.has(playlist.id)}
                       onAuthRequired={() => setShowAuthModal(true)}
-                          onSavedChange={handleSavedChange}
-                          onLikedChange={handleLikedChange}
+                      onSavedChange={handleSavedChange}
+                      onLikedChange={handleLikedChange}
                     />
-                  ))}
-                </div>
-              </div>
+                  </div>
+                ))}
+              </SectionRow>
 
               {/* Newsletter signup — bottom of home view */}
               <div className="px-4 sm:px-6 mt-10 mb-12">

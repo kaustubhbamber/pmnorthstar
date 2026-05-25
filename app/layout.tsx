@@ -92,12 +92,12 @@ export const metadata: Metadata = {
   // would override the auto-generated tags.
 };
 
-// Read the saved theme and write data-theme on <html> before React
-// hydrates. Without this, every page renders with the default theme
-// for a beat (a "light flash" when the saved theme is dark), then
-// re-paints once a useEffect runs. This script is synchronous and
-// runs before paint, so the very first paint is the correct theme.
-const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){}})();`;
+// Only set data-theme when the user has explicitly picked a theme.
+// CSS handles the no-attribute case via prefers-color-scheme (system
+// pref), so first paint is always correct without depending on this
+// script running before paint. The script's only job now is to honor
+// a user override that disagrees with the OS preference.
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
