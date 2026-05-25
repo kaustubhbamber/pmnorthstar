@@ -9,9 +9,14 @@
 
 import { fetchWithTimeout, stripTags, truncate } from "./util";
 import type { CheckResult } from "./types";
+import type { CruxData } from "./crux";
 
 // TTFB is captured during the orchestrator's HTML fetch and passed in
 // here so the perf checks stay pure (no extra network IO).
+// CrUX (Chrome UX Report) field data is fetched once in the orchestrator
+// and passed to the LCP/INP/CLS checks. If GOOGLE_API_KEY isn't set OR
+// the site has too little traffic for field data, crux.hasData is false
+// and those checks return a "no field data" detail.
 export interface FetchCtx {
   inputUrl: URL;
   finalUrl: URL;
@@ -19,6 +24,7 @@ export interface FetchCtx {
   html: string;
   headers: Headers;
   ttfbMs: number;
+  crux: CruxData;
 }
 
 // Subdomains that scream "vibe-coded side project." Order matters for
@@ -239,54 +245,80 @@ export async function ttfb(ctx: FetchCtx): Promise<CheckResult> {
   };
 }
 
-export async function htmlPayload(ctx: FetchCtx): Promise<CheckResult> {
-  const bytes = new TextEncoder().encode(ctx.html).length;
-  const kb = Math.round(bytes / 1024);
-  const pass = bytes < 200_000;
+// ── Core Web Vitals (from Chrome UX Report field data) ────────────────────
+// These three checks read real-user data from CrUX (the dataset Google
+// uses for Search ranking). If the site doesn't have enough Chrome
+// traffic to be in CrUX, we honestly mark "no field data" rather than
+// guess from synthetic measurement. Pair these with TTFB and
+// modern-images for the full Performance dimension.
+
+export async function lcp(ctx: FetchCtx): Promise<CheckResult> {
+  const ms = ctx.crux.lcpMs;
+  if (ms === undefined) {
+    return {
+      id: "lcp",
+      label: "LCP under 2.5s (real-user data)",
+      pass: false,
+      detail: `No field data yet. Sites need enough Chrome traffic for Google CrUX to report. Synthetic LCP would be misleading.`,
+    };
+  }
+  const sec = (ms / 1000).toFixed(1);
+  const pass = ms < 2500;
   return {
-    id: "html-payload",
-    label: "Initial HTML under 200KB",
+    id: "lcp",
+    label: "LCP under 2.5s (real-user data)",
     pass,
     detail: pass
-      ? `HTML payload is ${kb}KB. Parses fast on mobile 4G.`
-      : `HTML payload is ${kb}KB. Too much markup ships before anything renders.`,
+      ? `LCP is ${sec}s at the 75th percentile (Chrome UX Report, last 28 days). Real users see content fast.`
+      : ms < 4000
+      ? `LCP is ${sec}s at the 75th percentile. Slow but not critical. Target is under 2.5s.`
+      : `LCP is ${sec}s at the 75th percentile. Most users see a blank page far too long.`,
   };
 }
 
-export async function layoutShiftPrevention(ctx: FetchCtx): Promise<CheckResult> {
-  const html = ctx.html;
-  const imgs = Array.from(html.matchAll(/<img\b[^>]*>/gi)).map((m) => m[0]);
-  const sized = imgs.filter(
-    (tag) => /\bwidth\s*=\s*["']?\d/i.test(tag) && /\bheight\s*=\s*["']?\d/i.test(tag),
-  ).length;
-  // CSS-level CLS preventatives that show up in inline styles or the
-  // global @import in <head>.
-  const hasFontDisplay = /font-display\s*:\s*(swap|optional|fallback)/i.test(html);
-  const hasAspectRatio = /aspect-ratio\s*:/i.test(html);
-
-  const imgRatio = imgs.length === 0 ? 1 : sized / imgs.length;
-  const imgsOk = imgRatio >= 0.8;
-  const fontsOk = hasFontDisplay || hasAspectRatio || imgs.length === 0;
-  const pass = imgsOk && fontsOk;
-
-  let detail: string;
-  if (imgs.length === 0 && hasFontDisplay) {
-    detail = `No images and font-display is configured. Layout will stay stable.`;
-  } else if (imgs.length === 0) {
-    detail = `No images on the page. Minimal layout shift risk.`;
-  } else if (pass) {
-    detail = `${sized} of ${imgs.length} images have width+height and font loading is configured.`;
-  } else if (!imgsOk) {
-    detail = `Only ${sized} of ${imgs.length} images have width+height. Missing dimensions cause content to jump as images load.`;
-  } else {
-    detail = `Images have dimensions but no font-display strategy. Web fonts will cause text to reflow.`;
+export async function inp(ctx: FetchCtx): Promise<CheckResult> {
+  const ms = ctx.crux.inpMs;
+  if (ms === undefined) {
+    return {
+      id: "inp",
+      label: "INP under 200ms (real-user data)",
+      pass: false,
+      detail: `No field data yet. INP needs real user interactions to measure; small sites haven't accumulated enough yet.`,
+    };
   }
-
+  const pass = ms < 200;
   return {
-    id: "layout-shift-prevention",
-    label: "Layout shift prevention",
+    id: "inp",
+    label: "INP under 200ms (real-user data)",
     pass,
-    detail,
+    detail: pass
+      ? `INP is ${Math.round(ms)}ms at the 75th percentile. Interactions feel responsive.`
+      : ms < 500
+      ? `INP is ${Math.round(ms)}ms. Borderline. Heavy JavaScript handlers are blocking the main thread.`
+      : `INP is ${Math.round(ms)}ms. Users feel the page is unresponsive. Heavy JS is the usual culprit.`,
+  };
+}
+
+export async function cls(ctx: FetchCtx): Promise<CheckResult> {
+  const v = ctx.crux.cls;
+  if (v === undefined) {
+    return {
+      id: "cls",
+      label: "CLS under 0.1 (real-user data)",
+      pass: false,
+      detail: `No field data yet. CLS needs enough Chrome traffic for CrUX to aggregate.`,
+    };
+  }
+  const pass = v < 0.1;
+  return {
+    id: "cls",
+    label: "CLS under 0.1 (real-user data)",
+    pass,
+    detail: pass
+      ? `CLS is ${v.toFixed(3)} at the 75th percentile. Layout stays put as the page loads.`
+      : v < 0.25
+      ? `CLS is ${v.toFixed(3)}. Some shift. Add width+height to images and use font-display:swap.`
+      : `CLS is ${v.toFixed(3)}. Significant layout shift. Page feels broken on slow connections.`,
   };
 }
 
@@ -655,6 +687,168 @@ export async function custom404(ctx: FetchCtx): Promise<CheckResult> {
       detail: `Could not test 404 behavior.`,
     };
   }
+}
+
+// ── Brand & Identity: Apple touch icon ────────────────────────────────────
+// iOS uses apple-touch-icon when a user adds your site to the home
+// screen. Without it, iOS picks a screenshot of the page which looks
+// embarrassing. 180x180 PNG is the recommended size.
+export async function appleTouchIcon(ctx: FetchCtx): Promise<CheckResult> {
+  const html = ctx.html;
+  const match = html.match(/<link\b[^>]*rel=["']apple-touch-icon["'][^>]*>/i);
+  if (!match) {
+    return {
+      id: "apple-touch-icon",
+      label: "Apple touch icon present",
+      pass: false,
+      detail: `No <link rel="apple-touch-icon">. iOS users adding your site to home screen see a screenshot, not your icon.`,
+    };
+  }
+  const href = match[0].match(/href=["']([^"']+)["']/i)?.[1];
+  if (!href) {
+    return {
+      id: "apple-touch-icon",
+      label: "Apple touch icon present",
+      pass: false,
+      detail: `apple-touch-icon link tag found but has no href.`,
+    };
+  }
+  // Verify the file actually loads.
+  try {
+    const url = new URL(href, ctx.finalUrl).toString();
+    const res = await fetchWithTimeout(url, { method: "HEAD" }, 5000);
+    return {
+      id: "apple-touch-icon",
+      label: "Apple touch icon present",
+      pass: res.ok,
+      detail: res.ok
+        ? `apple-touch-icon loads from ${new URL(url).pathname}.`
+        : `apple-touch-icon URL returned ${res.status}.`,
+    };
+  } catch {
+    return {
+      id: "apple-touch-icon",
+      label: "Apple touch icon present",
+      pass: false,
+      detail: `Could not load apple-touch-icon at ${href}.`,
+    };
+  }
+}
+
+// ── SEO: Alt text coverage on images ──────────────────────────────────────
+// Alt text is the single highest-leverage accessibility + SEO check
+// most vibe-coded sites fail. Pass if 80%+ of <img> tags have a
+// non-empty alt attribute.
+export async function altTextCoverage(ctx: FetchCtx): Promise<CheckResult> {
+  const tags = Array.from(ctx.html.matchAll(/<img\b[^>]*>/gi)).map((m) => m[0]);
+  if (tags.length === 0) {
+    return {
+      id: "alt-text-coverage",
+      label: "Image alt text coverage",
+      pass: true,
+      detail: `No <img> tags on the page. Nothing to caption.`,
+    };
+  }
+  let withAlt = 0;
+  for (const tag of tags) {
+    const m = tag.match(/\balt=["']([^"']*)["']/i);
+    if (m && m[1].trim().length > 0) withAlt++;
+  }
+  const ratio = withAlt / tags.length;
+  const pass = ratio >= 0.8;
+  return {
+    id: "alt-text-coverage",
+    label: "Image alt text coverage",
+    pass,
+    detail: pass
+      ? `${withAlt} of ${tags.length} images have alt text. Accessible + SEO-friendly.`
+      : `Only ${withAlt} of ${tags.length} images have alt text. Hurts accessibility and image SEO.`,
+  };
+}
+
+// ── UX: Form labels associated with inputs ────────────────────────────────
+// Every <input> should have a <label> or aria-label. Without it, screen
+// readers don't know what the field is for, and the form is hard to use
+// for anyone navigating with keyboard or assistive tech.
+export async function formLabels(ctx: FetchCtx): Promise<CheckResult> {
+  const html = ctx.html;
+  // Pull inputs that need labels — text-like and select/textarea. Skip
+  // submit/button/hidden/image which don't need labels.
+  const inputRe = /<(?:input|select|textarea)\b[^>]*>/gi;
+  const inputs = Array.from(html.matchAll(inputRe)).map((m) => m[0]);
+  // Filter out input types that don't need labels.
+  const needsLabel = inputs.filter((tag) => {
+    if (!tag.toLowerCase().startsWith("<input")) return true; // select/textarea always need labels
+    const type = tag.match(/\btype=["']?(\w+)["']?/i)?.[1]?.toLowerCase();
+    return !type || !["submit", "button", "hidden", "image", "reset"].includes(type);
+  });
+
+  if (needsLabel.length === 0) {
+    return {
+      id: "form-labels",
+      label: "Form inputs are labeled",
+      pass: true,
+      detail: `No form inputs on the page. Nothing to label.`,
+    };
+  }
+
+  let labeled = 0;
+  for (const tag of needsLabel) {
+    const id = tag.match(/\bid=["']([^"']+)["']/i)?.[1];
+    const hasAriaLabel = /\baria-label=["'][^"']+["']/i.test(tag);
+    const hasAriaLabelledBy = /\baria-labelledby=["'][^"']+["']/i.test(tag);
+    const hasTitle = /\btitle=["'][^"']+["']/i.test(tag);
+    let hasLabelFor = false;
+    if (id) {
+      const labelRe = new RegExp(`<label\\b[^>]*for=["']${id}["']`, "i");
+      hasLabelFor = labelRe.test(html);
+    }
+    if (hasAriaLabel || hasAriaLabelledBy || hasLabelFor || hasTitle) {
+      labeled++;
+    }
+  }
+
+  const ratio = labeled / needsLabel.length;
+  const pass = ratio >= 0.8;
+  return {
+    id: "form-labels",
+    label: "Form inputs are labeled",
+    pass,
+    detail: pass
+      ? `${labeled} of ${needsLabel.length} form inputs have associated labels.`
+      : `Only ${labeled} of ${needsLabel.length} form inputs have labels. Forms are hard to use with a screen reader.`,
+  };
+}
+
+// ── Trust: Content-Security-Policy header set ─────────────────────────────
+// CSP is the modern XSS defense. Sites that ship without it are
+// vulnerable to script injection. Most modern frameworks make CSP easy
+// to configure; the absence usually signals security wasn't considered.
+export async function cspHeader(ctx: FetchCtx): Promise<CheckResult> {
+  const csp = ctx.headers.get("content-security-policy");
+  const cspReportOnly = ctx.headers.get("content-security-policy-report-only");
+  if (csp) {
+    return {
+      id: "csp-header",
+      label: "Content-Security-Policy set",
+      pass: true,
+      detail: `CSP header is set. Modern XSS defenses are in place.`,
+    };
+  }
+  if (cspReportOnly) {
+    return {
+      id: "csp-header",
+      label: "Content-Security-Policy set",
+      pass: false,
+      detail: `Only CSP-Report-Only is set. Reports violations but doesn't block them. Promote to enforcing when ready.`,
+    };
+  }
+  return {
+    id: "csp-header",
+    label: "Content-Security-Policy set",
+    pass: false,
+    detail: `No CSP header. Modern XSS defenses aren't in place. Add via your hosting config.`,
+  };
 }
 
 const SOCIAL_HOSTS = [

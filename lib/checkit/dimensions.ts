@@ -15,8 +15,8 @@ export interface DimensionConfig {
   label: string;
   oneLiner: string; // shown next to the score number on the card header
   whyItMatters: string;
-  // 4 check IDs in display order. Must match IDs returned by lib/checkit/checks.ts
-  checkIds: [string, string, string, string];
+  // 5 check IDs in display order. Must match IDs returned by lib/checkit/checks.ts
+  checkIds: [string, string, string, string, string];
   linkedResources: LinkedResource[];
 }
 
@@ -27,7 +27,7 @@ export const DIMENSIONS: DimensionConfig[] = [
     oneLiner: "Does it look credible in the first 3 seconds?",
     whyItMatters:
       "The first three seconds decide if a user trusts you with their email, their card, their time. A *.vercel.app URL and a default favicon tell users 'this is a side project,' even when the product underneath is brilliant. Brand isn't logos and color palettes. It's the dozen tiny signals (a custom domain, a real title tag, an OG image that doesn't render as a blank box in Slack) that say 'a real team built this.' Skip these and even your best users will treat you as disposable.",
-    checkIds: ["custom-domain", "real-favicon", "og-completeness", "real-title"],
+    checkIds: ["custom-domain", "real-favicon", "og-completeness", "real-title", "apple-touch-icon"],
     linkedResources: [
       {
         type: "case-study",
@@ -54,8 +54,8 @@ export const DIMENSIONS: DimensionConfig[] = [
     label: "Performance",
     oneLiner: "Does it load before users give up?",
     whyItMatters:
-      "Every 100ms of load time costs roughly 1% of conversions. On mobile 4G, where 60%+ of your traffic lives, a 4-second page loses more than half its visitors before they ever see your hero image. Performance isn't engineering vanity. It's the most direct lever on revenue you have. We measure the causes of slow load: how fast your server responds (TTFB), how much HTML it ships, whether your images and fonts are configured to prevent layout shift, and whether images use modern formats. Fix the causes and the user-perceived speed improves predictably. Chasing a Lighthouse number rarely does.",
-    checkIds: ["ttfb", "layout-shift-prevention", "html-payload", "modern-images"],
+      "Every 100ms of load time costs roughly 1% of conversions. On mobile 4G, where 60%+ of your traffic lives, a 4-second page loses more than half its visitors before they ever see your hero image. Performance isn't engineering vanity. It's the most direct lever on revenue you have. We measure three real Core Web Vitals from Chrome UX Report field data (LCP, INP, CLS), plus the server-side signals we can measure deterministically (TTFB, modern images). Field data tells you what real users actually experience; deterministic signals tell you what to fix.",
+    checkIds: ["lcp", "inp", "cls", "ttfb", "modern-images"],
     linkedResources: [
       {
         type: "case-study",
@@ -83,7 +83,7 @@ export const DIMENSIONS: DimensionConfig[] = [
     oneLiner: "Can Google actually find you?",
     whyItMatters:
       "If Google can't crawl you, you don't exist. Most vibe-coded sites have zero of the four things that matter (a sitemap, a meta description, canonical tags, a proper H1), then wonder why traffic is flat after launch. SEO isn't a marketing afterthought. It's plumbing you wire on day one, takes an hour to get right, and compounds for years. The sites that get organic traffic aren't necessarily better than yours. They're the ones that didn't skip the boring 1990s-era HTML basics.",
-    checkIds: ["meta-description", "robots-txt", "sitemap-xml", "structured-data"],
+    checkIds: ["meta-description", "robots-txt", "sitemap-xml", "structured-data", "alt-text-coverage"],
     linkedResources: [
       {
         type: "case-study",
@@ -111,7 +111,7 @@ export const DIMENSIONS: DimensionConfig[] = [
     oneLiner: "Do users know what to do next?",
     whyItMatters:
       "A beautiful site with no clear next action is a museum, not a product. Users need to know within 5 seconds what this is, who it's for, what to do. Mobile responsiveness isn't optional. Phones are where the audit happens before anyone touches a laptop, and a site that requires sideways scrolling on a 375px screen is dead before it's seen. Most failed launches don't fail because the product was bad. They fail because the hero didn't name the value and the button didn't say what would happen when clicked.",
-    checkIds: ["viewport-meta", "primary-cta", "h1-value-prop", "placeholder-text"],
+    checkIds: ["viewport-meta", "primary-cta", "h1-value-prop", "placeholder-text", "form-labels"],
     linkedResources: [
       {
         type: "case-study",
@@ -139,7 +139,7 @@ export const DIMENSIONS: DimensionConfig[] = [
     oneLiner: "Will users hand over their email?",
     whyItMatters:
       "The moment a user enters their email or their card, they're betting on you. HTTPS, a real privacy policy, a way to contact a human, a 404 page that isn't the framework's default. These aren't legal box-checks. They're trust signals. Skipping them tells users this is a project, not a product, and they'll behave accordingly. They bounce. They don't subscribe. They screenshot the broken 404 and post it. Trust takes years to build and 10 minutes to lose. The basics here cost a single afternoon.",
-    checkIds: ["secure-transport", "privacy-link", "custom-404", "identity-signal"],
+    checkIds: ["secure-transport", "privacy-link", "custom-404", "identity-signal", "csp-header"],
     linkedResources: [
       {
         type: "case-study",
