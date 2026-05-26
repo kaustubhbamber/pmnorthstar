@@ -1,19 +1,34 @@
 // CheckIt, public-facing audit result shapes.
 //
-// One AuditResult per URL. Five DimensionResults, each with 4 CheckResults.
-// Each check awards 5 points; a dimension is scored out of 20; total = 100.
+// One AuditResult per URL. Seven DimensionResults, each with 5 CheckResults.
+// Checks are weighted by importance (not evenly split). Dimension scores
+// sum to 100. The weight of each check is set in dimensions.ts.
 
-export type DimensionId = "brand" | "performance" | "seo" | "ux" | "trust";
+export type DimensionId =
+  | "brand"
+  | "performance"
+  | "seo"
+  | "ux"
+  | "trust"
+  | "polish"
+  | "standards";
 
 export type Band = "ready" | "almost" | "polish" | "vibe";
 
-export interface CheckResult {
+// Raw output of an individual check function. Points are stamped on in
+// audit.ts using the weight from dimensions.ts, producing CheckResult.
+export interface RawCheckResult {
   id: string;
   label: string;
   pass: boolean;
   // Site-specific one-liner: "your <title> is 'Create Next App'", not generic
   // "use a real title". Renders under the check row in the result card.
   detail: string;
+}
+
+export interface CheckResult extends RawCheckResult {
+  // Weight assigned in dimensions.ts. Sum of all weights = 100.
+  points: number;
 }
 
 export interface LinkedResource {
@@ -26,7 +41,8 @@ export interface LinkedResource {
 export interface DimensionResult {
   id: DimensionId;
   label: string;
-  score: number; // 0-20
+  score: number; // sum of points from passed checks
+  maxScore: number; // sum of points for all checks in this dimension
   checks: CheckResult[];
 }
 

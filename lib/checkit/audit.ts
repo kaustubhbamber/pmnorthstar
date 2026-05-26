@@ -1,13 +1,18 @@
 // CheckIt orchestrator. Single HTML fetch (with TTFB capture), then all
-// 25 checks run in parallel. Some checks issue additional sub-fetches
+// 35 checks run in parallel. Some checks issue additional sub-fetches
 // (robots.txt, sitemap.xml, favicon HEAD, og:image HEAD, apple-touch-icon
-// HEAD, 404 probe); each has its own 5-6s timeout so the audit always
-// completes within the route's 60s budget.
+// HEAD, manifest.json, 404 probe); each has its own 5-6s timeout so the
+// audit always completes within the route's 60s budget.
 //
 // No external APIs (no PSI, no CrUX). Every check is fully deterministic
 // so the audit always returns full data regardless of site size or
 // Google API quota. Field-data signals like CWV would belong in a
 // separate informational surface, not in the 100-point scorecard.
+//
+// Scoring is weighted: each check carries a `points` value (set in
+// dimensions.ts) reflecting how much it matters. Dimension totals are
+// intentionally uneven — UX & Conversion is worth 20, Standards is
+// worth 7. The seven dimension scores sum to 100.
 
 import * as Checks from "./checks";
 import type { FetchCtx } from "./checks";
@@ -56,7 +61,7 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     ttfbMs,
   };
 
-  // 2. Run all 25 checks in parallel. All fully deterministic.
+  // 2. Run all 35 checks in parallel. All fully deterministic.
   const results = await Promise.all([
     // Brand & Identity (5)
     Checks.customDomain(ctx),
@@ -82,6 +87,18 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     Checks.h1ValueProp(ctx),
     Checks.placeholderText(ctx),
     Checks.formLabels(ctx),
+    // Polish & Foundations (5)
+    Checks.themeColor(ctx),
+    Checks.langAttribute(ctx),
+    Checks.compression(ctx),
+    Checks.canonicalUrl(ctx),
+    Checks.hstsPreload(ctx),
+    // Modern Web Standards (5)
+    Checks.manifestJson(ctx),
+    Checks.twitterCard(ctx),
+    Checks.titleLength(ctx),
+    Checks.ariaLandmarks(ctx),
+    Checks.headingHierarchy(ctx),
     // Trust & Compliance (5)
     Checks.secureTransport(ctx),
     Checks.privacyLink(ctx),
@@ -93,25 +110,27 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
   const byId = new Map(results.map((r) => [r.id, r]));
 
   const dimensions: DimensionResult[] = DIMENSIONS.map((d) => {
-    const checks = d.checkIds.map((id) => {
+    const checks = d.checks.map(({ id, points }) => {
       const r = byId.get(id);
       if (!r) {
-        // Should be impossible — checkIds are typed against the audit set.
+        // Should be impossible — IDs are typed against the audit set.
         throw new Error(`Missing check result for "${id}"`);
       }
-      return r;
+      // Stamp the weight onto the result so the UI can show /points.
+      return { ...r, points };
     });
-    const passed = checks.filter((c) => c.pass).length;
+    const score = checks.reduce((s, c) => (c.pass ? s + c.points : s), 0);
+    const maxScore = checks.reduce((s, c) => s + c.points, 0);
     return {
       id: d.id,
       label: d.label,
-      // 5 checks per dimension × 4 pts = 20 max per dimension.
-      // 5 dimensions × 20 = 100 total.
-      score: passed * 4,
+      score,
+      maxScore,
       checks,
     };
   });
 
+  // Weights across all dimensions sum to 100, so totalScore is already 0-100.
   const total = dimensions.reduce((sum, d) => sum + d.score, 0);
 
   return {

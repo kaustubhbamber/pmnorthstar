@@ -315,7 +315,7 @@ function Hero({
 
 function IdleProof() {
   const items = [
-    { num: "20", label: "checks across 5 dimensions" },
+    { num: "35", label: "weighted checks across 7 dimensions" },
     { num: "<30s", label: "to a full audit" },
     { num: "0", label: "signups, paywalls, accounts" },
   ];
@@ -368,10 +368,10 @@ function LoadingState({ url }: { url: string }) {
         className="text-sm font-medium mb-1"
         style={{ color: "var(--text-primary)" }}
       >
-        Running 20 checks across your site
+        Running 35 checks across your site
       </p>
       <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-        Fetching {safeHost(url)} and Google PageSpeed, can take up to 30 seconds.
+        Fetching {safeHost(url)} and probing its surface, can take up to 30 seconds.
       </p>
     </div>
   );
@@ -624,7 +624,7 @@ function ScoreRing({
 function DimensionCard({ dimension }: { dimension: DimensionResult }) {
   const [open, setOpen] = useState(false);
   const config = DIMENSIONS.find((d) => d.id === dimension.id)!;
-  const ratio = dimension.score / 20;
+  const ratio = dimension.maxScore > 0 ? dimension.score / dimension.maxScore : 0;
   const color =
     ratio === 1
       ? "#22C55E"
@@ -667,7 +667,7 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
             <span className="font-display text-lg sm:text-xl font-bold">
               {dimension.score}
             </span>
-            <span className="text-[10px] opacity-70 font-mono">/20</span>
+            <span className="text-[10px] opacity-70 font-mono">/{dimension.maxScore}</span>
           </div>
         </div>
         <div className="flex-1 min-w-0">
@@ -750,12 +750,24 @@ function DimensionCard({ dimension }: { dimension: DimensionResult }) {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p
-                      className="text-sm font-medium"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {c.label}
-                    </p>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <p
+                        className="text-sm font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {c.label}
+                      </p>
+                      <span
+                        className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                        style={{
+                          color: "var(--text-faint)",
+                          background: "var(--tag-bg)",
+                        }}
+                        title="Points this check is worth"
+                      >
+                        {c.points} {c.points === 1 ? "pt" : "pts"}
+                      </span>
+                    </div>
                     <p
                       className="text-xs mt-0.5 leading-relaxed"
                       style={{ color: "var(--text-muted)" }}

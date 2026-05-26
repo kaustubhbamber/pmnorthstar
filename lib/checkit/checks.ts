@@ -8,7 +8,11 @@
 //, malformed tags, weird quoting, also tell us a site is broken.
 
 import { fetchWithTimeout, stripTags, truncate } from "./util";
-import type { CheckResult } from "./types";
+import type { RawCheckResult } from "./types";
+
+// Check functions return RawCheckResult; audit.ts stamps the `points`
+// weight onto each one to produce the final CheckResult.
+type CheckResult = RawCheckResult;
 
 // TTFB is captured during the orchestrator's HTML fetch and passed in
 // here so the perf checks stay pure (no extra network IO). Every check
@@ -900,5 +904,344 @@ export async function identitySignal(ctx: FetchCtx): Promise<CheckResult> {
         ? `Found About, Contact, or email link.`
         : `Found social media link in the page.`
       : `No About, Contact, or social link. Visitors can't tell who's behind this.`,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Dimension 6 — Polish & Foundations
+// Small but visible signals that separate "shipped a product" from
+// "uploaded some files." Each one is a 5-minute fix; their absence
+// signals the team didn't sweat the details.
+// ─────────────────────────────────────────────────────────────────────────
+
+export async function themeColor(ctx: FetchCtx): Promise<CheckResult> {
+  // Allow attributes in any order — same pattern as the meta fixes.
+  const match =
+    ctx.html.match(/<meta\b[^>]*\bname=["']theme-color["'][^>]*\bcontent=["']([^"']+)["']/i) ||
+    ctx.html.match(/<meta\b[^>]*\bcontent=["']([^"']+)["'][^>]*\bname=["']theme-color["']/i);
+  const color = match?.[1]?.trim();
+  return {
+    id: "theme-color",
+    label: "Theme color meta tag",
+    pass: !!color,
+    detail: color
+      ? `theme-color is set to ${color}. Mobile browser chrome matches the brand.`
+      : `No <meta name="theme-color">. iOS/Android browser chrome shows the default tint instead of your brand color.`,
+  };
+}
+
+export async function langAttribute(ctx: FetchCtx): Promise<CheckResult> {
+  const match = ctx.html.match(/<html\b[^>]*\blang=["']([^"']+)["']/i);
+  const lang = match?.[1]?.trim();
+  const pass = !!lang && lang.length >= 2;
+  return {
+    id: "lang-attribute",
+    label: "Language declared on <html>",
+    pass,
+    detail: pass
+      ? `<html lang="${lang}"> is set. Screen readers and translators know the language.`
+      : `<html> is missing a lang attribute. Screen readers can't pronounce content correctly and translators can't detect language.`,
+  };
+}
+
+export async function compression(ctx: FetchCtx): Promise<CheckResult> {
+  // Fetch undoes Content-Encoding before returning the body, but the
+  // header itself is preserved. Look for gzip / br / zstd / deflate.
+  const encoding = (ctx.headers.get("content-encoding") || "").toLowerCase();
+  const compressed = /\b(gzip|br|zstd|deflate)\b/.test(encoding);
+  return {
+    id: "compression",
+    label: "HTTP compression enabled",
+    pass: compressed,
+    detail: compressed
+      ? `Content-Encoding: ${encoding}. Server is compressing responses — 3-5x bandwidth saved.`
+      : `No Content-Encoding header. Server is sending uncompressed bytes. Enable gzip or Brotli in your hosting config.`,
+  };
+}
+
+export async function canonicalUrl(ctx: FetchCtx): Promise<CheckResult> {
+  const match = ctx.html.match(/<link\b[^>]*\brel=["']canonical["'][^>]*>/i);
+  if (!match) {
+    return {
+      id: "canonical-url",
+      label: "Canonical URL set",
+      pass: false,
+      detail: `No <link rel="canonical">. If the same page is reachable at multiple URLs, Google splits ranking signal across them.`,
+    };
+  }
+  const href = match[0].match(/href=["']([^"']+)["']/i)?.[1];
+  if (!href) {
+    return {
+      id: "canonical-url",
+      label: "Canonical URL set",
+      pass: false,
+      detail: `canonical link tag found but has no href.`,
+    };
+  }
+  // Resolve relative canonicals against the final URL so we compare correctly.
+  let canonical: URL;
+  try {
+    canonical = new URL(href, ctx.finalUrl);
+  } catch {
+    return {
+      id: "canonical-url",
+      label: "Canonical URL set",
+      pass: false,
+      detail: `canonical href "${truncate(href, 40)}" is not a valid URL.`,
+    };
+  }
+  return {
+    id: "canonical-url",
+    label: "Canonical URL set",
+    pass: true,
+    detail: `Canonical points to ${canonical.pathname}. Duplicate-content signal protected.`,
+  };
+}
+
+export async function hstsPreload(ctx: FetchCtx): Promise<CheckResult> {
+  const hsts = (ctx.headers.get("strict-transport-security") || "").toLowerCase();
+  if (!hsts) {
+    return {
+      id: "hsts-preload",
+      label: "HSTS preload eligible",
+      pass: false,
+      detail: `No Strict-Transport-Security header. Browsers don't know to force HTTPS on future visits.`,
+    };
+  }
+  const maxAgeMatch = hsts.match(/max-age=(\d+)/);
+  const maxAge = maxAgeMatch ? parseInt(maxAgeMatch[1], 10) : 0;
+  const hasSubdomains = /includesubdomains/.test(hsts);
+  const hasPreload = /\bpreload\b/.test(hsts);
+  const oneYear = 31_536_000;
+  const passes = [maxAge >= oneYear, hasSubdomains, hasPreload];
+  const passCount = passes.filter(Boolean).length;
+  if (passCount === 3) {
+    return {
+      id: "hsts-preload",
+      label: "HSTS preload eligible",
+      pass: true,
+      detail: `HSTS is set with max-age ≥ 1y, includeSubDomains, and preload. Submit to hstspreload.org to ship to Chrome's hard-coded list.`,
+    };
+  }
+  const missing: string[] = [];
+  if (maxAge < oneYear) missing.push(`max-age ≥ 1 year (currently ${maxAge}s)`);
+  if (!hasSubdomains) missing.push("includeSubDomains");
+  if (!hasPreload) missing.push("preload directive");
+  return {
+    id: "hsts-preload",
+    label: "HSTS preload eligible",
+    pass: false,
+    detail: `HSTS is set but missing ${missing.join(" + ")}. Not preload-eligible yet.`,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Dimension 7 — Modern Web Standards
+// Beyond-the-basics signals: progressive web app support, semantic
+// structure, proper title sizing. These show up in higher-end audits
+// (Lighthouse, accessibility scorecards) and differentiate sites that
+// understand modern web from sites that just shipped the minimum.
+// ─────────────────────────────────────────────────────────────────────────
+
+export async function manifestJson(ctx: FetchCtx): Promise<CheckResult> {
+  const match = ctx.html.match(/<link\b[^>]*\brel=["']manifest["'][^>]*>/i);
+  if (!match) {
+    return {
+      id: "manifest-json",
+      label: "Web App Manifest present",
+      pass: false,
+      detail: `No <link rel="manifest">. PWA features (Add to Home Screen, splash screen, theme) aren't available.`,
+    };
+  }
+  const href = match[0].match(/href=["']([^"']+)["']/i)?.[1];
+  if (!href) {
+    return {
+      id: "manifest-json",
+      label: "Web App Manifest present",
+      pass: false,
+      detail: `manifest link tag has no href.`,
+    };
+  }
+  try {
+    const url = new URL(href, ctx.finalUrl).toString();
+    const res = await fetchWithTimeout(url, {}, 5000);
+    if (!res.ok) {
+      return {
+        id: "manifest-json",
+        label: "Web App Manifest present",
+        pass: false,
+        detail: `Manifest URL returned ${res.status}.`,
+      };
+    }
+    // Quick validity check — must be parseable JSON with at least a name or short_name.
+    const body = await res.text();
+    try {
+      const parsed = JSON.parse(body);
+      const hasName = !!(parsed.name || parsed.short_name);
+      return {
+        id: "manifest-json",
+        label: "Web App Manifest present",
+        pass: hasName,
+        detail: hasName
+          ? `Manifest loads and declares ${parsed.short_name || parsed.name}. PWA-eligible.`
+          : `Manifest loads but is missing name/short_name — won't work for Add to Home Screen.`,
+      };
+    } catch {
+      return {
+        id: "manifest-json",
+        label: "Web App Manifest present",
+        pass: false,
+        detail: `Manifest URL returns content but it's not valid JSON.`,
+      };
+    }
+  } catch {
+    return {
+      id: "manifest-json",
+      label: "Web App Manifest present",
+      pass: false,
+      detail: `Could not load manifest from ${href}.`,
+    };
+  }
+}
+
+export async function twitterCard(ctx: FetchCtx): Promise<CheckResult> {
+  const tagMatch = (name: string): string | null => {
+    const re1 = new RegExp(
+      `<meta\\b[^>]*\\bname=["']twitter:${name}["'][^>]*\\bcontent=["']([^"']+)["']`,
+      "i",
+    );
+    const re2 = new RegExp(
+      `<meta\\b[^>]*\\bcontent=["']([^"']+)["'][^>]*\\bname=["']twitter:${name}["']`,
+      "i",
+    );
+    return ctx.html.match(re1)?.[1] ?? ctx.html.match(re2)?.[1] ?? null;
+  };
+  const card = tagMatch("card");
+  const title = tagMatch("title");
+  const description = tagMatch("description");
+  const image = tagMatch("image");
+  const present = [card, title || description, image].filter(Boolean).length;
+  // Card type + (title OR description) + image = minimum useful Twitter unfurl.
+  const pass = !!card && !!(title || description) && !!image;
+  if (!card && !title && !description && !image) {
+    return {
+      id: "twitter-card",
+      label: "Twitter card meta tags",
+      pass: false,
+      detail: `No Twitter card meta tags. Twitter (X) falls back to OG tags, which usually works but loses platform-specific control.`,
+    };
+  }
+  return {
+    id: "twitter-card",
+    label: "Twitter card meta tags",
+    pass,
+    detail: pass
+      ? `Twitter card "${card}" is set with title/description and image. Link previews render properly on X.`
+      : `${present} of 3 Twitter card fields present. Add the missing ones for full control over X link previews.`,
+  };
+}
+
+export async function titleLength(ctx: FetchCtx): Promise<CheckResult> {
+  const match = ctx.html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  const title = match ? stripTags(match[1]).trim() : "";
+  if (!title) {
+    return {
+      id: "title-length",
+      label: "Title length 30-60 chars",
+      pass: false,
+      detail: `No <title> tag.`,
+    };
+  }
+  const len = title.length;
+  const pass = len >= 30 && len <= 60;
+  return {
+    id: "title-length",
+    label: "Title length 30-60 chars",
+    pass,
+    detail: pass
+      ? `Title is ${len} chars. Good length for Google SERP truncation.`
+      : len < 30
+      ? `Title is ${len} chars. Too short — Google may rewrite it or you miss long-tail keywords.`
+      : `Title is ${len} chars. Google truncates around 60 chars — anything past that is wasted.`,
+  };
+}
+
+export async function ariaLandmarks(ctx: FetchCtx): Promise<CheckResult> {
+  const html = ctx.html;
+  const has = (tag: string): boolean =>
+    new RegExp(`<${tag}\\b`, "i").test(html) ||
+    new RegExp(`role=["']${tag}["']`, "i").test(html);
+  // The four landmarks that matter: header, nav, main, footer.
+  // Sites can use ARIA roles instead of semantic tags; we accept either.
+  const landmarks = {
+    header: has("header") || has("banner"),
+    nav: has("nav") || has("navigation"),
+    main: has("main"),
+    footer: has("footer") || has("contentinfo"),
+  };
+  const count = Object.values(landmarks).filter(Boolean).length;
+  const missing = Object.entries(landmarks)
+    .filter(([, present]) => !present)
+    .map(([name]) => name);
+  const pass = count >= 3;
+  return {
+    id: "aria-landmarks",
+    label: "ARIA landmarks present",
+    pass,
+    detail: pass
+      ? `${count} of 4 landmark regions present (${Object.entries(landmarks).filter(([, p]) => p).map(([n]) => n).join(", ")}). Screen reader users can navigate by section.`
+      : `Only ${count} of 4 landmarks. Missing: ${missing.join(", ")}. Add <${missing[0] || "main"}> tags for accessibility.`,
+  };
+}
+
+export async function headingHierarchy(ctx: FetchCtx): Promise<CheckResult> {
+  const headings: { level: number }[] = [];
+  const re = /<h([1-6])\b[^>]*>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(ctx.html))) {
+    headings.push({ level: parseInt(m[1], 10) });
+  }
+  if (headings.length === 0) {
+    return {
+      id: "heading-hierarchy",
+      label: "Heading hierarchy valid",
+      pass: false,
+      detail: `No heading tags on the page. Pages need at least one <h1>.`,
+    };
+  }
+  // Valid hierarchy: never skip a level downward (h1 then h3 is bad).
+  // Allow jumping back up any number of levels (h3 then h1 is fine).
+  let prev = headings[0].level;
+  const skips: string[] = [];
+  for (let i = 1; i < headings.length; i++) {
+    const cur = headings[i].level;
+    if (cur > prev + 1) {
+      skips.push(`<h${prev}> → <h${cur}>`);
+    }
+    prev = cur;
+  }
+  const startsWithH1 = headings[0].level === 1;
+  const pass = startsWithH1 && skips.length === 0;
+  if (!startsWithH1) {
+    return {
+      id: "heading-hierarchy",
+      label: "Heading hierarchy valid",
+      pass: false,
+      detail: `First heading is <h${headings[0].level}>, not <h1>. Search engines and screen readers expect <h1> as the page's primary heading.`,
+    };
+  }
+  if (skips.length > 0) {
+    return {
+      id: "heading-hierarchy",
+      label: "Heading hierarchy valid",
+      pass: false,
+      detail: `Heading levels skipped: ${skips[0]}${skips.length > 1 ? ` (and ${skips.length - 1} more)` : ""}. Don't jump levels — confuses screen readers.`,
+    };
+  }
+  return {
+    id: "heading-hierarchy",
+    label: "Heading hierarchy valid",
+    pass: true,
+    detail: `${headings.length} headings in valid hierarchical order starting with <h1>.`,
   };
 }
