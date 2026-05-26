@@ -140,13 +140,18 @@ export async function realFavicon(ctx: FetchCtx): Promise<CheckResult> {
 // require all four to score this slot.
 export async function ogCompleteness(ctx: FetchCtx): Promise<CheckResult> {
   const html = ctx.html;
+  // Match a <meta> tag with property=og:X (or name=og:X) and capture
+  // its content. Robust against any other attributes (data-*, nonce,
+  // suppressHydrationWarning, etc.) appearing between the tag name and
+  // the target attribute — that was the bug that hid amberstudent.com's
+  // valid JSON-LD from the structured-data check.
   const ogMatch = (prop: string): string | null => {
     const re = new RegExp(
-      `<meta\\s+(?:property|name)=["']og:${prop}["']\\s+content=["']([^"']+)["']`,
+      `<meta\\b[^>]*\\b(?:property|name)=["']og:${prop}["'][^>]*\\bcontent=["']([^"']+)["']`,
       "i",
     );
     const re2 = new RegExp(
-      `<meta\\s+content=["']([^"']+)["']\\s+(?:property|name)=["']og:${prop}["']`,
+      `<meta\\b[^>]*\\bcontent=["']([^"']+)["'][^>]*\\b(?:property|name)=["']og:${prop}["']`,
       "i",
     );
     return html.match(re)?.[1] ?? html.match(re2)?.[1] ?? null;
@@ -357,8 +362,11 @@ export async function modernImages(ctx: FetchCtx): Promise<CheckResult> {
 
 export async function metaDescription(ctx: FetchCtx): Promise<CheckResult> {
   const match =
-    ctx.html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i) ||
-    ctx.html.match(/<meta\s+content=["']([^"']*)["']\s+name=["']description["']/i);
+    // Allow any attributes between the tag name and name=/content=,
+    // not just whitespace. Frameworks like React Helmet and Next.js's
+    // metadata API commonly inject data-* attributes before `name`.
+    ctx.html.match(/<meta\b[^>]*\bname=["']description["'][^>]*\bcontent=["']([^"']*)["']/i) ||
+    ctx.html.match(/<meta\b[^>]*\bcontent=["']([^"']*)["'][^>]*\bname=["']description["']/i);
   const desc = match ? match[1].trim() : "";
   const pass = desc.length >= 50 && desc.length <= 160;
   return {
@@ -497,7 +505,11 @@ export async function structuredData(ctx: FetchCtx): Promise<CheckResult> {
 // ── UX & Conversion ───────────────────────────────────────────────────────
 
 export async function viewportMeta(ctx: FetchCtx): Promise<CheckResult> {
-  const match = ctx.html.match(/<meta\s+name=["']viewport["']\s+content=["']([^"']+)["']/i);
+  // Match the viewport meta tag regardless of attribute order or other
+  // attributes that frameworks may inject before name=.
+  const match =
+    ctx.html.match(/<meta\b[^>]*\bname=["']viewport["'][^>]*\bcontent=["']([^"']+)["']/i) ||
+    ctx.html.match(/<meta\b[^>]*\bcontent=["']([^"']+)["'][^>]*\bname=["']viewport["']/i);
   const content = match ? match[1] : "";
   const pass = /width=device-width/i.test(content);
   return {
