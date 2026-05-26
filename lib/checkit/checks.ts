@@ -442,7 +442,14 @@ export async function sitemapXml(ctx: FetchCtx): Promise<CheckResult> {
 // most heavily. A site without any schema is invisible to Answer Engines.
 export async function structuredData(ctx: FetchCtx): Promise<CheckResult> {
   const blocks = Array.from(
-    ctx.html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi),
+    // Match <script> with type="application/ld+json" regardless of where
+    // the type attribute sits among other attributes (data-*, nonce,
+    // suppresshydrationwarning, etc. — React Helmet / Next.js commonly
+    // emit extra attrs before `type=`). Also tolerate charset suffixes
+    // on the MIME type.
+    ctx.html.matchAll(
+      /<script\b[^>]*\btype=["']application\/ld\+json[^"']*["'][^>]*>([\s\S]*?)<\/script>/gi,
+    ),
   );
 
   if (blocks.length === 0) {
