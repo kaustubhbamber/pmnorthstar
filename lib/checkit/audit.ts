@@ -149,7 +149,7 @@ function fatalResult(url: string, message: string): AuditResult {
     finalUrl: url,
     fetchedAt: new Date().toISOString(),
     totalScore: 0,
-    band: "vibe",
+    band: "missing",
     dimensions: [],
     fatalError: message,
   };

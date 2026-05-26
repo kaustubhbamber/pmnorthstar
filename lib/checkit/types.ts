@@ -13,7 +13,22 @@ export type DimensionId =
   | "polish"
   | "standards";
 
-export type Band = "ready" | "almost" | "polish" | "vibe";
+// Ten bands, one per 10-point bucket on the 0-100 scale. Ordered
+// high to low so the bandFor function below maps cleanly: stellar
+// at the top, missing at the bottom. The labels are intentionally
+// distinct so the result card never says "vibe" for both a 35 and
+// a 55 — those are very different sites.
+export type Band =
+  | "stellar"
+  | "ready"
+  | "almost"
+  | "polish"
+  | "rough"
+  | "vibe"
+  | "draft"
+  | "skeleton"
+  | "raw"
+  | "missing";
 
 // Raw output of an individual check function. Points are stamped on in
 // audit.ts using the weight from dimensions.ts, producing CheckResult.
@@ -57,18 +72,26 @@ export interface AuditResult {
   fatalError?: string;
 }
 
-// Band thresholds set against the weighted 100-point scale, breaking
-// in tight 10-point steps near the top where the difference matters
-// (75 vs 65 is meaningful) and a wider floor below 60 (where the
-// distinction is "site is broken" either way).
+// Band thresholds break in 10-point steps across the 100-point scale.
+// Each band carries distinct copy in BAND_COPY below.
 export function bandFor(score: number): Band {
+  if (score >= 90) return "stellar";
   if (score >= 80) return "ready";
   if (score >= 70) return "almost";
   if (score >= 60) return "polish";
-  return "vibe";
+  if (score >= 50) return "rough";
+  if (score >= 40) return "vibe";
+  if (score >= 30) return "draft";
+  if (score >= 20) return "skeleton";
+  if (score >= 10) return "raw";
+  return "missing";
 }
 
 export const BAND_COPY: Record<Band, { label: string; tagline: string }> = {
+  stellar: {
+    label: "Stellar",
+    tagline: "Top-shelf. The site itself is a competitive moat.",
+  },
   ready: {
     label: "Production-ready",
     tagline: "This isn't a vibe, it's a product.",
@@ -81,9 +104,29 @@ export const BAND_COPY: Record<Band, { label: string; tagline: string }> = {
     label: "Needs polish",
     tagline: "The idea works. The execution still reads as a side project.",
   },
+  rough: {
+    label: "Rough edges",
+    tagline: "Effort is showing. Polish is not.",
+  },
   vibe: {
-    label: "Just a vibe right now",
+    label: "Just a vibe",
     tagline:
       "Get the basics in before users see this. The good news: every fix is fast.",
+  },
+  draft: {
+    label: "Draft mode",
+    tagline: "Visible cracks everywhere. Most users bounce before the hero loads.",
+  },
+  skeleton: {
+    label: "Skeleton",
+    tagline: "It loads. That's about the only kind thing to say.",
+  },
+  raw: {
+    label: "Raw URL",
+    tagline: "Just enough to register a domain. Almost nothing else works.",
+  },
+  missing: {
+    label: "Barely there",
+    tagline: "There's almost nothing here. Did you actually ship?",
   },
 };

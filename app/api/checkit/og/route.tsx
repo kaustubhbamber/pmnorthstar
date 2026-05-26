@@ -19,9 +19,20 @@ import { normalizeUrl } from "@/lib/checkit/util";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const BANDS = ["ready", "almost", "polish", "vibe"] as const;
+const BANDS = [
+  "stellar",
+  "ready",
+  "almost",
+  "polish",
+  "rough",
+  "vibe",
+  "draft",
+  "skeleton",
+  "raw",
+  "missing",
+] as const;
 function asBand(s: string): Band {
-  return (BANDS as readonly string[]).includes(s) ? (s as Band) : "vibe";
+  return (BANDS as readonly string[]).includes(s) ? (s as Band) : "missing";
 }
 
 export async function GET(req: NextRequest) {
@@ -41,7 +52,7 @@ export async function GET(req: NextRequest) {
   const host = url.hostname;
 
   let score: number | null = null;
-  let band: Band = "vibe";
+  let band: Band = "missing";
   try {
     const latest = await prisma.checkitAudit.findFirst({
       where: { host },

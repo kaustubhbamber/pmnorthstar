@@ -165,16 +165,35 @@ export function ogImage(props: OGTemplateProps) {
 interface CheckitOGProps {
   host: string;
   score: number;
-  band: "ready" | "almost" | "polish" | "vibe";
+  band:
+    | "stellar"
+    | "ready"
+    | "almost"
+    | "polish"
+    | "rough"
+    | "vibe"
+    | "draft"
+    | "skeleton"
+    | "raw"
+    | "missing";
   bandLabel: string;
   bandTagline: string;
 }
 
+// 10-step gradient from deep green ("stellar") to deep red ("missing")
+// driving the OG card background color so the score reads in the
+// social preview before any text loads.
 const BAND_BG: Record<CheckitOGProps["band"], string> = {
-  ready: "#0F9D58",
-  almost: "#22C55E",
-  polish: "#F59E0B",
-  vibe: "#F3123C",
+  stellar: "#0F9D58",
+  ready: "#22C55E",
+  almost: "#84CC16",
+  polish: "#EAB308",
+  rough: "#F59E0B",
+  vibe: "#F97316",
+  draft: "#EF4444",
+  skeleton: "#DC2626",
+  raw: "#B91C1C",
+  missing: "#7F1D1D",
 };
 
 export function checkitOgTemplate({

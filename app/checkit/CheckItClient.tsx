@@ -23,12 +23,20 @@ type ViewState =
   | { kind: "error"; message: string }
   | { kind: "ready"; result: AuditResult };
 
-// Color per band, matches the visual hierarchy of the score ring.
+// Color per band, a 10-step red → green gradient matching the
+// 10-point buckets in bandFor(). The two greens at the top read as
+// "shipped"; the four reds at the bottom read as "broken."
 const BAND_COLOR: Record<Band, string> = {
+  stellar: "#0F9D58",
   ready: "#22C55E",
-  almost: "#22C55E",
-  polish: "#F59E0B",
-  vibe: "var(--brand-primary)",
+  almost: "#84CC16",
+  polish: "#EAB308",
+  rough: "#F59E0B",
+  vibe: "#F97316",
+  draft: "#EF4444",
+  skeleton: "#DC2626",
+  raw: "#B91C1C",
+  missing: "#7F1D1D",
 };
 
 // Per-dimension accent, color-codes the left border of each result
