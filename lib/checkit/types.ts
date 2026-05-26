@@ -57,10 +57,14 @@ export interface AuditResult {
   fatalError?: string;
 }
 
+// Band thresholds set against the weighted 100-point scale. 80+ is
+// "production-ready" — a site that's done the important things even if
+// a few minor checks are missed. Hitting 90+ on a 35-check audit takes
+// near-perfection, so the bar would punish good sites for tiny gaps.
 export function bandFor(score: number): Band {
-  if (score >= 90) return "ready";
-  if (score >= 70) return "almost";
-  if (score >= 50) return "polish";
+  if (score >= 80) return "ready";
+  if (score >= 60) return "almost";
+  if (score >= 40) return "polish";
   return "vibe";
 }
 
