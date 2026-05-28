@@ -586,17 +586,12 @@ function RevealView({
 }
 
 // ── Phase: Outcome ────────────────────────────────────────────────────
-
-// Save state for the auto-save effect. Anonymous users see the
-// sign-in CTA; logged-in users see "Saved to your stats" once the
-// POST resolves. Errors degrade gracefully — the user can still
-// share + restart even if persistence fails.
-type SaveState =
-  | { kind: "checking" }
-  | { kind: "anonymous" }
-  | { kind: "saving" }
-  | { kind: "saved" }
-  | { kind: "error"; message: string };
+//
+// The auto-save / stats-tracking flow was reverted. The save-attempt
+// endpoint, /simulate/me page, and DrillAttempt model are still in
+// the codebase but not wired into the outcome view. Re-enable by
+// adding back a useEffect that POSTs to /api/simulate/save-attempt
+// when /api/auth/me confirms a session.
 
 function OutcomeView({
   drill,
@@ -609,63 +604,6 @@ function OutcomeView({
   history: HistoryEntry[];
   onRestart: () => void;
 }) {
-  const [saveState, setSaveState] = useState<SaveState>({ kind: "checking" });
-
-  // Auto-save the attempt for logged-in users. Fires once on mount of
-  // the outcome view; subsequent restarts produce a new outcome with
-  // a fresh history, which fires save again with a new pathTaken.
-  useEffect(() => {
-    let cancelled = false;
-    async function run() {
-      try {
-        const meRes = await fetch("/api/auth/me", { cache: "no-store" });
-        if (!meRes.ok) {
-          if (!cancelled) setSaveState({ kind: "anonymous" });
-          return;
-        }
-        const { user } = await meRes.json();
-        if (!user) {
-          if (!cancelled) setSaveState({ kind: "anonymous" });
-          return;
-        }
-        if (!cancelled) setSaveState({ kind: "saving" });
-        const pathTaken = history.map((h) => ({
-          nodeId: h.nodeId,
-          optionIndex: h.optionIndex,
-        }));
-        const saveRes = await fetch("/api/simulate/save-attempt", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ drillSlug: drill.slug, pathTaken }),
-        });
-        if (!saveRes.ok) {
-          const body = await saveRes.json().catch(() => ({}));
-          if (!cancelled)
-            setSaveState({
-              kind: "error",
-              message: body.error ?? "Save failed",
-            });
-          return;
-        }
-        if (!cancelled) setSaveState({ kind: "saved" });
-      } catch (err) {
-        if (!cancelled)
-          setSaveState({
-            kind: "error",
-            message: err instanceof Error ? err.message : "Save failed",
-          });
-      }
-    }
-    run();
-    return () => {
-      cancelled = true;
-    };
-    // We only want to fire save once per outcome-view mount. history
-    // is captured by value at the time of save; subsequent restarts
-    // remount this component with a fresh history.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drill.slug]);
-
   // Score math — per-dimension and total.
   const dims: DrillDimension[] = ["product", "business", "founder"];
   const scoreByDim = useMemo(() => {
@@ -972,10 +910,10 @@ function OutcomeView({
         </details>
       )}
 
-      {/* Save-progress banner — state-aware. Logged-in users see auto-save
-          status; anonymous users see the sign-in CTA preserving the drill
-          via ?next= so they can return to the same outcome screen. */}
-      <SaveBanner saveState={saveState} drillSlug={drill.slug} />
+      {/* Stats tracking is paused — anonymous-play only for now. The
+          API endpoints (/api/simulate/save-attempt, /api/simulate/me)
+          and the /simulate/me page exist but aren't called from here.
+          When we re-enable, swap this back to the state-aware SaveBanner. */}
 
       {/* Actions */}
       <div className="flex flex-wrap items-center gap-2.5">
@@ -1014,118 +952,6 @@ function OutcomeView({
           More drills
           <ArrowUpRight size={14} strokeWidth={2} />
         </Link>
-      </div>
-    </div>
-  );
-}
-
-// ── Save banner — state-aware ─────────────────────────────────────────
-
-function SaveBanner({
-  saveState,
-  drillSlug,
-}: {
-  saveState: SaveState;
-  drillSlug: string;
-}) {
-  // Configuration per save state. Keeps the render below tiny.
-  const cfg = (() => {
-    switch (saveState.kind) {
-      case "checking":
-        return {
-          accent: "var(--text-faint)",
-          label: "Checking",
-          body: "Looking up your account...",
-          cta: null as null | { href: string; text: string },
-        };
-      case "anonymous":
-        return {
-          accent: "var(--brand-primary)",
-          label: "Save this",
-          body: (
-            <>
-              <strong>Want to keep this score?</strong> Sign in to save it,
-              start a weekly streak, and track your dimensional accuracy
-              across every drill you play.
-            </>
-          ),
-          cta: {
-            href: `/login?next=/simulate/${drillSlug}`,
-            text: "Sign in to save your progress",
-          },
-        };
-      case "saving":
-        return {
-          accent: "var(--brand-primary)",
-          label: "Saving",
-          body: "Saving your score to your stats...",
-          cta: null,
-        };
-      case "saved":
-        return {
-          accent: "#0F9D58",
-          label: "Saved",
-          body: (
-            <>
-              <strong>Saved to your stats.</strong> Your dimensional accuracy
-              and weekly streak are updated.
-            </>
-          ),
-          cta: { href: "/simulate/me", text: "View your full stats" },
-        };
-      case "error":
-        return {
-          accent: "var(--brand-primary)",
-          label: "Couldn't save",
-          body: (
-            <>
-              We couldn&apos;t save this attempt automatically. Your share +
-              restart still work. Refresh and we&apos;ll try again.
-            </>
-          ),
-          cta: null,
-        };
-    }
-  })();
-
-  return (
-    <div
-      className="rounded-2xl px-5 py-5 sm:px-6 sm:py-6 mb-5"
-      style={{
-        background: "var(--card-bg)",
-        border: "1.5px solid var(--card-border)",
-        borderLeft: `4px solid ${cfg.accent}`,
-      }}
-    >
-      <div className="flex items-start gap-3">
-        <span
-          className="text-[10px] font-mono uppercase px-2 py-1 rounded flex-shrink-0 mt-0.5"
-          style={{
-            background: `color-mix(in srgb, ${cfg.accent} 12%, transparent)`,
-            color: cfg.accent,
-            letterSpacing: "0.14em",
-          }}
-        >
-          {cfg.label}
-        </span>
-        <div className="flex-1">
-          <p
-            className="text-sm sm:text-base leading-relaxed mb-2"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {cfg.body}
-          </p>
-          {cfg.cta && (
-            <Link
-              href={cfg.cta.href}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: cfg.accent }}
-            >
-              {cfg.cta.text}
-              <ArrowRight size={14} strokeWidth={2} />
-            </Link>
-          )}
-        </div>
       </div>
     </div>
   );

@@ -74,43 +74,6 @@ export default function SimulatePage() {
           <NoDrillYet />
         )}
 
-        {/* Login note — anonymous play works, but tracking requires auth */}
-        <div
-          className="mt-5 rounded-xl px-5 py-4 flex items-center gap-3"
-          style={{
-            background: "var(--card-bg)",
-            border: "1.5px solid var(--card-border)",
-            borderLeft: "4px solid var(--brand-primary)",
-          }}
-        >
-          <span
-            className="text-[10px] font-mono uppercase px-2 py-1 rounded flex-shrink-0"
-            style={{
-              background: "color-mix(in srgb, var(--brand-primary) 12%, transparent)",
-              color: "var(--brand-primary)",
-              letterSpacing: "0.14em",
-            }}
-          >
-            Track progress
-          </span>
-          <p
-            className="text-xs sm:text-sm leading-relaxed flex-1"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Play any drill free — no account needed. To save your score, build a
-            weekly streak, and see how you score across product / business /
-            founder dimensions over time,{" "}
-            <Link
-              href="/login?next=/simulate"
-              className="underline font-medium"
-              style={{ color: "var(--brand-primary)" }}
-            >
-              sign in
-            </Link>{" "}
-            (it&apos;s free).
-          </p>
-        </div>
-
         {/* What this is — 3 column explainer */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-10 mb-12">
           <ExplainerTile
@@ -126,7 +89,7 @@ export default function SimulatePage() {
           <ExplainerTile
             icon={Clock}
             title="~10 minutes"
-            body="Branching scenarios with rationales for every choice. Free to play; sign in to track."
+            body="Branching scenarios with rationales for every choice. Free, no signup."
           />
         </div>
 
