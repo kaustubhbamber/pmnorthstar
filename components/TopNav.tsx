@@ -85,7 +85,7 @@ export function TopNav({
           href="/simulate"
           className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90 flex-shrink-0"
           style={{
-            background: "#EA580C",
+            background: "#EC4899",
             color: "#ffffff",
             letterSpacing: "-0.005em",
           }}

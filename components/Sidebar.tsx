@@ -166,8 +166,8 @@ export function Sidebar({
             <span
               className="ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded"
               style={{
-                background: "rgba(234, 88, 12, 0.18)",
-                color: "#EA580C",
+                background: "rgba(236, 72, 153, 0.18)",
+                color: "#EC4899",
               }}
             >
               NEW

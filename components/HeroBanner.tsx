@@ -170,7 +170,7 @@ export function HeroBanner({ onNavChange }: HeroBannerProps) {
           href="/simulate"
           className="group rounded-2xl px-5 py-5 sm:py-6 transition-all flex items-center gap-4 hover:opacity-95"
           style={{
-            background: "#EA580C",
+            background: "#EC4899",
             border: "1.5px solid rgba(255, 255, 255, 0.12)",
           }}
         >
