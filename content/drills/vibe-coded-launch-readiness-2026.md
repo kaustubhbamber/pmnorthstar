@@ -2,7 +2,7 @@
 slug: vibe-coded-launch-readiness-2026
 type: current
 category: scope
-publishedAt: "2026-07-23T20:30:00+05:30"
+publishedAt: "2026-07-20T20:30:00+05:30"
 estimatedMinutes: 5
 principle: |
   Speed of building is now uncoupled from quality of shipping.

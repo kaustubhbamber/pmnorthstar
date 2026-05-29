@@ -3,7 +3,7 @@ slug: stripe-pricing-call-2010
 caseStudySlug: stripe-developer-first
 type: historical
 category: pricing
-publishedAt: "2026-06-15T20:30:00+05:30"
+publishedAt: "2026-06-12T20:30:00+05:30"
 year: 2010
 estimatedMinutes: 7
 principle: |

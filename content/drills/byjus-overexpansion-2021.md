@@ -3,7 +3,7 @@ slug: byjus-overexpansion-2021
 caseStudySlug: byjus-downfall
 type: historical
 category: scaling
-publishedAt: "2026-08-24T20:30:00+05:30"
+publishedAt: "2026-08-21T20:30:00+05:30"
 year: 2021
 estimatedMinutes: 7
 principle: |

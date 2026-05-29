@@ -3,7 +3,7 @@ slug: instagram-burbn-pivot-2010
 caseStudySlug: instagram-burbn-pivot
 type: historical
 category: pivots
-publishedAt: "2026-07-13T20:30:00+05:30"
+publishedAt: "2026-07-10T20:30:00+05:30"
 year: 2010
 estimatedMinutes: 6
 principle: |

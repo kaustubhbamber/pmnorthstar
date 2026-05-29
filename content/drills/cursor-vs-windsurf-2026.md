@@ -2,7 +2,7 @@
 slug: cursor-vs-windsurf-2026
 type: current
 category: strategic
-publishedAt: "2026-07-02T20:30:00+05:30"
+publishedAt: "2026-06-29T20:30:00+05:30"
 estimatedMinutes: 6
 principle: |
   In a category with two dominant players and an open frontier, the

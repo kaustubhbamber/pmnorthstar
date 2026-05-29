@@ -3,7 +3,7 @@ slug: notion-pivot-2015
 caseStudySlug: notion-all-in-one-workspace
 type: historical
 category: crisis
-publishedAt: "2026-06-22T20:30:00+05:30"
+publishedAt: "2026-06-19T20:30:00+05:30"
 year: 2015
 estimatedMinutes: 7
 principle: |
