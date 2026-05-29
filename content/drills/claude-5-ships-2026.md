@@ -2,7 +2,7 @@
 slug: claude-5-ships-2026
 type: current
 category: strategic
-publishedAt: "2026-06-04T20:30:00+05:30"
+publishedAt: "2026-06-01T20:30:00+05:30"
 estimatedMinutes: 7
 principle: |
   Don't pivot a production stack on a model release. The right time to

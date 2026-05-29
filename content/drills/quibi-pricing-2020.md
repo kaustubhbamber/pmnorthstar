@@ -3,7 +3,7 @@ slug: quibi-pricing-2020
 caseStudySlug: quibi-shutdown
 type: historical
 category: pricing
-publishedAt: "2026-08-03T20:30:00+05:30"
+publishedAt: "2026-07-31T20:30:00+05:30"
 year: 2020
 estimatedMinutes: 5
 principle: |

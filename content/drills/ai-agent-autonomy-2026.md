@@ -2,7 +2,7 @@
 slug: ai-agent-autonomy-2026
 type: current
 category: product
-publishedAt: "2026-06-25T20:30:00+05:30"
+publishedAt: "2026-06-22T20:30:00+05:30"
 estimatedMinutes: 6
 principle: |
   Autonomy is a product decision, not a capability decision. Just

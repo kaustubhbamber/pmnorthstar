@@ -3,7 +3,7 @@ slug: zomato-blinkit-2022
 caseStudySlug: zomato-blinkit-bet
 type: historical
 category: strategic
-publishedAt: "2026-08-10T20:30:00+05:30"
+publishedAt: "2026-08-07T20:30:00+05:30"
 year: 2022
 estimatedMinutes: 5
 principle: |

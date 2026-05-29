@@ -2,7 +2,7 @@
 slug: geo-aeo-strategy-2026
 type: current
 category: growth
-publishedAt: "2026-07-30T20:30:00+05:30"
+publishedAt: "2026-07-27T20:30:00+05:30"
 estimatedMinutes: 5
 principle: |
   When the discovery channel changes — search to social, social to
