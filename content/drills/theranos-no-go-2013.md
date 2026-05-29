@@ -3,7 +3,7 @@ slug: theranos-no-go-2013
 caseStudySlug: theranos-fraud
 type: historical
 category: crisis
-publishedAt: "2026-07-24T20:30:00+05:30"
+publishedAt: "2026-07-27T20:30:00+05:30"
 year: 2013
 estimatedMinutes: 6
 principle: |

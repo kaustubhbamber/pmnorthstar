@@ -2,7 +2,7 @@
 slug: competitor-shipped-your-roadmap-2026
 type: current
 category: strategic
-publishedAt: "2026-06-15T20:30:00+05:30"
+publishedAt: "2026-06-18T20:30:00+05:30"
 estimatedMinutes: 6
 principle: |
   When a competitor ships the feature you've been planning, the right

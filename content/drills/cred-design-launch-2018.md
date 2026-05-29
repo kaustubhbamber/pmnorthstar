@@ -3,7 +3,7 @@ slug: cred-design-launch-2018
 caseStudySlug: cred-design-fintech
 type: historical
 category: positioning
-publishedAt: "2026-07-17T20:30:00+05:30"
+publishedAt: "2026-07-20T20:30:00+05:30"
 year: 2018
 estimatedMinutes: 6
 principle: |

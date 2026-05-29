@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers, X, Sparkles, Gauge } from "lucide-react";
+import { Home, BookMarked, Star, FlameIcon, GraduationCap, MapPin, Layers, X, Sparkles, Gauge, Brain } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
 import { topics } from "@/data/topics";
@@ -142,8 +142,7 @@ export function Sidebar({
           </Link>
 
           {/* CheckIt — site readiness scorecard. Its own destination
-              since it's a tool, not a library section. NEW badge to
-              surface it while it's fresh. */}
+              since it's a tool, not a library section. */}
           <Link
             href="/checkit"
             onClick={onClose}
@@ -152,11 +151,23 @@ export function Sidebar({
           >
             <Gauge size={15} strokeWidth={1.6} />
             <span style={{ letterSpacing: "-0.005em" }}>CheckIt</span>
+          </Link>
+
+          {/* SimulateIt — decision-practice drills. NEW badge while it's
+              the newest tool in the family. */}
+          <Link
+            href="/simulate"
+            onClick={onClose}
+            className="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <Brain size={15} strokeWidth={1.6} />
+            <span style={{ letterSpacing: "-0.005em" }}>SimulateIt</span>
             <span
               className="ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded"
               style={{
-                background: "rgba(243, 18, 60, 0.15)",
-                color: "var(--brand-primary)",
+                background: "rgba(124, 58, 237, 0.18)",
+                color: "#7C3AED",
               }}
             >
               NEW

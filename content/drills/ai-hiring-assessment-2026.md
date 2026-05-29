@@ -2,7 +2,7 @@
 slug: ai-hiring-assessment-2026
 type: current
 category: hiring
-publishedAt: "2026-08-03T20:30:00+05:30"
+publishedAt: "2026-08-06T20:30:00+05:30"
 estimatedMinutes: 5
 principle: |
   Assessment tools optimize for the easy signal, not the predictive

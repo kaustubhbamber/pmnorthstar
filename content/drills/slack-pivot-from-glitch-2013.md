@@ -3,7 +3,7 @@ slug: slack-pivot-from-glitch-2013
 caseStudySlug: slack-gaming-pivot
 type: historical
 category: pivots
-publishedAt: "2026-06-05T20:30:00+05:30"
+publishedAt: "2026-06-08T20:30:00+05:30"
 year: 2013
 estimatedMinutes: 8
 principle: |

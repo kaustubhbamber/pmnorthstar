@@ -3,7 +3,7 @@ slug: netflix-dvd-streaming-bet-2007
 caseStudySlug: netflix-dvd-to-streaming
 type: historical
 category: strategic
-publishedAt: "2026-08-14T20:30:00+05:30"
+publishedAt: "2026-08-17T20:30:00+05:30"
 year: 2007
 estimatedMinutes: 7
 principle: |

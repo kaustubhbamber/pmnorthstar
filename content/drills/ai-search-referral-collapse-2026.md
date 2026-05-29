@@ -2,7 +2,7 @@
 slug: ai-search-referral-collapse-2026
 type: current
 category: growth
-publishedAt: "2026-08-10T20:30:00+05:30"
+publishedAt: "2026-08-13T20:30:00+05:30"
 estimatedMinutes: 6
 principle: |
   When the distribution channel that built you starts shrinking, the

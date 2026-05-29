@@ -3,7 +3,7 @@ slug: linear-pricing-2019
 caseStudySlug: linear-brand-from-day-one
 type: historical
 category: pricing
-publishedAt: "2026-06-26T20:30:00+05:30"
+publishedAt: "2026-06-29T20:30:00+05:30"
 year: 2019
 estimatedMinutes: 6
 principle: |

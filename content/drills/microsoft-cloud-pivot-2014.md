@@ -3,7 +3,7 @@ slug: microsoft-cloud-pivot-2014
 caseStudySlug: microsoft-cloud-turnaround
 type: historical
 category: strategic
-publishedAt: "2026-08-28T20:30:00+05:30"
+publishedAt: "2026-08-31T20:30:00+05:30"
 year: 2014
 estimatedMinutes: 7
 principle: |
