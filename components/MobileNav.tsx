@@ -9,6 +9,7 @@ import {
   Layers,
   Sparkles,
   Gauge,
+  Brain,
 } from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { playlists } from "@/data/learn";
@@ -76,9 +77,32 @@ export function MobileNav({ activeNav, onNavChange }: MobileNavProps) {
         );
       })}
 
-      {/* CheckIt — site readiness scorecard. Pinned at chip position
-          3 with NEW badge so the tool gets discovered alongside the
-          content sections. */}
+      {/* SimulateIt — newest tool, pinned at chip position 3 with the
+          NEW badge so it gets the discovery moment. Pink #DB2777
+          matches the home banner card + sidebar treatment. */}
+      <Link
+        href="/simulate"
+        className="chip flex-shrink-0 inline-flex items-center gap-1.5"
+        style={{
+          borderColor: "rgba(219, 39, 119, 0.4)",
+          background: "rgba(219, 39, 119, 0.08)",
+        }}
+      >
+        <Brain size={11} strokeWidth={1.6} style={{ color: "#DB2777" }} />
+        <span style={{ color: "var(--text-primary)" }}>SimulateIt</span>
+        <span
+          className="text-[9px] font-semibold px-1 rounded"
+          style={{
+            background: "#DB2777",
+            color: "#fff",
+            letterSpacing: "0.04em",
+          }}
+        >
+          NEW
+        </span>
+      </Link>
+
+      {/* CheckIt — site readiness scorecard. */}
       <Link
         href="/checkit"
         className="chip flex-shrink-0 inline-flex items-center gap-1.5"
@@ -89,19 +113,9 @@ export function MobileNav({ activeNav, onNavChange }: MobileNavProps) {
       >
         <Gauge size={11} strokeWidth={1.6} style={{ color: "var(--brand-primary)" }} />
         <span style={{ color: "var(--text-primary)" }}>CheckIt</span>
-        <span
-          className="text-[9px] font-semibold px-1 rounded"
-          style={{
-            background: "var(--brand-primary)",
-            color: "#fff",
-            letterSpacing: "0.04em",
-          }}
-        >
-          NEW
-        </span>
       </Link>
 
-      {/* AI Decoded — editorial AI section, sits next to CheckIt. */}
+      {/* AI Decoded — editorial AI section, sits next to the tools. */}
       <Link
         href="/ai-decoded"
         className="chip flex-shrink-0 inline-flex items-center gap-1.5"
