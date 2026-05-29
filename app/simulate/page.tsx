@@ -170,12 +170,13 @@ function FeaturedDrillCard({ drill }: { drill: Drill }) {
           {drill.intro.split("\n\n")[0]}
         </p>
 
-        <span
-          className="inline-flex items-center gap-1.5 text-sm font-semibold transition-transform group-hover:translate-x-0.5"
-          style={{ color: "var(--brand-primary)" }}
-        >
+        <span className="btn-primary group">
           Play this drill
-          <ArrowUpRight size={14} strokeWidth={2} />
+          <ArrowUpRight
+            size={14}
+            strokeWidth={1.8}
+            className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
         </span>
       </div>
     </Link>
