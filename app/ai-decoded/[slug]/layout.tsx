@@ -7,6 +7,10 @@ import {
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 
+// ISR: refresh metadata/JSON-LD hourly so a scheduled article's SEO data
+// appears on its publish date without a redeploy.
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   return getAllAIDecodedSlugs().map((slug) => ({ slug }));
 }

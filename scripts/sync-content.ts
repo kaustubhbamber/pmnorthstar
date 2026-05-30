@@ -82,6 +82,7 @@ function syncTopics() {
       fields.push(`    keywords: ${tsArr(d.keywords, 6)}`);
       fields.push(`    accentColor: ${ts(d.accentColor)}`);
       fields.push(`    caseStudyIds: ${tsArr(d.caseStudyIds, 6)}`);
+      if (d.publishedAt) fields.push(`    publishedAt: ${ts(d.publishedAt)}`);
       if (d.faqs) {
         fields.push(`    faqs: ${tsObjArr(d.faqs, 6)}`);
       }
@@ -105,6 +106,10 @@ export interface Topic {
   keywords: string[];
   accentColor: string;
   caseStudyIds: string[];
+  // ISO date. Optional: a topic with no publishedAt is always live
+  // (legacy entries predate scheduling). A future date keeps the topic
+  // hidden until then in production. Dev sees everything.
+  publishedAt?: string;
   faqs?: TopicFAQ[];
 }
 
@@ -112,8 +117,16 @@ export const topics: Topic[] = [
 ${body},
 ];
 
-export const getTopicBySlug = (slug: string): Topic | undefined =>
-  topics.find((t) => t.slug === slug);
+export const isTopicPublished = (t: Topic, now: Date = new Date()): boolean =>
+  !t.publishedAt || process.env.NODE_ENV !== "production" || new Date(t.publishedAt) <= now;
+
+export const publishedTopics = (now: Date = new Date()): Topic[] =>
+  topics.filter((t) => isTopicPublished(t, now));
+
+export const getTopicBySlug = (slug: string): Topic | undefined => {
+  const t = topics.find((x) => x.slug === slug);
+  return t && isTopicPublished(t) ? t : undefined;
+};
 `;
   fs.writeFileSync(path.join(DATA, "topics.ts"), out, "utf8");
   console.log(`✓ data/topics.ts (${entries.length} entries)`);
@@ -138,6 +151,7 @@ function syncComparisons() {
       fields.push(`    keywords: ${tsArr(d.keywords, 6)}`);
       fields.push(`    accentColor: ${ts(d.accentColor)}`);
       fields.push(`    rows: ${tsObjArr(d.rows, 6)}`);
+      if (d.publishedAt) fields.push(`    publishedAt: ${ts(d.publishedAt)}`);
       if (d.faqs) fields.push(`    faqs: ${tsObjArr(d.faqs, 6)}`);
       return `  {\n${fields.join(",\n")},\n  }`;
     })
@@ -162,6 +176,9 @@ export interface Comparison {
   keywords: string[];
   accentColor: string;
   rows: Array<{ label: string; a: string; b: string }>;
+  // ISO date. Optional: no publishedAt = always live. A future date
+  // hides the comparison until then in production (dev sees all).
+  publishedAt?: string;
   faqs?: ComparisonFAQ[];
 }
 
@@ -169,8 +186,16 @@ export const comparisons: Comparison[] = [
 ${body},
 ];
 
-export const getComparisonBySlug = (slug: string): Comparison | undefined =>
-  comparisons.find((c) => c.slug === slug);
+export const isComparisonPublished = (c: Comparison, now: Date = new Date()): boolean =>
+  !c.publishedAt || process.env.NODE_ENV !== "production" || new Date(c.publishedAt) <= now;
+
+export const publishedComparisons = (now: Date = new Date()): Comparison[] =>
+  comparisons.filter((c) => isComparisonPublished(c, now));
+
+export const getComparisonBySlug = (slug: string): Comparison | undefined => {
+  const c = comparisons.find((x) => x.slug === slug);
+  return c && isComparisonPublished(c) ? c : undefined;
+};
 `;
   fs.writeFileSync(path.join(DATA, "comparisons.ts"), out, "utf8");
   console.log(`✓ data/comparisons.ts (${entries.length} entries)`);
@@ -327,6 +352,7 @@ function syncCaseStudies() {
       fields.push(`    content: ${ts(e.body)}`);
       fields.push(`    logo: ${ts(d.logo)}`);
       if (d.region) fields.push(`    region: ${ts(d.region)}`);
+      if (d.publishedAt) fields.push(`    publishedAt: ${ts(d.publishedAt)}`);
       return `  {\n${fields.join(",\n")},\n  }`;
     })
     .join(",\n");
@@ -354,6 +380,13 @@ export interface CaseStudy {
   content: string;
   logo: string;
   region?: "India";
+  // ISO date. Optional: no publishedAt = always live (legacy entries
+  // predate scheduling). A future date keeps the study hidden until then
+  // in production — getCaseStudyById/BySlug return undefined for it, so it
+  // also disappears from topics, comparisons and related links. Dev sees
+  // everything. Detail/list pages are force-dynamic so the date takes
+  // effect at request time without a redeploy (mirrors SimulateIt drills).
+  publishedAt?: string;
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -366,14 +399,26 @@ export const caseStudyCategories: CaseStudyCategory[] = [
   "All", "Product", "Growth", "Strategy", "Design", "Failure",
 ];
 
-export const getCaseStudiesByCategory = (cat: CaseStudyCategory) =>
-  cat === "All" ? caseStudies : caseStudies.filter((c) => c.category === cat);
+export const isCaseStudyPublished = (c: CaseStudy, now: Date = new Date()): boolean =>
+  !c.publishedAt || process.env.NODE_ENV !== "production" || new Date(c.publishedAt) <= now;
 
-export const getCaseStudyById = (id: string): CaseStudy | undefined =>
-  caseStudies.find((c) => c.id === id);
+// Case studies whose publishedAt has passed (or have none). Use this for
+// every listing/browse surface so scheduled studies stay hidden until live.
+export const publishedCaseStudies = (now: Date = new Date()): CaseStudy[] =>
+  caseStudies.filter((c) => isCaseStudyPublished(c, now));
+
+export const getCaseStudiesByCategory = (cat: CaseStudyCategory) =>
+  (cat === "All" ? publishedCaseStudies() : publishedCaseStudies().filter((c) => c.category === cat));
+
+// Resolves by id but hides not-yet-published studies, so cross-references
+// (topics, comparisons, related, books) inherit the schedule for free.
+export const getCaseStudyById = (id: string): CaseStudy | undefined => {
+  const c = caseStudies.find((x) => x.id === id);
+  return c && isCaseStudyPublished(c) ? c : undefined;
+};
 
 export const getIndianCaseStudies = (): CaseStudy[] =>
-  caseStudies.filter((c) => c.region === "India");
+  caseStudies.filter((c) => c.region === "India" && isCaseStudyPublished(c));
 
 // Legacy slug map — keeps URL stability after the markdown migration.
 const SLUG_MAP: Record<string, string> = {
@@ -389,7 +434,7 @@ export const getCaseStudySlug = (id: string): string =>
 
 export const getCaseStudyBySlug = (slug: string): CaseStudy | undefined => {
   const id = ID_BY_SLUG[slug];
-  return id ? getCaseStudyById(id) : undefined;
+  return id != null ? getCaseStudyById(id) : undefined;
 };
 
 // True if param looks like a legacy cs-X identifier
@@ -523,6 +568,19 @@ export interface AIDecodedManifestEntry {
 export const aiDecodedManifest: AIDecodedManifestEntry[] = [
 ${items},
 ];
+
+// Manifest entries whose publishedAt has passed, newest first. The full
+// manifest includes future ("planned release") articles for build-time
+// completeness; this filters them out so client surfaces (home search,
+// hero "latest" link) never point at an article whose detail page is
+// still gated. Dev sees everything. Client-safe (no fs) unlike
+// lib/ai-decoded.ts.
+export const publishedAIDecoded = (
+  now: Date = new Date()
+): AIDecodedManifestEntry[] =>
+  aiDecodedManifest.filter(
+    (a) => process.env.NODE_ENV !== "production" || new Date(a.publishedAt) <= now
+  );
 `;
   fs.writeFileSync(path.join(DATA, "aiDecodedManifest.ts"), out, "utf8");
   console.log(`✓ data/aiDecodedManifest.ts (${entries.length} entries)`);

@@ -20,6 +20,9 @@ export interface Comparison {
   keywords: string[];
   accentColor: string;
   rows: Array<{ label: string; a: string; b: string }>;
+  // ISO date. Optional: no publishedAt = always live. A future date
+  // hides the comparison until then in production (dev sees all).
+  publishedAt?: string;
   faqs?: ComparisonFAQ[];
 }
 
@@ -438,5 +441,13 @@ export const comparisons: Comparison[] = [
   },
 ];
 
-export const getComparisonBySlug = (slug: string): Comparison | undefined =>
-  comparisons.find((c) => c.slug === slug);
+export const isComparisonPublished = (c: Comparison, now: Date = new Date()): boolean =>
+  !c.publishedAt || process.env.NODE_ENV !== "production" || new Date(c.publishedAt) <= now;
+
+export const publishedComparisons = (now: Date = new Date()): Comparison[] =>
+  comparisons.filter((c) => isComparisonPublished(c, now));
+
+export const getComparisonBySlug = (slug: string): Comparison | undefined => {
+  const c = comparisons.find((x) => x.slug === slug);
+  return c && isComparisonPublished(c) ? c : undefined;
+};

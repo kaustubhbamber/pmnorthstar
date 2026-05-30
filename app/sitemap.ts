@@ -1,16 +1,20 @@
 import type { MetadataRoute } from "next";
 import {
-  caseStudies,
+  publishedCaseStudies,
   getCaseStudySlug,
   CASE_STUDIES_LAST_UPDATED,
 } from "@/data/caseStudies";
-import { topics } from "@/data/topics";
-import { comparisons } from "@/data/comparisons";
+import { publishedTopics } from "@/data/topics";
+import { publishedComparisons } from "@/data/comparisons";
 import { books, getBookSlug, BOOKS_LAST_UPDATED } from "@/data/books";
 import { getAllAIDecodedArticles } from "@/lib/ai-decoded";
 import { publishedDrills } from "@/data/drills";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
+
+// Revalidate hourly (ISR) so scheduled (future-dated) content enters the
+// sitemap on its publish date without a redeploy.
+export const revalidate = 3600;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Index-level pages reflect today (they aggregate dynamic content
@@ -55,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  for (const study of caseStudies) {
+  for (const study of publishedCaseStudies(now)) {
     routes.push({
       url: `${SITE_URL}/case-study/${getCaseStudySlug(study.id)}`,
       lastModified: casesUpdated,
@@ -65,7 +69,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   // Topic hubs — category-level pages aggregating related case studies.
-  for (const topic of topics) {
+  for (const topic of publishedTopics(now)) {
     routes.push({
       url: `${SITE_URL}/topics/${topic.slug}`,
       lastModified: now,
@@ -75,7 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   // Comparison pages — capture "X vs Y" search queries.
-  for (const cmp of comparisons) {
+  for (const cmp of publishedComparisons(now)) {
     routes.push({
       url: `${SITE_URL}/compare/${cmp.slug}`,
       lastModified: now,

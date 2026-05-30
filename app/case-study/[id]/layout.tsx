@@ -11,6 +11,10 @@ import { getCaseStudyFaqs } from "@/data/caseStudyFaqs";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pmnorthstar.in";
 
+// ISR: refresh hourly so a scheduled (future-dated) case study's page +
+// metadata go live on its publishedAt date without a redeploy.
+export const revalidate = 3600;
+
 // Prerender every case study at its slug URL (not cs-X).
 // The [id] route param now holds a slug; legacy cs-X params are
 // 301-redirected by the layout component below.

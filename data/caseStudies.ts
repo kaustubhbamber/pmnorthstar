@@ -18,6 +18,13 @@ export interface CaseStudy {
   content: string;
   logo: string;
   region?: "India";
+  // ISO date. Optional: no publishedAt = always live (legacy entries
+  // predate scheduling). A future date keeps the study hidden until then
+  // in production — getCaseStudyById/BySlug return undefined for it, so it
+  // also disappears from topics, comparisons and related links. Dev sees
+  // everything. Detail/list pages are force-dynamic so the date takes
+  // effect at request time without a redeploy (mirrors SimulateIt drills).
+  publishedAt?: string;
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -1261,14 +1268,26 @@ export const caseStudyCategories: CaseStudyCategory[] = [
   "All", "Product", "Growth", "Strategy", "Design", "Failure",
 ];
 
-export const getCaseStudiesByCategory = (cat: CaseStudyCategory) =>
-  cat === "All" ? caseStudies : caseStudies.filter((c) => c.category === cat);
+export const isCaseStudyPublished = (c: CaseStudy, now: Date = new Date()): boolean =>
+  !c.publishedAt || process.env.NODE_ENV !== "production" || new Date(c.publishedAt) <= now;
 
-export const getCaseStudyById = (id: string): CaseStudy | undefined =>
-  caseStudies.find((c) => c.id === id);
+// Case studies whose publishedAt has passed (or have none). Use this for
+// every listing/browse surface so scheduled studies stay hidden until live.
+export const publishedCaseStudies = (now: Date = new Date()): CaseStudy[] =>
+  caseStudies.filter((c) => isCaseStudyPublished(c, now));
+
+export const getCaseStudiesByCategory = (cat: CaseStudyCategory) =>
+  (cat === "All" ? publishedCaseStudies() : publishedCaseStudies().filter((c) => c.category === cat));
+
+// Resolves by id but hides not-yet-published studies, so cross-references
+// (topics, comparisons, related, books) inherit the schedule for free.
+export const getCaseStudyById = (id: string): CaseStudy | undefined => {
+  const c = caseStudies.find((x) => x.id === id);
+  return c && isCaseStudyPublished(c) ? c : undefined;
+};
 
 export const getIndianCaseStudies = (): CaseStudy[] =>
-  caseStudies.filter((c) => c.region === "India");
+  caseStudies.filter((c) => c.region === "India" && isCaseStudyPublished(c));
 
 // Legacy slug map — keeps URL stability after the markdown migration.
 const SLUG_MAP: Record<string, string> = {

@@ -8,6 +8,10 @@ import { SubscribeForm } from "@/components/SubscribeForm";
 import { SidebarShell } from "@/components/SidebarShell";
 import { solidColorFor } from "@/lib/category-colors";
 
+// ISR: re-render hourly so a scheduled (future-dated) article goes live on
+// its publishedAt date without a redeploy.
+export const revalidate = 3600;
+
 // Split rendered HTML at the </p> tag closest to `ratio` through the
 // article so we can inject a CTA mid-read. Keeps both halves valid HTML.
 function splitHtmlAtParagraph(

@@ -17,6 +17,10 @@ export interface Topic {
   keywords: string[];
   accentColor: string;
   caseStudyIds: string[];
+  // ISO date. Optional: a topic with no publishedAt is always live
+  // (legacy entries predate scheduling). A future date keeps the topic
+  // hidden until then in production. Dev sees everything.
+  publishedAt?: string;
   faqs?: TopicFAQ[];
 }
 
@@ -185,5 +189,13 @@ export const topics: Topic[] = [
   },
 ];
 
-export const getTopicBySlug = (slug: string): Topic | undefined =>
-  topics.find((t) => t.slug === slug);
+export const isTopicPublished = (t: Topic, now: Date = new Date()): boolean =>
+  !t.publishedAt || process.env.NODE_ENV !== "production" || new Date(t.publishedAt) <= now;
+
+export const publishedTopics = (now: Date = new Date()): Topic[] =>
+  topics.filter((t) => isTopicPublished(t, now));
+
+export const getTopicBySlug = (slug: string): Topic | undefined => {
+  const t = topics.find((x) => x.slug === slug);
+  return t && isTopicPublished(t) ? t : undefined;
+};
