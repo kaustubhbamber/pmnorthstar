@@ -7,8 +7,19 @@ import Link from "next/link";
 import { ArrowUpRight, Brain, Clock, Target } from "lucide-react";
 import { SidebarShell } from "@/components/SidebarShell";
 import { publishedDrills, type Drill } from "@/data/drills";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+// Site-wide drill-completion count for the hero social-proof line.
+// Best-effort — a DB hiccup returns 0 and the line simply doesn't render.
+async function totalPlays(): Promise<number> {
+  try {
+    return await prisma.simulateAttempt.count();
+  } catch {
+    return 0;
+  }
+}
 
 const TYPE_BADGE: Record<Drill["type"], { label: string; color: string }> = {
   historical: { label: "Historical", color: "#9B8FFF" },
@@ -16,13 +27,14 @@ const TYPE_BADGE: Record<Drill["type"], { label: string; color: string }> = {
   hypothetical: { label: "Hypothetical", color: "#F5C842" },
 };
 
-export default function SimulatePage() {
+export default async function SimulatePage() {
   // In dev, surface every drill regardless of publishedAt so authoring
   // doesn't require date-juggling. Production respects the schedule.
   const isDev = process.env.NODE_ENV !== "production";
   const cutoff = isDev ? new Date("2099-12-31") : new Date();
   const all = publishedDrills(cutoff);
   const featured = all[0];
+  const plays = await totalPlays();
 
   return (
     <SidebarShell>
@@ -66,6 +78,21 @@ export default function SimulatePage() {
           thinking, business judgement, and founder instinct. Two new drills
           every week.
         </p>
+
+        {plays > 0 && (
+          <p
+            className="text-xs font-mono uppercase mb-8 -mt-4"
+            style={{
+              color: "var(--text-faint)",
+              letterSpacing: "0.12em",
+            }}
+          >
+            <span style={{ color: "var(--brand-primary)" }}>
+              {plays.toLocaleString()}
+            </span>{" "}
+            {plays === 1 ? "drill played" : "drills played"} so far
+          </p>
+        )}
 
         {/* Featured drill card */}
         {featured ? (

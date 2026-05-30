@@ -19,7 +19,7 @@ import type { FetchCtx } from "./checks";
 import { DIMENSIONS } from "./dimensions";
 import type { AuditResult, DimensionResult } from "./types";
 import { bandFor } from "./types";
-import { fetchWithTimeout, normalizeUrl } from "./util";
+import { fetchWithTimeout, normalizeUrl, readCapped } from "./util";
 
 const HTML_TIMEOUT_MS = 12_000;
 
@@ -42,7 +42,7 @@ export async function runAudit(rawUrl: string): Promise<AuditResult> {
     status = res.status;
     headers = res.headers;
     finalUrl = new URL(res.url);
-    html = await res.text();
+    html = await readCapped(res);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "fetch failed";
     return fatalResult(url.toString(), `Could not load the URL (${msg}).`);

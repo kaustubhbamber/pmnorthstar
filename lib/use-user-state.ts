@@ -11,37 +11,30 @@ interface UserState {
 
 // Lightweight hook that fetches user + engagement state for the
 // SmartEngagementBlock decision (newsletter vs recommendations).
-// Cached in module memory for the page lifetime — auth state doesn't
-// change mid-session in practice, so no need to re-fetch.
-let cache: { fetched: boolean; state: UserState } = {
-  fetched: false,
-  state: { loading: true, isLoggedIn: false, hasEngaged: false },
-};
-
+// Re-fetches on every mount: auth state DOES change mid-session in this
+// SPA (login/logout via the modal without a full reload), so a persisted
+// module cache would strand engaged/logged-in users on the wrong variant
+// until a hard refresh. The calls are cheap and best-effort.
 export function useUserState(): UserState {
-  const [state, setState] = useState<UserState>(cache.state);
+  const [state, setState] = useState<UserState>({
+    loading: true,
+    isLoggedIn: false,
+    hasEngaged: false,
+  });
 
   useEffect(() => {
-    if (cache.fetched) {
-      setState(cache.state);
-      return;
-    }
     let cancelled = false;
     (async () => {
       try {
         const res = await fetch("/api/auth/me", { credentials: "include" });
         if (!res.ok) {
-          const next = { loading: false, isLoggedIn: false, hasEngaged: false };
-          cache = { fetched: true, state: next };
-          if (!cancelled) setState(next);
+          if (!cancelled) setState({ loading: false, isLoggedIn: false, hasEngaged: false });
           return;
         }
         const data = await res.json();
         const user = data?.user;
         if (!user) {
-          const next = { loading: false, isLoggedIn: false, hasEngaged: false };
-          cache = { fetched: true, state: next };
-          if (!cancelled) setState(next);
+          if (!cancelled) setState({ loading: false, isLoggedIn: false, hasEngaged: false });
           return;
         }
         // Probe saved/liked count to determine engagement.
@@ -53,18 +46,16 @@ export function useUserState(): UserState {
         const liked = likedRes && likedRes.ok ? await likedRes.json() : { items: [] };
         const engaged =
           (saved?.items?.length ?? 0) > 0 || (liked?.items?.length ?? 0) > 0;
-        const next: UserState = {
-          loading: false,
-          isLoggedIn: true,
-          hasEngaged: engaged,
-          userName: user.name,
-        };
-        cache = { fetched: true, state: next };
-        if (!cancelled) setState(next);
+        if (!cancelled) {
+          setState({
+            loading: false,
+            isLoggedIn: true,
+            hasEngaged: engaged,
+            userName: user.name,
+          });
+        }
       } catch {
-        const next = { loading: false, isLoggedIn: false, hasEngaged: false };
-        cache = { fetched: true, state: next };
-        if (!cancelled) setState(next);
+        if (!cancelled) setState({ loading: false, isLoggedIn: false, hasEngaged: false });
       }
     })();
     return () => {

@@ -1359,7 +1359,7 @@ export const getCaseStudySlug = (id: string): string =>
 
 export const getCaseStudyBySlug = (slug: string): CaseStudy | undefined => {
   const id = ID_BY_SLUG[slug];
-  return id ? getCaseStudyById(id) : undefined;
+  return id != null ? getCaseStudyById(id) : undefined;
 };
 
 // True if param looks like a legacy cs-X identifier

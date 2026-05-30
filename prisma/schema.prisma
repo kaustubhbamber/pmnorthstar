@@ -138,3 +138,24 @@ model DrillAttempt {
   @@index([drillSlug])
   @@map("drill_attempts")
 }
+
+// One row per SimulateIt drill completion — anonymous, no User
+// relation, mirroring CheckitAudit. Most players aren't logged in, and
+// tracking who ran what would be privacy-hostile. This is deliberately
+// separate from DrillAttempt: that table is a logged-in user's saved
+// history; this one only answers "how many drills have been played?"
+// for the social-proof counter on the landing + drill intro. Query via
+// Supabase SQL Editor:
+//   SELECT COUNT(*) FROM simulate_attempts;
+//   SELECT drill_slug, COUNT(*) FROM simulate_attempts GROUP BY drill_slug ORDER BY 2 DESC;
+model SimulateAttempt {
+  id          String   @id @default(uuid())
+  drillSlug   String   @map("drill_slug")
+  score       Int
+  maxPossible Int      @map("max_possible")
+  completedAt DateTime @default(now()) @map("completed_at")
+
+  @@index([completedAt])
+  @@index([drillSlug])
+  @@map("simulate_attempts")
+}

@@ -13,7 +13,7 @@
 // progress. Auth-bound persistence (streaks, lifetime stats) is layered
 // on later — for now it's anonymous play only.
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -115,8 +115,14 @@ export function SimulatePlayer({ drill }: { drill: Drill }) {
 
   const currentNode = drill.nodes[state.currentNodeId];
 
+  // Guards a single completion-log per drill run. Reset whenever a run
+  // (re)starts. Prevents a double-tap on "Continue" from logging two
+  // attempts into the usage counter.
+  const loggedCompletionRef = useRef(false);
+
   const begin = useCallback(() => {
     track({ name: "simulateit_drill_started", drill_slug: drill.slug });
+    loggedCompletionRef.current = false;
     setState({
       phase: "decision",
       currentNodeId: "start",
@@ -128,6 +134,9 @@ export function SimulatePlayer({ drill }: { drill: Drill }) {
   const selectOption = useCallback(
     (optionIndex: number) => {
       if (!currentNode || !currentNode.options) return;
+      // Ignore taps that arrive after we've already left the decision
+      // phase (slow double-click).
+      if (state.phase !== "decision") return;
       const opt = currentNode.options[optionIndex];
       const entry: HistoryEntry = {
         nodeId: state.currentNodeId,
@@ -142,45 +151,69 @@ export function SimulatePlayer({ drill }: { drill: Drill }) {
         option_index: optionIndex,
         points: opt.points,
       });
-      setState((s) => ({
-        ...s,
-        phase: "reveal",
-        history: [...s.history, entry],
-      }));
+      setState((s) => {
+        // Atomic guard against a rapid double-tap firing this twice before
+        // re-render. Without it, the second tap appends a duplicate history
+        // entry, so the reveal header reads "Decision 2" while the body is
+        // still Decision 1's content.
+        if (s.phase !== "decision") return s;
+        return { ...s, phase: "reveal", history: [...s.history, entry] };
+      });
     },
-    [currentNode, state.currentNodeId, drill.slug]
+    [currentNode, state.currentNodeId, state.phase, drill.slug]
   );
 
   const advance = useCallback(() => {
     if (!currentNode || !currentNode.options) return;
+    // Ignore a Continue tap that lands after we've already advanced.
+    if (state.phase !== "reveal") return;
     const last = state.history[state.history.length - 1];
     if (!last) return;
     const nextId = currentNode.options[last.optionIndex].leadsTo;
     const nextNode = drill.nodes[nextId];
     if (!nextNode) return;
     if (nextNode.isOutcome) {
-      track({
-        name: "simulateit_drill_completed",
-        drill_slug: drill.slug,
-        node_id: nextId,
-        decisions: state.history.length,
-      });
-      setState((s) => ({
-        ...s,
-        phase: "outcome",
-        currentNodeId: nextId,
-      }));
+      // Side effects (analytics + usage-counter log) run once per run,
+      // even if Continue is double-tapped, via the ref guard.
+      if (!loggedCompletionRef.current) {
+        loggedCompletionRef.current = true;
+        track({
+          name: "simulateit_drill_completed",
+          drill_slug: drill.slug,
+          node_id: nextId,
+          decisions: state.history.length,
+        });
+        // Log an anonymous completion for the usage counter (mirrors
+        // CheckIt). Fire-and-forget — the browser keeps the request alive
+        // and a logging failure must never interrupt the outcome screen.
+        const finalScore = state.history.reduce((sum, h) => sum + h.points, 0);
+        const finalMax = state.history.reduce((sum, h) => {
+          const node = drill.nodes[h.nodeId];
+          if (!node?.options) return sum;
+          return sum + Math.max(...node.options.map((o) => o.points));
+        }, 0);
+        fetch("/api/simulate/log-attempt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            drillSlug: drill.slug,
+            score: finalScore,
+            maxPossible: finalMax,
+          }),
+          keepalive: true,
+        }).catch(() => {
+          /* swallow */
+        });
+      }
+      setState((s) => (s.phase !== "reveal" ? s : { ...s, phase: "outcome", currentNodeId: nextId }));
     } else {
-      setState((s) => ({
-        ...s,
-        phase: "decision",
-        currentNodeId: nextId,
-      }));
+      setState((s) => (s.phase !== "reveal" ? s : { ...s, phase: "decision", currentNodeId: nextId }));
     }
-  }, [currentNode, state.history, drill.nodes, drill.slug]);
+  }, [currentNode, state.history, state.phase, drill.nodes, drill.slug]);
 
   const restart = useCallback(() => {
     track({ name: "simulateit_drill_restarted", drill_slug: drill.slug });
+    loggedCompletionRef.current = false;
     if (typeof window !== "undefined") {
       localStorage.removeItem(storageKey(drill.slug));
     }
@@ -318,6 +351,20 @@ function IntroView({
   drill: Drill;
   onBegin: () => void;
 }) {
+  // Per-drill play count for social proof at the point of attempt —
+  // the SimulateIt analog to CheckIt's "X sites scored" hero line.
+  // Best-effort: if the endpoint fails or returns zero, the line just
+  // doesn't render.
+  const [plays, setPlays] = useState<number | null>(null);
+  useEffect(() => {
+    fetch(`/api/simulate/stats?slug=${encodeURIComponent(drill.slug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && typeof d.total === "number" && setPlays(d.total))
+      .catch(() => {
+        /* swallow */
+      });
+  }, [drill.slug]);
+
   return (
     <div>
       <h1
@@ -332,7 +379,7 @@ function IntroView({
       </h1>
 
       <div
-        className="text-[10px] font-mono uppercase mb-5 inline-flex items-center gap-2"
+        className="text-[10px] font-mono uppercase mb-5 inline-flex items-center gap-2 flex-wrap"
         style={{
           color: "var(--text-faint)",
           letterSpacing: "0.14em",
@@ -341,6 +388,14 @@ function IntroView({
         <span>~{drill.estimatedMinutes} minutes</span>
         <span>•</span>
         <span>{drill.category}</span>
+        {plays !== null && plays > 0 && (
+          <>
+            <span>•</span>
+            <span style={{ color: "var(--brand-primary)" }}>
+              {plays.toLocaleString()} {plays === 1 ? "play" : "plays"}
+            </span>
+          </>
+        )}
       </div>
 
       {drill.intro.split("\n\n").map((para, i) => (

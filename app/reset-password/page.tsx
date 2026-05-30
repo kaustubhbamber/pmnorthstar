@@ -196,11 +196,14 @@ function ResetPasswordForm() {
 }
 
 export default function ResetPasswordPage() {
-  const [isDark, setIsDark] = useState(false);
+  // Lazy-init from storage so the first paint already matches the saved
+  // theme — initializing to false then flipping in the effect caused a
+  // light-mode flash for dark-mode users on every load.
+  const [isDark] = useState<boolean>(
+    () => typeof window !== "undefined" && localStorage.getItem("theme") === "dark"
+  );
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") setIsDark(true);
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   }, [isDark]);
 

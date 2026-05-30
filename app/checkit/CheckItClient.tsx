@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -70,6 +70,9 @@ export default function CheckItClient() {
   const [input, setInput] = useState("");
   const [view, setView] = useState<ViewState>({ kind: "idle" });
   const [stats, setStats] = useState<CheckitStats | null>(null);
+  // Sequence id so a slow earlier audit can't overwrite a newer one's
+  // result (e.g. submit a slow site, then click a fast example URL).
+  const reqIdRef = useRef(0);
 
   // Pull aggregate usage counts for the hero social-proof line. Best-
   // effort — if the endpoint fails or returns zeros, the line just
@@ -84,6 +87,7 @@ export default function CheckItClient() {
   }, []);
 
   const runAudit = useCallback(async (url: string) => {
+    const reqId = ++reqIdRef.current;
     setView({ kind: "loading", url });
     // Reflect in address bar so the result is shareable.
     const params = new URLSearchParams({ url });
@@ -95,6 +99,8 @@ export default function CheckItClient() {
     try {
       const res = await fetch(`/api/checkit/audit?url=${encodeURIComponent(url)}`);
       const data = await res.json();
+      // Drop the result if a newer audit has since been kicked off.
+      if (reqId !== reqIdRef.current) return;
       if (!res.ok || data.error) {
         setView({ kind: "error", message: data.error || "Audit failed." });
         return;
@@ -112,6 +118,7 @@ export default function CheckItClient() {
         band: result.band,
       });
     } catch {
+      if (reqId !== reqIdRef.current) return;
       setView({ kind: "error", message: "Network error. Try again." });
     }
   }, []);

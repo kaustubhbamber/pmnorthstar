@@ -39,7 +39,20 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     setError("");
   };
 
+  // Close on Escape, mirroring the backdrop click — without this the
+  // dialog can't be dismissed from the keyboard.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const handleSubmit = async () => {
+    // Guard against re-entry — the Enter key path (and a fast second
+    // click) could otherwise fire concurrent signup/login requests.
+    if (loading) return;
     setLoading(true);
     setError("");
 
@@ -99,7 +112,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSubmit();
+    if (e.key === "Enter" && !loading) handleSubmit();
   };
 
   return (
@@ -112,6 +125,8 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       >
         {/* Modal */}
         <div
+          role="dialog"
+          aria-modal="true"
           className="relative w-full max-w-md rounded-2xl p-5 sm:p-8"
           style={{
             background: "var(--page-bg)",
