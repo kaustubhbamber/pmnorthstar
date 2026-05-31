@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Compass } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { publishedCaseStudies } from "@/data/caseStudies";
 
 export default function NotFound() {
+  const caseStudiesCount = publishedCaseStudies().length;
+
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -77,7 +80,7 @@ export default function NotFound() {
             </Link>
             <Link href="/#casestudies" className="btn-accent-soft group">
               <BookOpen size={14} strokeWidth={1.8} />
-              Browse 65 case studies
+              Browse {caseStudiesCount} case studies
             </Link>
           </div>
         </div>

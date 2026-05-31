@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { SidebarShell } from "@/components/SidebarShell";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { publishedCaseStudies } from "@/data/caseStudies";
 import { DIMENSIONS } from "@/lib/checkit/dimensions";
 import { BAND_COPY } from "@/lib/checkit/types";
 import type { AuditResult, DimensionResult, Band } from "@/lib/checkit/types";
@@ -888,7 +889,7 @@ function FooterCta() {
         Want to see how the best products got the basics right?
       </p>
       <p className="text-xs mb-3" style={{ color: "var(--text-muted)" }}>
-        northstar has 64+ case studies on how Razorpay, Stripe, Notion, and
+        northstar has {publishedCaseStudies().length}+ case studies on how Razorpay, Stripe, Notion, and
         others built products that converted from day one.
       </p>
       <Link
