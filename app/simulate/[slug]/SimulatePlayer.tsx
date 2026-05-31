@@ -785,20 +785,43 @@ function OutcomeView({
     return `SimulateIt — ${drillTitle(drill)}\n${blocks} ${totalScore}/${totalMax}`;
   }, [history, drill, totalScore, totalMax]);
 
+  // Compact G/Y/R encoding of the same blocks, for the shareable result
+  // URL → OG score card. Emoji don't survive URL params cleanly, so the
+  // /api/simulate/og route reconstructs the squares from these letters.
+  const letterBlocks = useMemo(() => {
+    return history
+      .map((h) => {
+        const node = drill.nodes[h.nodeId];
+        if (!node?.options) return "W";
+        const max = Math.max(...node.options.map((o) => o.points));
+        if (h.points === max) return "G";
+        if (h.points >= max / 2) return "Y";
+        return "R";
+      })
+      .join("");
+  }, [history, drill]);
+
   const handleShare = useCallback(() => {
     track({ name: "simulateit_shared", drill_slug: drill.slug });
-    const text = shareString + `\n\nnorthstar — pmnorthstar.in/simulate/${drill.slug}`;
-    if (navigator.share) {
+    // Share the /result interstitial so the link unfurls with a score
+    // card; the emoji recap still carries the score in the text body.
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://pmnorthstar.in";
+    const shareUrl = `${origin}/simulate/${drill.slug}/result?s=${totalScore}&m=${totalMax}&b=${letterBlocks}`;
+    const text = shareString + `\n\n${shareUrl}`;
+    if (typeof navigator !== "undefined" && navigator.share) {
       navigator
-        .share({ title: `SimulateIt — ${drillTitle(drill)}`, text })
+        .share({ title: `SimulateIt — ${drillTitle(drill)}`, text, url: shareUrl })
         .catch(() => {
           /* user cancelled */
         });
-    } else if (navigator.clipboard) {
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(text);
       alert("Result copied to clipboard");
     }
-  }, [shareString, drill]);
+  }, [shareString, letterBlocks, drill, totalScore, totalMax]);
 
   return (
     <div>

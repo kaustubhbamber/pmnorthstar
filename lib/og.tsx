@@ -380,6 +380,259 @@ export function checkitOgTemplate({
   );
 }
 
+// ── SimulateIt result share image ──────────────────────────────────────
+//
+// Score card for /simulate/[slug]/result?s=&m=&b=. Dark card with the
+// SimulateIt hot-pink accent, a big performance-colored score, a row of
+// G/Y/R decision squares (Wordle-style), and the drill title. The blocks
+// are passed as a compact G/Y/R/W string because emoji don't survive URL
+// params cleanly.
+
+const SIM_BLOCK_COLOR: Record<string, string> = {
+  G: "#22C55E", // best option
+  Y: "#EAB308", // partial
+  R: "#EF4444", // weak
+  W: "#3F3F46", // neutral / non-scored
+};
+
+// Score color tracks the same bands as the in-app result screen.
+function simScoreColor(pct: number): string {
+  if (pct >= 0.85) return "#22C55E";
+  if (pct >= 0.7) return "#4ADE80";
+  if (pct >= 0.5) return "#EAB308";
+  if (pct >= 0.3) return "#F97316";
+  return "#EF4444";
+}
+
+function simVerdict(pct: number): string {
+  if (pct >= 0.85) return "Founder-grade";
+  if (pct >= 0.7) return "Strong call";
+  if (pct >= 0.5) return "Solid instincts";
+  if (pct >= 0.3) return "Played it safe";
+  return "Wrong bet";
+}
+
+export interface SimulateOGProps {
+  title: string; // drill title
+  score: number;
+  max: number;
+  blocks: string; // compact "GGYRG" string, one char per decision
+}
+
+export function simulateOgTemplate({
+  title,
+  score,
+  max,
+  blocks,
+}: SimulateOGProps) {
+  const pct = max > 0 ? score / max : 0;
+  const verdict = simVerdict(pct);
+  const scoreColor = simScoreColor(pct);
+  const squares = blocks.split("").slice(0, 14);
+  return (
+    <div
+      style={{
+        background: "#0A0A0F",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "64px 80px",
+        position: "relative",
+      }}
+    >
+      {/* Hot-pink glow, top-right — the SimulateIt brand accent */}
+      <div
+        style={{
+          position: "absolute",
+          top: -120,
+          right: -120,
+          width: 380,
+          height: 380,
+          borderRadius: 9999,
+          background: "rgba(219,39,119,0.22)",
+          filter: "blur(90px)",
+          display: "flex",
+        }}
+      />
+
+      {/* Eyebrow */}
+      <div style={{ display: "flex", alignItems: "center", gap: 14, zIndex: 1 }}>
+        <div
+          style={{
+            width: 12,
+            height: 12,
+            borderRadius: 9999,
+            background: "#DB2777",
+            display: "flex",
+          }}
+        />
+        <span
+          style={{
+            color: "#DB2777",
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+          }}
+        >
+          northstar · simulateit
+        </span>
+      </div>
+
+      {/* Middle: big score + verdict, then the decision squares */}
+      <div
+        style={{ display: "flex", flexDirection: "column", gap: 26, zIndex: 1 }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 28 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              fontWeight: 800,
+              letterSpacing: "-0.05em",
+              lineHeight: 0.9,
+              color: scoreColor,
+            }}
+          >
+            <span style={{ fontSize: 240 }}>{score}</span>
+            <span
+              style={{
+                fontSize: 52,
+                opacity: 0.6,
+                marginLeft: 10,
+                fontWeight: 600,
+                color: "#FFFFFF",
+              }}
+            >
+              /{max}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              paddingBottom: 28,
+              gap: 6,
+            }}
+          >
+            <span
+              style={{
+                fontSize: 52,
+                fontWeight: 700,
+                letterSpacing: "-0.025em",
+                lineHeight: 1,
+                color: "#FFFFFF",
+              }}
+            >
+              {verdict}
+            </span>
+            <span
+              style={{
+                fontSize: 24,
+                color: "rgba(255,255,255,0.6)",
+                lineHeight: 1.3,
+              }}
+            >
+              on a real founder decision
+            </span>
+          </div>
+        </div>
+
+        {squares.length > 0 && (
+          <div style={{ display: "flex", gap: 10 }}>
+            {squares.map((c, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 46,
+                  height: 46,
+                  borderRadius: 8,
+                  background: SIM_BLOCK_COLOR[c] || "#3F3F46",
+                  display: "flex",
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Bottom: drill title (left) + CTA (right) */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          gap: 32,
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 6,
+            maxWidth: 680,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 18,
+              fontWeight: 600,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.5)",
+            }}
+          >
+            The drill
+          </span>
+          <span
+            style={{
+              fontSize: title.length > 40 ? 34 : 42,
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+              color: "#FFFFFF",
+              lineHeight: 1.05,
+            }}
+          >
+            {title}
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: 4,
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 18,
+              color: "rgba(255,255,255,0.55)",
+              fontWeight: 500,
+            }}
+          >
+            Can you beat it?
+          </span>
+          <span
+            style={{
+              fontSize: 26,
+              color: "#DB2777",
+              fontWeight: 700,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            pmnorthstar.in/simulate
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Promo card for /checkit when there's no specific URL being shared
 // (someone shares the bare /checkit page). Brand-red background.
 export function checkitPromoTemplate() {
