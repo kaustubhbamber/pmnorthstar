@@ -34,6 +34,7 @@ import type {
   DrillOption,
 } from "@/data/drills";
 import { track } from "@/lib/track";
+import { SubscribeForm } from "@/components/SubscribeForm";
 
 type Phase = "intro" | "decision" | "reveal" | "outcome";
 
@@ -1062,6 +1063,15 @@ function OutcomeView({
           More drills
           <ArrowUpRight size={14} strokeWidth={2} />
         </Link>
+      </div>
+
+      <div className="mt-8">
+        <SubscribeForm
+          variant="card"
+          surface="simulateit_result"
+          headline="Get a new drill every week."
+          subhead="Branching decision drills from real startup moments, straight to your inbox. Free. No paywall."
+        />
       </div>
     </div>
   );

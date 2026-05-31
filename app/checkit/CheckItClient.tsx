@@ -12,6 +12,7 @@ import {
   Share2,
 } from "lucide-react";
 import { SidebarShell } from "@/components/SidebarShell";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { DIMENSIONS } from "@/lib/checkit/dimensions";
 import { BAND_COPY } from "@/lib/checkit/types";
 import type { AuditResult, DimensionResult, Band } from "@/lib/checkit/types";
@@ -484,6 +485,13 @@ function ResultView({ result }: { result: AuditResult }) {
       </div>
 
       <FooterCta />
+
+      <SubscribeForm
+        variant="card"
+        surface="checkit_result"
+        headline="Get a teardown like this every week."
+        subhead="Product deep dives on how the best sites get the basics right. Free. No paywall."
+      />
     </div>
   );
 }

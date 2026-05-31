@@ -5,11 +5,20 @@
 
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getDrillBySlug } from "@/data/drills";
+import { getDrillBySlug, publishedDrills } from "@/data/drills";
 import { SidebarShell } from "@/components/SidebarShell";
 import { SimulatePlayer } from "./SimulatePlayer";
 
-export const dynamic = "force-dynamic";
+// ISR: pre-render published drills as static HTML and revalidate hourly.
+// Future-dated drills aren't pre-built — they render on-demand, hit the
+// publishedAt gate below (404), and go live within ~1h of their date once
+// the revalidation window turns over. Matches the case-study/topic/compare
+// scheduled-publishing path; replaces the old force-dynamic render.
+export const revalidate = 3600;
+
+export function generateStaticParams() {
+  return publishedDrills().map((drill) => ({ slug: drill.slug }));
+}
 
 interface PageProps {
   params: { slug: string };
