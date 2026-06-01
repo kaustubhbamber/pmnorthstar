@@ -166,7 +166,7 @@ export default async function SimulateMePage() {
 
   return (
     <SidebarShell>
-      <div className="px-4 sm:px-6 py-8 sm:py-12 max-w-3xl mx-auto">
+      <div className="px-4 sm:px-6 py-8 sm:py-12 max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-2 mb-2">
           <Link

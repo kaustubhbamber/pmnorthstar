@@ -29,12 +29,12 @@ export default function AboutPage() {
       <main className="flex-1">
         {/* Hero — neutral background, brand-red eyebrow accent only */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-16 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-3xl">
+          <div className="w-full max-w-4xl">
             <Breadcrumbs
-              className="mb-5"
+              className="mb-6"
               items={[
                 { label: "northstar", href: "/" },
                 { label: "About" },
@@ -48,7 +48,7 @@ export default function AboutPage() {
               <ArrowLeft size={14} strokeWidth={1.6} />
               Back to the library
             </Link>
-            <div className="flex items-center gap-2.5 mb-4">
+            <div className="flex items-center gap-2.5 mb-5">
               <span
                 className="w-5 h-px"
                 style={{ background: "var(--brand-primary)" }}
@@ -64,7 +64,7 @@ export default function AboutPage() {
               </span>
             </div>
             <h1
-              className="text-4xl sm:text-5xl font-bold leading-[1.05] mb-5"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-6"
               style={{
                 color: "var(--text-primary)",
                 letterSpacing: "-0.03em",
@@ -73,7 +73,7 @@ export default function AboutPage() {
               northstar is a curated PM library. Free, hand-picked, opinionated.
             </h1>
             <p
-              className="text-base sm:text-lg leading-relaxed"
+              className="text-base sm:text-lg lg:text-xl leading-relaxed max-w-3xl"
               style={{ color: "var(--text-muted)" }}
             >
               {CASE_STUDY_COUNT} long-form case studies. {BOOK_COUNT} original book reviews with takeaways. {PLAYLIST_COUNT} hand-picked YouTube playlists. No paywall, no signup wall, no ads.
@@ -83,10 +83,10 @@ export default function AboutPage() {
 
         {/* Why this exists */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-16 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-3xl">
+          <div className="w-full max-w-4xl">
             <p
               className="eyebrow mb-3"
               style={{ color: "var(--brand-primary)", opacity: 0.85 }}
@@ -94,7 +94,7 @@ export default function AboutPage() {
               Why this exists
             </p>
             <h2
-              className="text-2xl sm:text-3xl font-semibold mb-5"
+              className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6"
               style={{
                 color: "var(--text-primary)",
                 letterSpacing: "-0.02em",
@@ -103,8 +103,8 @@ export default function AboutPage() {
               Most PM resources are either paywalled, ad-stuffed, or scattered.
             </h2>
             <div
-              className="space-y-4 text-base sm:text-lg leading-relaxed"
-              style={{ color: "var(--text-muted)" }}
+              className="space-y-6 text-base sm:text-lg lg:text-xl leading-relaxed"
+              style={{ color: "var(--text-muted)", opacity: 0.9 }}
             >
               <p>
                 Serious PM content lives behind paywalls. Lenny&apos;s Newsletter at $150 a year. Reforge at $2,000+. Medium hiding articles after a few free reads.

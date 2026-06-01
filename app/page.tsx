@@ -922,17 +922,17 @@ export default function HomePage() {
           <main className="flex-1 overflow-y-auto scroll-container">
             {/* Hero */}
             <section
-              className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+              className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-16 flex justify-center"
               style={{ borderBottom: "1.5px solid var(--card-border)" }}
             >
-              <div className="max-w-3xl">
-                <p className="eyebrow mb-3 sm:mb-4" style={{ color: "#26A69A" }}>
+              <div className="w-full max-w-4xl">
+                <p className="eyebrow mb-4" style={{ color: "#26A69A" }}>
                   Curated paths through the library
                 </p>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] mb-3 sm:mb-4" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] mb-5 sm:mb-6" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>
                   <span className="gradient-warm">Different ways</span> to navigate the case studies.
                 </h2>
-                <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: "var(--text-muted)" }}>
+                <p className="text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl" style={{ color: "var(--text-muted)" }}>
                   <strong style={{ color: "var(--text-primary)" }}>Topics</strong> group case studies by theme (Indian fintech, super-app failures). <strong style={{ color: "var(--text-primary)" }}>Comparisons</strong> put two companies head-to-head when they share a market.
                 </p>
               </div>

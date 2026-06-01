@@ -64,18 +64,18 @@ export default function IndiaPage() {
       <div className="flex flex-col min-w-0">
         {/* Hero */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-12 sm:py-20"
+          className="px-4 sm:px-8 lg:px-12 py-12 sm:py-20 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-3xl">
+          <div className="w-full max-w-4xl">
             <Breadcrumbs
-              className="mb-5"
+              className="mb-6"
               items={[
                 { label: "northstar", href: "/" },
                 { label: "India" },
               ]}
             />
-            <div className="flex items-center gap-2.5 mb-4">
+            <div className="flex items-center gap-2.5 mb-6">
               <span
                 className="w-5 h-px"
                 style={{ background: "#FF6B35" }}
@@ -88,7 +88,7 @@ export default function IndiaPage() {
               </span>
             </div>
             <h1
-              className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-5"
+              className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.05] mb-6"
               style={{
                 color: "var(--text-primary)",
                 letterSpacing: "-0.04em",
@@ -99,7 +99,7 @@ export default function IndiaPage() {
               for the India context.
             </h1>
             <p
-              className="text-base sm:text-lg leading-relaxed max-w-xl"
+              className="text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl"
               style={{ color: "var(--text-muted)" }}
             >
               A curated library for Indian product managers, founders, and
@@ -107,7 +107,7 @@ export default function IndiaPage() {
               the US market. northstar is being rewritten for ours.
             </p>
 
-            <div className="flex flex-wrap items-center gap-2.5 mt-7">
+            <div className="flex flex-wrap items-center gap-2.5 mt-8">
               <a href="#india-published" className="btn-primary group">
                 Browse the library
                 <ArrowUpRight
@@ -122,38 +122,40 @@ export default function IndiaPage() {
 
         {/* Stats */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 grid grid-cols-3 max-w-3xl"
+          className="px-4 sm:px-8 lg:px-12 py-8 sm:py-12 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          {[
-            { value: BOOK_COUNT, label: "books" },
-            { value: CASE_STUDY_COUNT, label: "case studies" },
-            { value: PLAYLIST_COUNT, label: "playlists" },
-          ].map(({ value, label }, idx) => (
-            <div
-              key={label}
-              className={`text-left px-2 sm:px-6 ${
-                idx > 0 ? "border-l" : ""
-              }`}
-              style={{ borderColor: "var(--card-border)" }}
-            >
+          <div className="w-full max-w-4xl grid grid-cols-3">
+            {[
+              { value: BOOK_COUNT, label: "books" },
+              { value: CASE_STUDY_COUNT, label: "case studies" },
+              { value: PLAYLIST_COUNT, label: "playlists" },
+            ].map(({ value, label }, idx) => (
               <div
-                className="text-[10px] sm:text-[11px] font-medium tracking-wider uppercase mb-1 sm:mb-2"
-                style={{ color: "var(--text-faint)" }}
+                key={label}
+                className={`text-left px-2 sm:px-6 ${
+                  idx > 0 ? "border-l" : ""
+                }`}
+                style={{ borderColor: "var(--card-border)" }}
               >
-                {label}
+                <div
+                  className="text-[10px] sm:text-[11px] font-medium tracking-wider uppercase mb-1 sm:mb-2"
+                  style={{ color: "var(--text-faint)" }}
+                >
+                  {label}
+                </div>
+                <div
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold"
+                  style={{
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  {value}
+                </div>
               </div>
-              <div
-                className="text-2xl sm:text-4xl lg:text-5xl font-bold"
-                style={{
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                {value}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </section>
 
         {/* Published India case studies */}
@@ -197,10 +199,10 @@ export default function IndiaPage() {
         {stillUpcoming.length > 0 && (
           <section
             id="india-coming"
-            className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
+            className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 flex justify-center"
             style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
-            <div className="max-w-3xl">
+            <div className="w-full max-w-4xl">
               <p className="eyebrow mb-3" style={{ color: "#FF6B35" }}>
                 In the works
               </p>
@@ -214,7 +216,7 @@ export default function IndiaPage() {
                 {stillUpcoming.length} more deep dives ahead
               </h2>
               <p
-                className="text-sm sm:text-base leading-relaxed mb-8 max-w-2xl"
+                className="text-base sm:text-lg lg:text-xl leading-relaxed mb-8 max-w-3xl"
                 style={{ color: "var(--text-muted)" }}
               >
                 Long-form analyses of the product decisions behind India's
@@ -302,22 +304,22 @@ export default function IndiaPage() {
 
         {/* Why this exists */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16"
+          className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-2xl">
+          <div className="w-full max-w-4xl">
             <p className="eyebrow mb-3" style={{ color: "#50C878" }}>
               Why northstar
             </p>
             <h2
-              className="text-2xl sm:text-3xl font-semibold mb-5"
+              className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6"
               style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
             >
               Most PM resources are written for the US. This one's for here.
             </h2>
             <div
-              className="text-base leading-relaxed space-y-4"
-              style={{ color: "var(--text-muted)" }}
+              className="text-base sm:text-lg lg:text-xl leading-relaxed space-y-6"
+              style={{ color: "var(--text-muted)", opacity: 0.9 }}
             >
               <p>
                 Lenny&apos;s Newsletter, Reforge, First Round Review — they&apos;re

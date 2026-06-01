@@ -157,10 +157,10 @@ export default function BookPage({ params }: { params: { slug: string } }) {
         <main className="flex-1 overflow-y-auto scroll-container">
           {/* Hero */}
           <section
-            className="dot-grid px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+            className="dot-grid px-4 sm:px-8 lg:px-12 py-8 sm:py-12 flex justify-center"
             style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
-            <div className="max-w-3xl">
+            <div className="w-full max-w-4xl">
               <Breadcrumbs
                 className="mb-5"
                 items={[
@@ -189,22 +189,23 @@ export default function BookPage({ params }: { params: { slug: string } }) {
                   {book.year} · {book.pages} pages
                 </span>
               </div>
+<h1
+  className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-4"
+  style={{
+    color: "var(--text-primary)",
+    letterSpacing: "-0.03em",
+  }}
+>
+  {book.title}
+</h1>
 
-              <h1
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05] mb-3"
-                style={{
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                {book.title}
-              </h1>
-              <p
-                className="text-base sm:text-lg mb-5"
-                style={{ color: "var(--text-muted)" }}
-              >
-                by {book.author}
-              </p>
+<p
+  className="text-base sm:text-lg lg:text-xl leading-relaxed mb-6"
+  style={{ color: "var(--text-muted)" }}
+>
+  {book.description}
+</p>
+
 
               {/* Rating */}
               <div className="flex items-center gap-1.5 mb-6">
@@ -275,10 +276,10 @@ export default function BookPage({ params }: { params: { slug: string } }) {
 
           {/* Two-column: author photo + tags */}
           <section
-            className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
+            className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 flex justify-center"
             style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
-            <div className="max-w-3xl grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 sm:gap-7 items-start">
+            <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 sm:gap-7 items-start">
               <div className="flex-shrink-0">
                 {/* Author avatar slot — fixed-size box that always reserves
                     space. Initials gradient renders as a base; Wikipedia
@@ -351,10 +352,10 @@ export default function BookPage({ params }: { params: { slug: string } }) {
           {/* Summary section — "The short route" */}
           <section
             id="short-route"
-            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14 flex justify-center"
             style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
-            <div className="max-w-3xl">
+            <div className="w-full max-w-4xl">
               <p
                 className="eyebrow mb-3"
                 style={{ color: "var(--brand-primary)", opacity: 0.85 }}
@@ -385,8 +386,8 @@ export default function BookPage({ params }: { params: { slug: string } }) {
                       return (
                         <div key={i}>
                           <p
-                            className="text-sm sm:text-base leading-relaxed"
-                            style={{ color: "var(--text-muted)" }}
+                            className="text-base sm:text-lg lg:text-xl leading-[1.85] mb-8"
+                            style={{ color: "var(--text-primary)", opacity: 0.9 }}
                           >
                             {para}
                           </p>

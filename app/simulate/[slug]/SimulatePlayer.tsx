@@ -247,7 +247,7 @@ export function SimulatePlayer({ drill }: { drill: Drill }) {
     runningTotals.max > 0;
 
   return (
-    <div className="px-4 sm:px-6 py-8 sm:py-12 max-w-3xl mx-auto">
+    <div className="px-4 sm:px-6 py-8 sm:py-12 max-w-4xl mx-auto">
       {/* Top breadcrumb */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">
         <Link

@@ -55,12 +55,12 @@ export default function TopicPage({ params }: PageProps) {
       <div className="flex flex-col min-w-0">
         {/* Hero */}
         <section
-          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-16"
+          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-16 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-3xl">
+          <div className="w-full max-w-4xl">
             <Breadcrumbs
-              className="mb-5"
+              className="mb-6"
               items={[
                 { label: "northstar", href: "/" },
                 { label: "Topics" },
@@ -68,7 +68,7 @@ export default function TopicPage({ params }: PageProps) {
               ]}
             />
             <span
-              className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md mb-3 sm:mb-4"
+              className="inline-block text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md mb-4 sm:mb-5"
               style={{
                 background: topic.accentColor,
                 color: "#ffffff",
@@ -78,7 +78,7 @@ export default function TopicPage({ params }: PageProps) {
               {topic.eyebrow}
             </span>
             <h1
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] mb-4 sm:mb-5"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-5 sm:mb-6"
               style={{
                 color: "var(--text-primary)",
                 letterSpacing: "-0.03em",
@@ -87,7 +87,7 @@ export default function TopicPage({ params }: PageProps) {
               {topic.title}
             </h1>
             <p
-              className="text-sm sm:text-base lg:text-lg leading-relaxed"
+              className="text-base sm:text-lg lg:text-xl leading-relaxed"
               style={{ color: "var(--text-muted)" }}
             >
               {topic.intro}
@@ -137,10 +137,10 @@ export default function TopicPage({ params }: PageProps) {
         {/* FAQ */}
         {topic.faqs && topic.faqs.length > 0 && (
           <section
-            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+            className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14 flex justify-center"
             style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
-            <div className="max-w-3xl">
+            <div className="w-full max-w-4xl">
               <h2
                 className="text-2xl sm:text-3xl font-semibold mb-6"
                 style={{
@@ -163,7 +163,7 @@ export default function TopicPage({ params }: PageProps) {
                       {faq.question}
                     </h3>
                     <p
-                      className="text-sm sm:text-base leading-relaxed"
+                      className="text-base sm:text-lg leading-relaxed"
                       style={{ color: "var(--text-muted)" }}
                     >
                       {faq.answer}

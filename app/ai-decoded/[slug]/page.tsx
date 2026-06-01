@@ -49,19 +49,19 @@ export default function AIDecodedArticlePage({
     >
       {/* Hero */}
       <section
-        className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+        className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 flex justify-center"
         style={{ borderBottom: "1.5px solid var(--card-border)" }}
       >
-        <div className="max-w-3xl">
+        <div className="w-full max-w-4xl">
           <Breadcrumbs
-            className="mb-5"
+            className="mb-6"
             items={[
               { label: "northstar", href: "/" },
               { label: "AI Decoded", href: "/ai-decoded" },
               { label: fm.title },
             ]}
           />
-          <div className="flex flex-wrap items-center gap-3 mb-5">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             <span
               className="inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded-md"
               style={{
@@ -72,11 +72,11 @@ export default function AIDecodedArticlePage({
             >
               {fm.category}
             </span>
-            <span className="meta-mono inline-flex items-center gap-1">
-              <Clock size={11} strokeWidth={1.6} />
+            <span className="meta-mono inline-flex items-center gap-1 text-sm">
+              <Clock size={12} strokeWidth={1.6} />
               {article.readTime} min read
             </span>
-            <span className="meta-mono">
+            <span className="meta-mono text-sm">
               {new Date(fm.publishedAt).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "short",
@@ -86,7 +86,7 @@ export default function AIDecodedArticlePage({
           </div>
 
           <h1
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05] mb-5"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-6"
             style={{
               color: "var(--text-primary)",
               letterSpacing: "-0.03em",
@@ -96,7 +96,7 @@ export default function AIDecodedArticlePage({
           </h1>
 
           <p
-            className="text-base sm:text-lg leading-relaxed mb-5 max-w-2xl"
+            className="text-base sm:text-lg lg:text-xl leading-relaxed mb-6 max-w-3xl"
             style={{ color: "var(--text-muted)" }}
           >
             {fm.excerpt}
@@ -109,10 +109,10 @@ export default function AIDecodedArticlePage({
       {/* Hero image */}
       {fm.heroImage && (
         <section
-          className="px-4 sm:px-8 lg:px-12 py-8"
+          className="px-4 sm:px-8 lg:px-12 py-8 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-3xl">
+          <div className="w-full max-w-4xl">
             <figure>
               <img
                 src={fm.heroImage.src}
@@ -145,7 +145,7 @@ export default function AIDecodedArticlePage({
         return (
           <>
             <section
-              className="px-4 sm:px-8 lg:px-12 pt-10 sm:pt-14"
+              className="px-4 sm:px-8 lg:px-12 pt-10 sm:pt-14 flex justify-center"
               style={
                 secondHalf
                   ? undefined
@@ -153,14 +153,14 @@ export default function AIDecodedArticlePage({
               }
             >
               <div
-                className="max-w-3xl article-prose"
+                className="w-full max-w-4xl article-prose"
                 dangerouslySetInnerHTML={{ __html: firstHalf }}
               />
             </section>
             {secondHalf && (
               <>
-                <section className="px-4 sm:px-8 lg:px-12 py-8">
-                  <div className="max-w-3xl">
+                <section className="px-4 sm:px-8 lg:px-12 py-8 flex justify-center">
+                  <div className="w-full max-w-4xl">
                     <SubscribeForm
                       variant="card"
                       surface="ai-decoded-article"
@@ -170,11 +170,11 @@ export default function AIDecodedArticlePage({
                   </div>
                 </section>
                 <section
-                  className="px-4 sm:px-8 lg:px-12 pb-10 sm:pb-14"
+                  className="px-4 sm:px-8 lg:px-12 pb-10 sm:pb-14 flex justify-center"
                   style={{ borderBottom: "1.5px solid var(--card-border)" }}
                 >
                   <div
-                    className="max-w-3xl article-prose"
+                    className="w-full max-w-4xl article-prose"
                     dangerouslySetInnerHTML={{ __html: secondHalf }}
                   />
                 </section>
@@ -187,10 +187,10 @@ export default function AIDecodedArticlePage({
       {/* FAQ — AEO surface */}
       {fm.faqs && fm.faqs.length > 0 && (
         <section
-          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14"
+          className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14 flex justify-center"
           style={{ borderBottom: "1.5px solid var(--card-border)" }}
         >
-          <div className="max-w-3xl">
+          <div className="w-full max-w-4xl">
             <h2
               className="text-2xl sm:text-3xl font-semibold mb-6"
               style={{
