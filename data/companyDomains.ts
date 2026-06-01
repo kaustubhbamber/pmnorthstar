@@ -56,6 +56,7 @@ export const companyDomains: Record<string, string> = {
   Whatsapp: "whatsapp.com",
   Atlassian: "atlassian.com",
   // India case studies
+  Zee: "zee5.com",
   Cred: "cred.club",
   Razorpay: "razorpay.com",
   Zerodha: "zerodha.com",
