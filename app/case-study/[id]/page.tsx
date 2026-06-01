@@ -250,14 +250,27 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               <article>
                 {paragraphs.map((p, i) => {
                   const injectAfter = Math.max(2, Math.floor(paragraphs.length * 0.4));
+                  
+                  // Check if this paragraph is just a markdown image
+                  const imgMatch = p.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+
                   return (
                     <div key={i}>
-                      <p
-                        className="text-sm sm:text-base lg:text-lg leading-[1.85] mb-6"
-                        style={{ color: "var(--text-primary)", opacity: 0.9 }}
-                      >
-                        {p}
-                      </p>
+                      {imgMatch ? (
+                        <img 
+                          src={imgMatch[2]} 
+                          alt={imgMatch[1]} 
+                          className="w-full rounded-2xl my-8 object-cover"
+                          style={{ border: "1.5px solid var(--card-border)" }}
+                        />
+                      ) : (
+                        <p
+                          className="text-sm sm:text-base lg:text-lg leading-[1.85] mb-6"
+                          style={{ color: "var(--text-primary)", opacity: 0.9 }}
+                        >
+                          {p}
+                        </p>
+                      )}
                       {i === injectAfter && (
                         <div className="my-8">
                           <SmartEngagementBlock
