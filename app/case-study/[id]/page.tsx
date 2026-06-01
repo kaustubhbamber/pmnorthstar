@@ -129,12 +129,12 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
         <main className="flex-1 overflow-y-auto scroll-container">
           {/* Hero */}
           <div
-            className="dot-grid px-4 sm:px-8 lg:px-12 py-8 sm:py-10 flex justify-center"
+            className="dot-grid px-4 sm:px-8 lg:px-12 py-8 sm:py-12 flex justify-center"
             style={{ borderBottom: "1.5px solid var(--card-border)" }}
           >
-            <div className="w-full max-w-3xl">
+            <div className="w-full max-w-4xl">
               <Breadcrumbs
-                className="mb-4"
+                className="mb-6"
                 items={[
                   { label: "northstar", href: "/" },
                   { label: "Case studies", href: "/#casestudies" },
@@ -142,7 +142,7 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                   { label: study.title },
                 ]}
               />
-              <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="flex flex-wrap items-center gap-3 mb-6">
                 <span
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-full"
                   style={{ background: `${color}14`, color }}
@@ -151,17 +151,17 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                   {study.category}
                 </span>
                 <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
-                <span className="meta-mono inline-flex items-center gap-1">
-                  <Clock size={11} strokeWidth={1.6} />
+                <span className="meta-mono inline-flex items-center gap-1 text-sm">
+                  <Clock size={12} strokeWidth={1.6} />
                   {readTime} min
                 </span>
                 <span className="w-px h-3" style={{ background: "var(--card-border)" }} />
-                <span className="meta-mono">{study.company} · {study.year}</span>
+                <span className="meta-mono text-sm">{study.company} · {study.year}</span>
               </div>
 
-              <div className="flex items-start gap-4 mb-4">
+              <div className="flex items-start gap-5 mb-6">
                 <span
-                  className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl flex-shrink-0 mt-1 overflow-hidden"
+                  className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-xl flex-shrink-0 mt-1 overflow-hidden"
                   style={{
                     aspectRatio: "1 / 1",
                     background: logoUrl && !logoFailed ? "#fff" : "transparent",
@@ -175,20 +175,20 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                     <img
                       src={logoUrl}
                       alt={`${study.company} logo — ${study.category} product case study`}
-                      width={64}
-                      height={64}
+                      width={80}
+                      height={80}
                       onError={() => setLogoFailed(true)}
                       className="max-w-full max-h-full object-contain"
-                      style={{ padding: "8px" }}
+                      style={{ padding: "10px" }}
                     />
                   ) : (
-                    <span className="text-3xl sm:text-4xl lg:text-5xl leading-none">
+                    <span className="text-4xl sm:text-5xl lg:text-6xl leading-none">
                       {study.logo}
                     </span>
                   )}
                 </span>
                 <h1
-                  className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05]"
+                  className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05]"
                   style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}
                 >
                   {study.title}
@@ -196,13 +196,13 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
               </div>
 
               <p
-                className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mb-4"
+                className="text-base sm:text-lg lg:text-xl leading-relaxed max-w-3xl mb-6"
                 style={{ color: "var(--text-muted)" }}
               >
                 {study.description}
               </p>
 
-              <div className="flex items-center justify-between flex-wrap gap-4 mt-6">
+              <div className="flex items-center justify-between flex-wrap gap-4 mt-8">
                 <Byline label="Written" date={SITE_LAST_REVIEWED} />
                 <ShareButton
                   title={`${study.title} — northstar case study`}
@@ -215,11 +215,11 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Content */}
-          <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 flex justify-center">
-            <div className="w-full max-w-3xl">
+          <div className="px-4 sm:px-8 lg:px-12 py-10 sm:py-14 flex justify-center">
+            <div className="w-full max-w-4xl">
               {/* Outcome callout */}
               <div
-                className="text-sm px-5 py-4 rounded-xl mb-8 flex items-start gap-3"
+                className="text-base px-6 py-5 rounded-xl mb-10 flex items-start gap-4"
                 style={{
                   background: isFailure ? "rgba(255,75,75,0.05)" : "rgba(80,200,120,0.05)",
                   border: `1.5px solid ${isFailure ? "rgba(255,75,75,0.25)" : "rgba(80,200,120,0.25)"}`,
@@ -227,13 +227,13 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                 }}
               >
                 {isFailure ? (
-                  <TrendingDown size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
+                  <TrendingDown size={20} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
                 ) : (
-                  <TrendingUp size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
+                  <TrendingUp size={20} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
                 )}
                 <div>
                   <span
-                    className="text-[11px] font-semibold uppercase tracking-wider block mb-1"
+                    className="text-xs font-bold uppercase tracking-wider block mb-1.5"
                     style={{ opacity: 0.8 }}
                   >
                     {isFailure ? "Outcome" : "Impact"}
@@ -259,12 +259,12 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
                         <img 
                           src={imgMatch[2]} 
                           alt={imgMatch[1]} 
-                          className="w-full rounded-2xl my-8 object-cover"
+                          className="w-full rounded-2xl my-10 object-cover"
                           style={{ border: "1.5px solid var(--card-border)" }}
                         />
                       ) : (
                         <p
-                          className="text-sm sm:text-base lg:text-lg leading-[1.85] mb-6"
+                          className="text-base sm:text-lg lg:text-xl leading-[1.85] mb-8"
                           style={{ color: "var(--text-primary)", opacity: 0.9 }}
                         >
                           {p}
